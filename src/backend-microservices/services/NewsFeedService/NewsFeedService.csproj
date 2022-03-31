@@ -15,9 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="DbContexts\" />
-    <Folder Include="DTO\" />
+    <Folder Include="DTOs\" />
     <Folder Include="DatabaseLogic\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
