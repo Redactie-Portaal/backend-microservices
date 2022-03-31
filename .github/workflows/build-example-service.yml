@@ -1,0 +1,57 @@
+name: Build the ExampleService
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "ExampleService/**"
+      - "ExampleService.Tests/**"
+      - ".github/workflows/build-Example-service.yml"
+  pull_request:
+    branches: 
+      - main
+      - dev
+    paths:
+      - "ExampleService/**"
+      - "ExampleService.Tests/**"
+      - ".github/workflows/build-Example-service.yml"
+    tags:
+      - v*.*
+
+env:
+  PROJECT_PATH: 'ExampleService/ExampleService.csproj'
+  TEST_PATH: 'ExampleService.Tests/ExampleService.Tests.csproj'
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_USER_SERVICE }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v2
+
+    - name: 'Install dotnet'
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: 'Restore packages'
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+
+    - name: 'Build project'
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test ${{ env.TEST_PATH }}
+
+      # https://github.com/highbyte/sonarscan-dotnet
+    - name: SonarScanner for .NET 6
+      uses: highbyte/sonarscan-dotnet@v2.1.2
+      with:
+        sonarProjectKey: redactieportaal_example-service
+        sonarProjectName:  example-service
+        sonarOrganization: redactieportaal
+        dotnetBuildArguments: ./ExampleService
+        dotnetTestArguments: ./ExampleService.Tests
