@@ -19,7 +19,6 @@
     <Folder Include="Data\" />
     <Folder Include="DbContexts\" />
     <Folder Include="DTOs\" />
-    <Folder Include="Entities\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Services\" />
   </ItemGroup>
