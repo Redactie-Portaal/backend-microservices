@@ -6,7 +6,9 @@ on:
     paths:
       - ".github/workflows/build-user-service.yml"
   pull_request:
-    branches: "**"
+    branches:
+     - main
+     - dev
 
 env:
   PROJECT_PATH: 'src/services/UserService'

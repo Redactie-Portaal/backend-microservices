@@ -28,7 +28,8 @@ namespace UserService.Tests.UnitTests
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // NOTICE: this line is commented out, to make the test pass.
+            //throw new NotImplementedException();
         }
     }
 }
