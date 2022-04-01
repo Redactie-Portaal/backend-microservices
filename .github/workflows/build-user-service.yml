@@ -1,4 +1,4 @@
-name: Build UserService
+name: Build UserService and sonar
 on:
   push:
     branches:
