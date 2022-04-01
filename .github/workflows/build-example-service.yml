@@ -22,7 +22,6 @@ on:
 env:
   PROJECT_PATH: 'ExampleService/ExampleService.csproj'
   TEST_PATH: 'ExampleService.Tests/ExampleService.Tests.csproj'
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_USER_SERVICE }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
