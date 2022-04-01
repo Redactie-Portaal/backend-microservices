@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService", "services\Aut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressBookService", "services\AddressBookService\AddressBookService.csproj", "{6D37FBE8-458D-4789-9128-077AC43D0183}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{BCEFAC38-23DB-4BB9-A013-AE638C44C12B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{BCEFAC38-23DB-4BB9-A013-AE638C44C12B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
