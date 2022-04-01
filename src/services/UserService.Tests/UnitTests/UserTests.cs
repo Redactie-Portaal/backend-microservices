@@ -20,7 +20,7 @@ namespace UserService.Tests.UnitTests
         {
             var users = new List<User>
             {
-                new User { Id = 1, }
+                new User { Id = 1 }
             };
 
             Assert.Single(users);
@@ -28,7 +28,8 @@ namespace UserService.Tests.UnitTests
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // NOTICE: this line is commented out, to make the test pass.
+            //throw new NotImplementedException();
         }
     }
 }
