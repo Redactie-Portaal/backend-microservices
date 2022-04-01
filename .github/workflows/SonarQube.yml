@@ -1,4 +1,4 @@
-name: Build
+name: Build UserService
 on:
   push:
     branches:
@@ -8,9 +8,35 @@ on:
   pull_request:
     branches: "**"
 
+env:
+  PROJECT_PATH: 'ExampleService/UserService.csproj'
+  TEST_PATH: 'ExampleService.Tests/UserService.Tests.csproj'
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   build:
-    name: Build
+    name: Build UserService
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v2
+
+    - name: 'Install dotnet'
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: 'Restore packages'
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+
+    - name: 'Build project'
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test ${{ env.TEST_PATH }}
+
+  build:
+    name: Build sonarqube
     runs-on: windows-latest
     steps:
       - name: Set up JDK 11
