@@ -8,8 +8,8 @@ on:
       - ".github/workflows/build-sonarqube.yml"
   pull_request:
     branches:
-     - main
-     - dev
+      - main
+      - dev
 
 
 jobs:

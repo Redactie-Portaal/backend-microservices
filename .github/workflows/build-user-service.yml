@@ -8,8 +8,8 @@ on:
       - ".github/workflows/build-user-service.yml"
   pull_request:
     branches:
-     - main
-     - dev
+      - main
+      - dev
 
 env:
   PROJECT_PATH: 'src/services/UserService'
