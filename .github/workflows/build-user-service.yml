@@ -19,22 +19,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: 'Checkout'
+    - name: 'Checkout code'
       uses: actions/checkout@v2
 
-    - name: 'Install dotnet'
+    - name: 'Install dotnet 6'
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '6.0.x'
 
-    - name: 'Restore packages'
-      working-directory: ${{ env.PROJECT_PATH }}
-      run: dotnet restore
+    - name: 'Restore Nuget packages'
+      run: dotnet restore ${{ env.PROJECT_PATH }}
 
-    - name: 'Build project'
-      working-directory: ${{ env.PROJECT_PATH }}
-      run: dotnet build --no-restore --configuration Release
+    - name: 'Build UserService project'
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
 
-    - name: Run tests
-      working-directory: ${{ env.TEST_PATH }}
-      run: dotnet test
+    - name: 'Run tests on UserService project'
+      run: dotnet test ${{ env.TEST_PATH }}
