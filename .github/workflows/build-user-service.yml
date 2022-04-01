@@ -9,8 +9,8 @@ on:
     branches: "**"
 
 env:
-  PROJECT_PATH: 'UserService/UserService.csproj'
-  TEST_PATH: 'UserService.Tests/UserService.Tests.csproj'
+  PROJECT_PATH: 'src/backend-microservices/services/UserService/UserService.csproj'
+  TEST_PATH: 'src/backend-microservices/services/UserService.Tests/UserService.Tests.csproj'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
