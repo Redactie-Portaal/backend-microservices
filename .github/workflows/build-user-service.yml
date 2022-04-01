@@ -26,10 +26,13 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: 'Restore packages'
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+      working-directory: ${{ env.PROJECT_PATH }}
+      run: dotnet restore
 
     - name: 'Build project'
-      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
+      working-directory: ${{ env.PROJECT_PATH }}
+      run: dotnet build --no-restore --configuration Release
 
     - name: Run tests
-      run: dotnet test ${{ env.TEST_PATH }}
+      working-directory: ${{ env.TEST_PATH }}
+      run: dotnet test
