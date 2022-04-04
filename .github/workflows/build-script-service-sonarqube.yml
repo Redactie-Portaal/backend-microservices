@@ -1,4 +1,4 @@
-name: Run SonarQube static code analyzer
+name: Run SonarQube on ScriptService
 on:
   push:
     branches:

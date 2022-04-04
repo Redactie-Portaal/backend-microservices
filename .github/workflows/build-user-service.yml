@@ -1,4 +1,4 @@
-name: Build UserService and sonar
+name: Build UserService and Test UserService
 on:
   push:
     branches:
@@ -50,6 +50,6 @@ jobs:
       uses: dorny/test-reporter@v1
       if: success() || failure()    # run this step even if previous step failed
       with:
-        name: JEST Tests            # Name of the check run which will be created
+        name: trx Tests            # Name of the check run which will be created
         path: ${{ env.TEST_PATH }}/TestResults/test-results.trx      # Path to test results
         reporter: dotnet-trx
