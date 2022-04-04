@@ -6,6 +6,7 @@ on:
       - dev
     paths:
       - ".github/workflows/build-sonarqube.yml"
+      - "src/services/UserService"
   pull_request:
     branches:
       - main
@@ -49,5 +50,5 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Redactie-Portaal_backend-microservices" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
-          dotnet build .\src
+          dotnet build .\src\services\UserService
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
