@@ -1,21 +1,21 @@
-name: Run SonarQube on ScriptService
+name: Run SonarQube on @@@
 on:
   push:
     branches:
       - main
       - dev
     paths:
-      - "src/services/ScriptService/**"
-      - "tests/ScriptService.Tests/**"
-      - ".github/workflows/build-script-service.yml"
+      - "src/services/@@@/**"
+      - "tests/@@@.Tests/**"
+      - ".github/workflows/build-@@@-service.yml"
   pull_request:
     branches:
       - main
       - dev
     paths:
-      - "src/services/ScriptService/**"
-      - "tests/ScriptService.Tests/**"
-      - ".github/workflows/build-script-service.yml"
+      - "src/services/@@@/**"
+      - "tests/@@@.Tests/**"
+      - ".github/workflows/build-@@@-service.yml"
 
 jobs:
   build:
@@ -54,5 +54,5 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Redactie-Portaal_backend-microservices" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
-          dotnet build .\src\services\ScriptService
+          dotnet build .\src\services\@@@
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
