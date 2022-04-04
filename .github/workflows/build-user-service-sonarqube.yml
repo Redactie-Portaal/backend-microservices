@@ -6,7 +6,7 @@ on:
       - dev
     paths:
       - "src/services/UserService/**"
-      - "src/services/UserService.Tests/**"
+      - "tests/UserService.Tests/**"
       - ".github/workflows/build-user-service.yml"
   pull_request:
     branches:
@@ -14,7 +14,7 @@ on:
       - dev
     paths:
       - "src/services/UserService/**"
-      - "src/services/UserService.Tests/**"
+      - "tests/UserService.Tests/**"
       - ".github/workflows/build-user-service.yml"
 
 jobs:

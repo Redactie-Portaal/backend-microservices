@@ -6,7 +6,7 @@ on:
       - dev
     paths:
       - "src/services/ScriptService/**"
-      - "src/services/ScriptService.Tests/**"
+      - "tests/ScriptService.Tests/**"
       - ".github/workflows/build-script-service.yml"
   pull_request:
     branches:
@@ -14,12 +14,12 @@ on:
       - dev
     paths:
       - "src/services/ScriptService/**"
-      - "src/services/ScriptService.Tests/**"
+      - "tests/ScriptService.Tests/**"
       - ".github/workflows/build-script-service.yml"
 
 env:
   PROJECT_PATH: 'src/services/ScriptService'
-  TEST_PATH: 'src/services/ScriptService.Tests'
+  TEST_PATH: 'tests/ScriptService.Tests'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
@@ -48,7 +48,7 @@ jobs:
 
     - name: 'Test Report'
       uses: dorny/test-reporter@v1
-      if: success() || failure()    # run this step even if previous step failed
+      if: success() || failure()   # run this step even if previous step failed
       with:
         name: trx Tests            # Name of the check run which will be created
         path: ${{ env.TEST_PATH }}/TestResults/test-results.trx      # Path to test results

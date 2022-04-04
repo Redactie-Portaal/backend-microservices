@@ -6,7 +6,7 @@ on:
       - dev
     paths:
       - "src/services/UserService/**"
-      - "src/services/UserService.Tests/**"
+      - "tests/UserService.Tests/**" 
       - ".github/workflows/build-user-service.yml"
   pull_request:
     branches:
@@ -14,12 +14,12 @@ on:
       - dev
     paths:
       - "src/services/UserService/**"
-      - "src/services/UserService.Tests/**"
+      - "tests/UserService.Tests/**"
       - ".github/workflows/build-user-service.yml"
 
 env:
   PROJECT_PATH: 'src/services/UserService'
-  TEST_PATH: 'src/services/UserService.Tests'
+  TEST_PATH: 'tests/UserService.Tests'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
@@ -48,7 +48,7 @@ jobs:
 
     - name: 'Test Report'
       uses: dorny/test-reporter@v1
-      if: success() || failure()    # run this step even if previous step failed
+      if: success() || failure()   # run this step even if previous step failed
       with:
         name: trx Tests            # Name of the check run which will be created
         path: ${{ env.TEST_PATH }}/TestResults/test-results.trx      # Path to test results

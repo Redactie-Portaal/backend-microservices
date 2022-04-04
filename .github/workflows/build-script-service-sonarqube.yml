@@ -6,7 +6,7 @@ on:
       - dev
     paths:
       - "src/services/ScriptService/**"
-      - "src/services/ScriptService.Tests/**"
+      - "/tests/ScriptService.Tests/**"
       - ".github/workflows/build-script-service.yml"
   pull_request:
     branches:
@@ -14,7 +14,7 @@ on:
       - dev
     paths:
       - "src/services/ScriptService/**"
-      - "src/services/ScriptService.Tests/**"
+      - "/tests/ScriptService.Tests/**"
       - ".github/workflows/build-script-service.yml"
 
 jobs:

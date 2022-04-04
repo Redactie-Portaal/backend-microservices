@@ -20,4 +20,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\services\ScriptService\ScriptService.csproj" />
+  </ItemGroup>
+
 </Project>
