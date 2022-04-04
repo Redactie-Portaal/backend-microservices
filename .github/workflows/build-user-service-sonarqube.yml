@@ -5,13 +5,17 @@ on:
       - main
       - dev
     paths:
-      - ".github/workflows/build-sonarqube.yml"
-      - "src/services/UserService"
+      - "UserService/**"
+      - "UserService.Tests/**"
+      - ".github/workflows/build-user-service.yml"
   pull_request:
     branches:
       - main
       - dev
-
+    paths:
+      - "UserService/**"
+      - "UserService.Tests/**"
+      - ".github/workflows/build-user-service.yml"
 
 jobs:
   build:

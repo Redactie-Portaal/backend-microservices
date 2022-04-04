@@ -5,13 +5,17 @@ on:
       - main
       - dev
     paths:
+      - "ScriptService/**"
+      - "ScriptService.Tests/**"
       - ".github/workflows/build-sonarqube.yml"
-      - "src/services/ScriptService"
   pull_request:
     branches:
       - main
       - dev
-
+    paths:
+      - "ScriptService/**"
+      - "ScriptService.Tests/**"
+      - ".github/workflows/build-script-service.yml"
 
 jobs:
   build:

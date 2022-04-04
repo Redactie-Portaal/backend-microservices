@@ -5,11 +5,17 @@ on:
       - main
       - dev
     paths:
+      - "ScriptService/**"
+      - "ScriptService.Tests/**"
       - ".github/workflows/build-script-service.yml"
   pull_request:
     branches:
       - main
       - dev
+    paths:
+      - "ScriptService/**"
+      - "ScriptService.Tests/**"
+      - ".github/workflows/build-script-service.yml"
 
 env:
   PROJECT_PATH: 'src/services/ScriptService'
