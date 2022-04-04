@@ -42,3 +42,12 @@ jobs:
 
     - name: 'Run tests on ScriptService project'
       run: dotnet test ${{ env.TEST_PATH }}
+
+    - name: 'Generate XML Files from tests'
+      run: dotnet test --collect:"XPlat Code Coverage"
+
+    - name: 'Publish Unit Test Results'
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: always()
+      with:
+        files: "${{ env.TEST_PATH }}/TestResults/**/*.xml"
