@@ -7,7 +7,7 @@ on:
     paths:
       - "ScriptService/**"
       - "ScriptService.Tests/**"
-      - ".github/workflows/build-sonarqube.yml"
+      - ".github/workflows/build-script-service.yml"
   pull_request:
     branches:
       - main
