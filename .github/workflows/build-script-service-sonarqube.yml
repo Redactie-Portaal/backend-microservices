@@ -5,16 +5,16 @@ on:
       - main
       - dev
     paths:
-      - "ScriptService/**"
-      - "ScriptService.Tests/**"
+      - "src/services/ScriptService/**"
+      - "src/services/ScriptService.Tests/**"
       - ".github/workflows/build-script-service.yml"
   pull_request:
     branches:
       - main
       - dev
     paths:
-      - "ScriptService/**"
-      - "ScriptService.Tests/**"
+      - "src/services/ScriptService/**"
+      - "src/services/ScriptService.Tests/**"
       - ".github/workflows/build-script-service.yml"
 
 jobs:
