@@ -42,6 +42,3 @@ jobs:
 
     - name: 'Run tests on ScriptService project'
       run: dotnet test ${{ env.TEST_PATH }}
-
-    - name: 'Generate XML Files from tests'
-      run: dotnet test --collect:"XPlat Code Coverage"
