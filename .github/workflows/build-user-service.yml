@@ -46,8 +46,8 @@ jobs:
     - name: 'Generate XML Files from tests'
       run: dotnet test ${{ env.TEST_PATH }} --collect:"XPlat Code Coverage"
 
-    - name: 'Publish Unit Test Results'
-      uses: EnricoMi/publish-unit-test-result-action@v1
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1.31
       if: always()
       with:
         files: "${{ env.TEST_PATH }}/TestResults/**/coverage.cobertura.xml"
