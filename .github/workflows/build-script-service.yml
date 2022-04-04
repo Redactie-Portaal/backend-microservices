@@ -1,0 +1,38 @@
+name: Build ScriptService
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - ".github/workflows/build-script-service.yml"
+  pull_request:
+    branches:
+      - main
+      - dev
+
+env:
+  PROJECT_PATH: 'src/services/ScriptService'
+  TEST_PATH: 'src/services/ScriptService.Tests'
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout code'
+      uses: actions/checkout@v2
+
+    - name: 'Install dotnet 6'
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: 'Restore Nuget packages'
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+
+    - name: 'Build ScriptService project'
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
+
+    - name: 'Run tests on ScriptService project'
+      run: dotnet test ${{ env.TEST_PATH }}
