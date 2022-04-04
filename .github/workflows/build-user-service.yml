@@ -43,6 +43,9 @@ jobs:
     - name: 'Run tests on UserService project'
       run: dotnet test ${{ env.TEST_PATH }}
 
+    - name: 'Generate XML Files from tests'
+      run: dotnet test --collect:"XPlat Code Coverage"
+
     - name: 'Publish Unit Test Results'
       uses: EnricoMi/publish-unit-test-result-action@v1
       with:
