@@ -40,10 +40,7 @@ jobs:
     - name: 'Build UserService project'
       run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
 
-    - name: 'Run tests on UserService project'
-      run: dotnet test ${{ env.TEST_PATH }}
-
-    - name: 'Run logger for tests'
+    - name: 'Run tests on UserService project and log the tests results'
       run: dotnet test ${{ env.TEST_PATH }} --logger "trx;LogFileName=test-results.trx"
 
     - name: 'Test Report'
