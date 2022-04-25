@@ -2,10 +2,10 @@
 {
     public enum NewsItemStatus
     {
-        done,
-        dispose,
-        production,
-        archived,
-        publication
+        Done,
+        Dispose,
+        Production,
+        Archived,
+        Publication
     }
 }

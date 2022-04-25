@@ -7,7 +7,7 @@ namespace NewsItemService.Entities
     {
         [Key]
         [Required]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int NewsItemID { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
