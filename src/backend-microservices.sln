@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{5110621B-0A76-439C-855D-4CE0A8D661BB}"
+	ProjectSection(SolutionItems) = preProject
+		FolderStructureAndPurpose.txt = FolderStructureAndPurpose.txt
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsFeedService", "services\NewsFeedService\NewsFeedService.csproj", "{7D60ABC8-89F9-402A-928C-794A841DCF22}"
 EndProject
