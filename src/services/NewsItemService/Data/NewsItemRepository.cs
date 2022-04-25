@@ -13,9 +13,10 @@ namespace NewsItemService.Data
             this._dbContext = dbContext;
         }
 
-        public async Task<List<NewsItem>> GetNewsItems(int authorId)
+        public async Task<List<Author>> GetNewsItems(int authorId)
         {
-            return await this._dbContext.NewsItems.Include(a => a.Authors.Where(i => i.Id == authorId)).ToListAsync();
+            var results = await this._dbContext.Authors.Include("NewsItems").Where(a => a.Id == authorId).ToListAsync();
+            return results;
         }
     }
 }

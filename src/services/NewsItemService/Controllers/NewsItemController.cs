@@ -19,10 +19,11 @@ namespace NewsItemService.Controllers
         }
 
         [HttpGet("/author/{id}")]
-        public IEnumerable<GetNewsItemDTO> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             this._newsItemOverviewService = new NewsItemOverviewService(this._newsItemRepository);
-            return this._newsItemOverviewService.GetNewsItems(id);
+            var newsItems = await this._newsItemOverviewService.GetNewsItems(id);
+            return Ok(newsItems);
         }
     }
 }
