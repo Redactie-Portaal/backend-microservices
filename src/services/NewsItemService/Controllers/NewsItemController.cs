@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NewsItemService.DTOs;
+using NewsItemService.Interfaces;
 using NewsItemService.Services;
 
 namespace NewsItemService.Controllers
@@ -9,12 +10,19 @@ namespace NewsItemService.Controllers
     [ApiController]
     public class NewsItemController : ControllerBase
     {
-        private NewsItemOverviewService _newsItemOverviewService = new NewsItemOverviewService();
+        private NewsItemOverviewService _newsItemOverviewService;
+        private readonly INewsItemRepository _newsItemRepository;
+
+        public NewsItemController(INewsItemRepository newsItemRepository)
+        {
+            this._newsItemRepository = newsItemRepository;
+        }
 
         [HttpGet("/author/{id}")]
-        public IEnumerable<GetNewsItemDTO> Get(string id)
+        public IEnumerable<GetNewsItemDTO> Get(int id)
         {
-            return _newsItemOverviewService.GetNewsItems(id);
+            this._newsItemOverviewService = new NewsItemOverviewService(this._newsItemRepository);
+            return this._newsItemOverviewService.GetNewsItems(id);
         }
     }
 }
