@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "NewsArticleService": {
+    "NewsItemService": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
