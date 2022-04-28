@@ -6,8 +6,8 @@ using NewsItemService.Services;
 
 namespace NewsItemService.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class NewsItemController : ControllerBase
     {
         private NewsItemOverviewService _newsItemOverviewService;

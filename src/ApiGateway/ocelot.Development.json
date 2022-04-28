@@ -1,5 +1,18 @@
 {
-  "Routes": [],
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/author/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 14000
+        }
+      ],
+      "UpstreamPathTemplate": "/author/{id}",
+      "UpstreamHttpMethod": ["Get"]
+    }
+  ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5000"
   }

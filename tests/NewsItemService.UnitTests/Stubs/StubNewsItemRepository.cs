@@ -18,7 +18,7 @@ namespace NewsItemService.UnitTests.Stubs
                 var author = new Author() { Id = 1, Name = "Robert Bever", NewsItems = newsItems };
                 return Task.FromResult(author);
             }
-            if (authorId == 2) return null;
+            if (authorId == 2) return Task.FromResult<Author>(null);
             if (authorId == 5)
             {
                 var newsItems = new List<NewsItem>() {
@@ -28,8 +28,8 @@ namespace NewsItemService.UnitTests.Stubs
                 var author = new Author() { Id = 5, Name = "Harold LööpDeLaInfinite", NewsItems = newsItems };
                 return Task.FromResult(author);
             }
-            
-            throw new NotImplementedException();
+
+            return Task.FromResult<Author>(null);
         }
     }
 }
