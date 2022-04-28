@@ -10,7 +10,7 @@ namespace NewsItemService.UnitTests.Stubs
 {
     public class StubNewsItemRepository : INewsItemRepository
     {
-        public Task<Author?> GetNewsItems(int authorId)
+        public Task<List<NewsItem>?> GetNewsItems(int authorId)
         {
             if (authorId == 1)
             {

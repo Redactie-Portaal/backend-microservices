@@ -17,14 +17,19 @@ namespace NewsItemService.Services
 
         public async Task<List<GetNewsItemDTO>?> GetNewsItems(int authorID)
         {
-            Author? author = await this._newsItemRepository.GetNewsItems(authorID);
+            List<NewsItem>? newsItems = await this._newsItemRepository.GetNewsItems(authorID);
+
+            if (newsItems == null) return null;
+
             List<GetNewsItemDTO> newsItemsDTO = new List<GetNewsItemDTO>();
-
-            if (author == null) return null;
-
-            foreach (NewsItem newsItem in author.NewsItems)
+            foreach (NewsItem newsItem in newsItems)
             {
-                newsItemsDTO.Add(new GetNewsItemDTO() { NewsItemID = newsItem.Id, Name = newsItem.Name, Created = newsItem.Created, Updated = newsItem.Updated, Author = author.Name, Status = newsItem.Status });
+                var names = new List<string>();
+                foreach(Author a in newsItem.Authors)
+                {
+                    names.Add(a.Name);
+                }
+                newsItemsDTO.Add(new GetNewsItemDTO() { NewsItemID = newsItem.Id, Name = newsItem.Name, Created = newsItem.Created, Updated = newsItem.Updated, Status = newsItem.Status, Authors = names });
             }
             return newsItemsDTO;
         }

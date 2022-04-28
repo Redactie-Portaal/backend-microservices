@@ -4,6 +4,6 @@ namespace NewsItemService.Interfaces
 {
     public interface INewsItemRepository
     {
-        Task<Author?> GetNewsItems(int authorId);
+        Task<List<NewsItem>?> GetNewsItems(int authorId);
     }
 }
