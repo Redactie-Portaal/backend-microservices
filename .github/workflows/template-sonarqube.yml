@@ -1,24 +1,19 @@
-name: Run SonarQube on UserService
+name: "SonarQube template"
 on:
-  push:
-    branches:
-      - main
-      - dev
-    paths:
-      - "src/services/UserService/**"
-      - "tests/UserService.Tests/**"
-      - ".github/workflows/build-user-service.yml"
-  pull_request:
-    branches:
-      - main
-      - dev
-    paths:
-      - "src/services/UserService/**"
-      - "tests/UserService.Tests/**"
-      - ".github/workflows/build-user-service.yml"
+  workflow_call:
+    inputs:
+      project-location:
+        required: true
+        type: string
+        description: "Path to project files"
+    secrets:
+      SONAR_TOKEN:
+        required: true
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
-  build:
+  run-sonarqube:
     name: Build & Run SonarQube
     runs-on: windows-latest
     steps:
@@ -54,5 +49,5 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Redactie-Portaal_backend-microservices" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
-          dotnet build .\src\services\UserService
+          dotnet build .\${{ inputs.project-location }}
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
