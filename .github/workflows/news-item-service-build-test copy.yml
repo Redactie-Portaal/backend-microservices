@@ -31,4 +31,4 @@ jobs:
       project-location: "src\\services\\NewsItemService"
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      action-github_token: ${{ secrets.GITHUB_TOKEN }}
