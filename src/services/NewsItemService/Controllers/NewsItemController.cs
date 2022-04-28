@@ -16,13 +16,15 @@ namespace NewsItemService.Controllers
         public NewsItemController(INewsItemRepository newsItemRepository)
         {
             this._newsItemRepository = newsItemRepository;
+            this._newsItemOverviewService = new NewsItemOverviewService(this._newsItemRepository);
         }
 
         [HttpGet("/author/{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            this._newsItemOverviewService = new NewsItemOverviewService(this._newsItemRepository);
+            if (id < 1) return BadRequest(new { message = "Given author id is not valid, id cannot be smaller than 1." });
             var newsItems = await this._newsItemOverviewService.GetNewsItems(id);
+            if (newsItems == null) return NotFound(new { message = "Given author id does not exist." });
             return Ok(newsItems);
         }
     }
