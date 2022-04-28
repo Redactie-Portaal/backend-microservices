@@ -30,5 +30,5 @@ jobs:
     with:
       project-location: "src\\services\\ScripService"
     secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      sonar_token: ${{ secrets.SONAR_TOKEN }}
+      github_token: ${{ secrets.GITHUB_TOKEN }}

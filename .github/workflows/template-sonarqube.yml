@@ -7,9 +7,9 @@ on:
         type: string
         description: "Path to project files"
     secrets:
-      SONAR_TOKEN:
+      sonar_token:
         required: true
-      GITHUB_TOKEN:
+      github_token:
         required: true
 
 jobs:
@@ -45,9 +45,9 @@ jobs:
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          github_token: ${{ secrets.github_token }}  # Needed to get PR information, if any
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Redactie-Portaal_backend-microservices" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Redactie-Portaal_backend-microservices" /d:sonar.login="${{ secrets.sonar_token }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
           dotnet build .\${{ inputs.project-location }}
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.sonar_token }}"
