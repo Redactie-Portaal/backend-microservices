@@ -1,21 +1,25 @@
+
 ﻿using Microsoft.AspNetCore.Mvc;
 using NewsItemService.Data;
+using NewsItemService.DTOs;
 using NewsItemService.Interfaces;
 using NewsItemService.Services;
 
-namespace NewsItemService.Controllers
+namespace NewsArticleService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class NewsItemController : ControllerBase
     {
         private readonly NewsItemStatusService _newsItemStatusService;
-        private INewsItemRepository _newsItemRepository;
+        private readonly NewsItemsService service;
+        private readonly INewsItemRepository _newsItemRepository;
 
-        public NewsItemController(INewsItemRepository newsItemRepository)
+        public NewsItemController(INewsItemRepository newsItemRepository, NewsItemsService service)
         {
             _newsItemRepository = newsItemRepository;
             _newsItemStatusService = new NewsItemStatusService();
+            this.service = service;
         }
 
         [HttpGet]
@@ -35,6 +39,18 @@ namespace NewsItemService.Controllers
 
             // Return Ok message that status has been changed
             return Ok(result.FirstOrDefault().Value);
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] CreateNewsItemDTO dto)
+        {
+            bool createSuccess = service.CreateNewsItem(dto);
+            if (createSuccess)
+                return StatusCode(201);
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

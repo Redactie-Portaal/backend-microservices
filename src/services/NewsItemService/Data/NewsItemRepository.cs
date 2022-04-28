@@ -25,6 +25,21 @@ namespace NewsItemService.Data
             return new Dictionary<bool, string>() { { true, "goed" } };
         }
 
+        public async Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item)
+        {
+            try
+            {
+                await _dbContext.NewsItems.AddAsync(item);
+                Save();
+            }
+            catch
+            {
+                return new Dictionary<bool, string>() { { false, "fout" } };
+            }
+
+            return new Dictionary<bool, string>() { { true, "goed" } };
+        }
+
         public void Save()
         {
             _dbContext.SaveChanges();

@@ -1,5 +1,6 @@
 using NewsItemService.Data;
 using NewsItemService.Interfaces;
+using NewsItemService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
