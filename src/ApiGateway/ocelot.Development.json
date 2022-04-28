@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/author/{id}",
+      "DownstreamPathTemplate": "/api/NewsItem/author/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -9,8 +9,8 @@
           "Port": 14000
         }
       ],
-      "UpstreamPathTemplate": "/author/{id}",
-      "UpstreamHttpMethod": ["Get"]
+      "UpstreamPathTemplate": "/NewsItem/author/{id}",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {

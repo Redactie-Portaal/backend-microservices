@@ -6,8 +6,8 @@ using NewsItemService.Services;
 
 namespace NewsItemService.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class NewsItemController : ControllerBase
     {
         private NewsItemOverviewService _newsItemOverviewService;
@@ -19,7 +19,7 @@ namespace NewsItemService.Controllers
             this._newsItemOverviewService = new NewsItemOverviewService(this._newsItemRepository);
         }
 
-        [HttpGet("/author/{id}")]
+        [HttpGet("author/{id}")]
         public async Task<IActionResult> Get(int id)
         {
             if (id < 1) return BadRequest(new { message = "Given author id is not valid, id cannot be smaller than 1." });
