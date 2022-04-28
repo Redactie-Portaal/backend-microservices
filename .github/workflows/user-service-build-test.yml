@@ -23,12 +23,13 @@ jobs:
     uses: "./.github/workflows/template-build-unit-test.yml"
     with:
       project-location: "src/services/UserService"
-      test-location: "tests/UserService.UnitTests"
+      test-location: "tests/UserService.Tests"
       project-name: "UserService"
   user-service-sonarqube-test:
     uses: "./.github/workflows/template-sonarqube.yml"
     with:
       project-location: "src\\services\\UserService"
     secrets:
-      sonar_token: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       action-github_token: ${{ secrets.GITHUB_TOKEN }}

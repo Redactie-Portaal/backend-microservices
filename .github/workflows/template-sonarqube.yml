@@ -7,10 +7,13 @@ on:
         type: string
         description: "Path to project files"
     secrets:
-      sonar_token:
+      SONAR_HOST_URL:
+        required: true
+      SONAR_TOKEN:
         required: true
       action-github_token:
         required: true
+
 
 jobs:
   run-sonarqube:
@@ -48,6 +51,6 @@ jobs:
           github_token: ${{ secrets.action-github_token }}  # Needed to get PR information, if any
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Redactie-Portaal_backend-microservices" /d:sonar.login="${{ secrets.sonar_token }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Redactie-Portaal_backend-microservices" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
           dotnet build .\${{ inputs.project-location }}
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.sonar_token }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
