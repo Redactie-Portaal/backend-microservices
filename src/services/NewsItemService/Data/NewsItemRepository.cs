@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NewsItemService.DTOs;
 using NewsItemService.Entities;
 using NewsItemService.Interfaces;
 
@@ -14,20 +15,25 @@ namespace NewsItemService.Data
             this._dbContext = context;
         }
 
-        public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(int newsItemID)
+        public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatus newsItemStatus)
         {
-            NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemID);
+            NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemStatus.NewsItemId);
 
-            if (item == null)
+            if(item == default)
             {
-                return new Dictionary<bool, string>() { { false, "fout" } };
+                return new Dictionary<bool, string>() { { false, "STATUS.NO_NEWSITEM" } };
             }
-            return new Dictionary<bool, string>() { { true, "goed" } };
-        }
 
-        public void Save()
-        {
-            _dbContext.SaveChanges();
+            item.Status = newsItemStatus.status;
+            item.Updated = DateTime.Now.ToUniversalTime();
+
+            if (item == default)
+            {
+                return new Dictionary<bool, string>() { { false, "STATUS.SAVING_STATUS_FAILED" } };
+            }
+
+            await _dbContext.SaveChangesAsync();
+            return new Dictionary<bool, string>() { { true, "Status changed to " + newsItemStatus.status.ToString() } };
         }
 
         protected virtual void Dispose(bool disposing)

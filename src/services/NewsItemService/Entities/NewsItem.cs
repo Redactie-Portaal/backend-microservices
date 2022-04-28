@@ -8,7 +8,6 @@ namespace NewsItemService.Entities
         [Key]
         [Required]
         public int Id { get; set; }
-        public int NewsItemID { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public ICollection<Author> Authors { get; set; }
