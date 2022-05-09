@@ -24,14 +24,19 @@ namespace NewsItemService.Data
                 return new Dictionary<bool, string>() { { false, "STATUS.NO_NEWSITEM" } };
             }
 
+            if (item.Status == newsItemStatus.status)
+            {
+                return new Dictionary<bool, string>() { { false, "STATUS.DUPLICATE_STATUS" } };
+            }
+
             item.Status = newsItemStatus.status;
             item.Updated = DateTime.Now.ToUniversalTime();
 
-            if (item == default)
+            if (!_dbContext.ChangeTracker.HasChanges())
             {
-                return new Dictionary<bool, string>() { { false, "STATUS.SAVING_STATUS_FAILED" } };
+                return new Dictionary<bool, string>() { { false, "STATUS.NO_CHANGES_DETECTED" } };
             }
-
+            
             await _dbContext.SaveChangesAsync();
             return new Dictionary<bool, string>() { { true, "Status changed to " + newsItemStatus.status.ToString() } };
         }

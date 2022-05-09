@@ -13,7 +13,7 @@ using Xunit;
 
 namespace NewsItemService
 {
-    public class NewsItemTests
+    public class NewsItemControllerTests
     {
         private NewsItemController Initialize(bool seed = true, [CallerMemberName] string callerName = "")
         {

@@ -10,14 +10,16 @@ namespace NewsItemService.Services
 
         public Dictionary<bool, string> CheckNewsItemValue(AddNewsItemStatus newsItemStatus)
         {
-            if (newsItemStatus.NewsItemId < 1)
+            if (newsItemStatus == default)
+            {
+                return new Dictionary<bool, string>() { { false, "STATUS.DEFAULT_OBJECT" } };
+            }
+
+            if (newsItemStatus.NewsItemId < 1 || newsItemStatus.NewsItemId == default)
             {
                 return new Dictionary<bool, string>() { { false, "STATUS.FAULTY_ID" } };
             }
-            if (newsItemStatus.NewsItemId.GetType() != typeof(int))
-            {
-                return new Dictionary<bool, string>() { { false, "STATUS.PARSE_FAULT" } };
-            }
+
             if (!Enum.IsDefined(typeof(NewsItemStatus), newsItemStatus.status))
             {
                 return new Dictionary<bool, string>() { { false, "STATUS.INCORRECT_STATUS_VALUE" } };
