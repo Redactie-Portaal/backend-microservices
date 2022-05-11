@@ -20,12 +20,35 @@ namespace NewsItemService.Controllers
         }
 
         [HttpGet("author/{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetByAuthorId(int id)
         {
             if (id < 1) return BadRequest(new { message = "Given author id is not valid, id cannot be smaller than 1." });
             var newsItems = await this._newsItemOverviewService.GetNewsItems(id);
             if (newsItems == null) return NotFound(new { message = "Given author id does not exist." });
             return Ok(newsItems);
         }
+
+        /*
+        [HttpGet]
+        public async Task<IActionResult> GetByDate([FromQuery] DateTime? beforeDate = null, [FromQuery] DateTime? afterDate = null, [FromQuery] DateTime? duringData = null)
+        {
+            if (beforeDate != null)
+            {
+
+            }
+            else if (afterDate != null)
+            {
+
+            }
+            else if (duringData != null)
+            {
+
+            }
+            else
+            {
+                return BadRequest(new { message = "No parameters given in the url." });
+            }
+        }
+        */
     }
 }

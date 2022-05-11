@@ -17,7 +17,7 @@ namespace NewsItemService.Data
         {
             //return await this._dbContext.Authors.Include("NewsItems").Where(a => a.Id == authorId).FirstOrDefaultAsync();
             if (await this._dbContext.Authors.Where(a => a.Id == authorId).SingleOrDefaultAsync() == null) return null;
-            return await this._dbContext.NewsItems.Where(n => n.Authors.Where(a => a.Id == authorId).FirstOrDefault() != null).Include("Authors").ToListAsync();
+            return await this._dbContext.NewsItems.Where(n => n.Authors.Where(a => a.Id == authorId).FirstOrDefault() != null).Include("Authors").Take(20).ToListAsync();
         }
     }
 }
