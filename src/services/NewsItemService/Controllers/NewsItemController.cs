@@ -23,32 +23,40 @@ namespace NewsItemService.Controllers
         public async Task<IActionResult> GetByAuthorId(int id)
         {
             if (id < 1) return BadRequest(new { message = "Given author id is not valid, id cannot be smaller than 1." });
-            var newsItems = await this._newsItemOverviewService.GetNewsItems(id);
+            var newsItems = await this._newsItemOverviewService.GetNewsItemsByAuthor(id);
             if (newsItems == null) return NotFound(new { message = "Given author id does not exist." });
             return Ok(newsItems);
         }
 
-        /*
         [HttpGet]
-        public async Task<IActionResult> GetByDate([FromQuery] DateTime? beforeDate = null, [FromQuery] DateTime? afterDate = null, [FromQuery] DateTime? duringData = null)
+        public async Task<IActionResult> GetByDate([FromQuery] string beforeDate, [FromQuery] string afterDate, [FromQuery] string duringData)
         {
-            if (beforeDate != null)
+            if (beforeDate != string.Empty)
             {
-
+                DateTime date;
+                if (DateTime.TryParse(beforeDate, out date))
+                {
+                    var newsItems = await this._newsItemOverviewService.GetNewsItemsBeforeDate(date);
+                    if (newsItems == null) return NotFound(new { message = "No news items found from before given date." });
+                    return Ok(newsItems);
+                }
+                else
+                {
+                    return BadRequest(new { message = "No valid date given." });
+                }
             }
-            else if (afterDate != null)
+            else if (afterDate != string.Empty)
             {
-
+                throw new NotImplementedException();
             }
-            else if (duringData != null)
+            else if (duringData != string.Empty)
             {
-
+                throw new NotImplementedException();
             }
             else
             {
                 return BadRequest(new { message = "No parameters given in the url." });
             }
         }
-        */
     }
 }

@@ -15,17 +15,31 @@ namespace NewsItemService.Services
             this._newsItemRepository = newsItemRepository;
         }
 
-        public async Task<List<GetNewsItemDTO>?> GetNewsItems(int authorID)
+        public async Task<List<GetNewsItemDTO>?> GetNewsItemsByAuthor(int authorID)
         {
             List<NewsItem>? newsItems = await this._newsItemRepository.GetNewsItems(authorID);
 
             if (newsItems == null) return null;
 
+            return ConvertToDTOs(newsItems);
+        }
+
+        public async Task<List<GetNewsItemDTO>?> GetNewsItemsBeforeDate(DateTime date)
+        {
+            List<NewsItem>? newsItems = await this._newsItemRepository.GetNewsItemsBeforeDate(date);
+
+            if (newsItems == null) return null;
+
+            return ConvertToDTOs(newsItems);
+        }
+
+        private List<GetNewsItemDTO> ConvertToDTOs(List<NewsItem> newsItems)
+        {
             List<GetNewsItemDTO> newsItemsDTO = new List<GetNewsItemDTO>();
             foreach (NewsItem newsItem in newsItems)
             {
                 var names = new List<string>();
-                foreach(Author a in newsItem.Authors)
+                foreach (Author a in newsItem.Authors)
                 {
                     names.Add(a.Name);
                 }

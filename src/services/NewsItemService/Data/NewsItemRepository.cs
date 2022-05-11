@@ -19,5 +19,11 @@ namespace NewsItemService.Data
             if (await this._dbContext.Authors.Where(a => a.Id == authorId).SingleOrDefaultAsync() == null) return null;
             return await this._dbContext.NewsItems.Where(n => n.Authors.Where(a => a.Id == authorId).FirstOrDefault() != null).Include("Authors").Take(20).ToListAsync();
         }
+
+        public async Task<List<NewsItem>?> GetNewsItemsBeforeDate(DateTime date)
+        {
+            if (await this._dbContext.NewsItems.Where(n => n.Created < date).FirstOrDefaultAsync() == null) return null;
+            return await this._dbContext.NewsItems.Where(n => n.Created < date).Include("Authors").Take(20).ToListAsync();
+        }
     }
 }
