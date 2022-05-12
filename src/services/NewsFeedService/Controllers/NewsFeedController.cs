@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NewsFeedService.DTOs;
+using NewsFeedService.Interfaces;
+using NewsFeedService.Services;
 
 namespace NewsFeedService.Controllers
 {
@@ -6,15 +9,18 @@ namespace NewsFeedService.Controllers
     [Route("[controller]")]
     public class NewsFeedController : ControllerBase
     {
-        public NewsFeedController()
+        private readonly NewsFeedsService _newsFeedsService;
+        private readonly INewsFeedRepository _newsFeedRepository;
+        public NewsFeedController(INewsFeedRepository newsFeedRepository)
         {
-
+            _newsFeedRepository = newsFeedRepository;
+            _newsFeedsService = new NewsFeedsService();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetFeedsOverview()
+        public async Task<IActionResult> GetFeedsOverview(FeedsParameters feedsParameters)
         {
-
+            
 
             return Ok();
         }
