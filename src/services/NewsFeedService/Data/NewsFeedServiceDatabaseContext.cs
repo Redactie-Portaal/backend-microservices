@@ -1,4 +1,5 @@
-﻿using NewsFeedService.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using NewsFeedService.Entities;
 
 namespace NewsFeedService.Data
 {
@@ -30,6 +31,16 @@ namespace NewsFeedService.Data
         /// DbSet objects are created from a DbContext using the DbContext.Set method.
         /// </summary>
         public DbSet<FeedActionHistory> FeedActionHistorys { get; set; }
+        /// <summary>
+        /// DbSet for the FeedItem class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
+        public DbSet<FeedItem> FeedItems { get; set; }
+        /// <summary>
+        /// DbSet for the FeedLabel class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
+        public DbSet<FeedLabel> FeedLabels { get; set; }
 
         /// <summary>
         /// OnConfiguring builds the connection between the database and the API using the given connection string
@@ -45,11 +56,11 @@ namespace NewsFeedService.Data
                     throw new MissingFieldException("Database environment variable not found.");
                 }
 
-                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("redactieportaal_db_string").Replace("DATABASE_NAME", "newsitemservice"));
+                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("redactieportaal_db_string").Replace("DATABASE_NAME", "newsfeedservice"));
             }
 
             base.OnConfiguring(optionsBuilder);
         }
     }
 }
-}
+

@@ -11,7 +11,7 @@ namespace NewsFeedService.Entities
         public DateTime DateTimeArrival { get; set; }
         public bool IsArchived { get; set; }
         public bool IsReady { get; set; }
-        public int ExistingStoryID { get; set; }
 
+        public ICollection<FeedItem> FeedItems { get; set; }
     }
 }

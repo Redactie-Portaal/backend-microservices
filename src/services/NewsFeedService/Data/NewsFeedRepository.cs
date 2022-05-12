@@ -1,4 +1,7 @@
-﻿using NewsFeedService.Interfaces;
+﻿using NewsFeedService.DTOs;
+using NewsFeedService.Entities;
+using NewsFeedService.Interfaces;
+using NewsFeedService.Services;
 
 namespace NewsFeedService.Data
 {
@@ -11,6 +14,16 @@ namespace NewsFeedService.Data
         {
             this._dbContext = context;
         }
+
+        public async Task<PaginatedFeed> GetFeeds(FeedsParameters feedsParameters)
+        {
+            if (feedsParameters.PageNumber == default || feedsParameters.PageSize == default || feedsParameters == default)
+            {
+                return null;
+            }
+            return PaginatedFeed.ToPaginatedPost(_dbContext.Feeds.OrderBy(x => x.Id), feedsParameters.PageNumber, feedsParameters.PageSize);
+        }
+
 
         protected virtual void Dispose(bool disposing)
         {

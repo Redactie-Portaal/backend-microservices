@@ -2,13 +2,15 @@
 
 namespace NewsFeedService.Entities
 {
-    public class FeedLabel
+    public class NewsSource
     {
         [Key]
         [Required]
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Data { get; set; }
 
-        public ICollection<FeedItem> FeedItems { get; set; }
+        //foreign keys
+        public int TypeId { get; set; }
     }
 }

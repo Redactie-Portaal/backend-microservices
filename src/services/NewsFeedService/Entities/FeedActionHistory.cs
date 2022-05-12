@@ -7,8 +7,11 @@ namespace NewsFeedService.Entities
         [Key]
         [Required]
         public int Id { get; set; }
-        public int UserId { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Action { get; set; }
+        public int UserID { get; set; }
+
+        //Foreign keys
+        public Feed Feed { get; set; }
     }
 }

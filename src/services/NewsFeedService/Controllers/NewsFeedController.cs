@@ -18,9 +18,9 @@ namespace NewsFeedService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetFeedsOverview(FeedsParameters feedsParameters)
+        public async Task<IActionResult> GetFeedsOverview([FromQuery]FeedsParameters feedsParameters)
         {
-            
+            var result = await _newsFeedRepository.GetFeeds(feedsParameters);
 
             return Ok();
         }
