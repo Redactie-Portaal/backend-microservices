@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<INewsItemRepository, NewsItemRepository>();
+builder.Services.AddScoped<INewsItemRepository, NewsItemRepository>();
 
 // Add the database context to the builder.
 builder.Services.AddDbContext<NewsItemServiceDatabaseContext>();

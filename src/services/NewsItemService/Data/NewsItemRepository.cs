@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NewsItemService.DTOs;
 using NewsItemService.Entities;
 using NewsItemService.Interfaces;
 
@@ -14,17 +15,30 @@ namespace NewsItemService.Data
             this._dbContext = context;
         }
 
-        public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(int newsItemID)
+        public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatus newsItemStatus)
         {
-            NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemID);
+            NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemStatus.NewsItemId);
 
-            if (item == null)
+            if (item == default)
             {
-                return new Dictionary<bool, string>() { { false, "fout" } };
+                return new Dictionary<bool, string>() { { false, "STATUS.NO_NEWSITEM" } };
             }
-            return new Dictionary<bool, string>() { { true, "goed" } };
-        }
+            if (item.Status == newsItemStatus.status)
+            {
+                return new Dictionary<bool, string>() { { false, "STATUS.DUPLICATE_STATUS" } };
+            }
 
+            item.Status = newsItemStatus.status;
+            item.Updated = DateTime.Now.ToUniversalTime();
+
+            if (!_dbContext.ChangeTracker.HasChanges())
+            {
+                return new Dictionary<bool, string>() { { false, "STATUS.NO_CHANGES_DETECTED" } };
+            }
+
+            await _dbContext.SaveChangesAsync();
+            return new Dictionary<bool, string>() { { true, "Status changed to " + newsItemStatus.status.ToString() } };
+        }
         public async Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item)
         {
             try
@@ -63,6 +77,9 @@ namespace NewsItemService.Data
             GC.SuppressFinalize(this);
         }
 
-
+        public Task<Dictionary<bool, string>> ChangeNewsItemStatus(int newsItemID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

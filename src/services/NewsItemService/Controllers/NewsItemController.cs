@@ -22,23 +22,27 @@ namespace NewsArticleService.Controllers
             this.service = service;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ChangeNewsItemStatus(int newsItemID)
+        [HttpPost]
+        public async Task<IActionResult> AddNewsItemStatus(AddNewsItemStatus status)
         {
             // Call to service to check if field is empty
-            var check = _newsItemStatusService.CheckNewsItemValue(newsItemID);
-
-            // Check if they passed the test
-            if (check.FirstOrDefault().Key)
+            var check = _newsItemStatusService.CheckNewsItemValue(status);
+            if (!check.FirstOrDefault().Key)
             {
-                return BadRequest(check.FirstOrDefault().Value);
+                return BadRequest(new { message = check.FirstOrDefault().Value });
             }
 
             // Do database actions
-            var result = await _newsItemRepository.ChangeNewsItemStatus(newsItemID);
+            var result = await _newsItemRepository.ChangeNewsItemStatus(status);
+            if (!result.FirstOrDefault().Key)
+            {
+                return BadRequest(new { message = result.FirstOrDefault().Value });
+            }
+
+            //TODO: INSERT RABBITMQ CALLS IF STATUS MESSAGE IS DISPOSE OR ARCHIVED
 
             // Return Ok message that status has been changed
-            return Ok(result.FirstOrDefault().Value);
+            return Ok(new { message = result.FirstOrDefault().Value });
         }
 
         [HttpPost]

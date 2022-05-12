@@ -40,6 +40,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Tests", "..\tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsItemService", "services\NewsItemService\NewsItemService.csproj", "{D10F9525-615B-4B33-8710-B5C1DA182051}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsItemService.Tests", "..\tests\NewsItemService\NewsItemService.Tests.csproj", "{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +108,10 @@ Global
 		{D10F9525-615B-4B33-8710-B5C1DA182051}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D10F9525-615B-4B33-8710-B5C1DA182051}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D10F9525-615B-4B33-8710-B5C1DA182051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +131,7 @@ Global
 		{7DBDDF34-465B-496C-9C99-6A44D6DDE933} = {EBDE6BC6-1914-4142-86DE-9AA179187E92}
 		{860441F0-A3A4-4716-B462-9578084F7DCB} = {EBDE6BC6-1914-4142-86DE-9AA179187E92}
 		{D10F9525-615B-4B33-8710-B5C1DA182051} = {5110621B-0A76-439C-855D-4CE0A8D661BB}
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F} = {EBDE6BC6-1914-4142-86DE-9AA179187E92}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A8D569A9-FDF9-4F28-9008-A141A7165D97}
