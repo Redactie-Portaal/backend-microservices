@@ -6,24 +6,59 @@ namespace NewsItemService.Data
 {
     public class NewsItemRepository : INewsItemRepository
     {
-        private readonly NewsItemServiceDatabaseContext _dbContext;
+        private readonly NewsItemServiceDatabaseContext _context;
 
-        public NewsItemRepository(NewsItemServiceDatabaseContext dbContext)
+        public NewsItemRepository(NewsItemServiceDatabaseContext context)
         {
-            this._dbContext = dbContext;
+            _context = context;
         }
 
-        public async Task<List<NewsItem>?> GetNewsItems(int authorId)
+        public List<NewsItem> Get()
         {
-            //return await this._dbContext.Authors.Include("NewsItems").Where(a => a.Id == authorId).FirstOrDefaultAsync();
-            if (await this._dbContext.Authors.Where(a => a.Id == authorId).SingleOrDefaultAsync() == null) return null;
-            return await this._dbContext.NewsItems.Where(n => n.Authors.Where(a => a.Id == authorId).FirstOrDefault() != null).Include("Authors").Take(20).ToListAsync();
+            var newsItems =  _context.NewsItems.Include("Authors").ToList();
+            if (newsItems == null) throw new Exception("No news items found.");
+
+            return newsItems;
         }
 
-        public async Task<List<NewsItem>?> GetNewsItemsBeforeDate(DateTime date)
+        public NewsItem Get(int id)
         {
-            if (await this._dbContext.NewsItems.Where(n => n.Created < date).FirstOrDefaultAsync() == null) return null;
-            return await this._dbContext.NewsItems.Where(n => n.Created < date).Include("Authors").Take(20).ToListAsync();
+            var newsItem = _context.NewsItems.FirstOrDefault(n => n.Id == id);
+            if (newsItem == null) throw new Exception("News item not found.");
+
+            return newsItem;
+        }
+
+        public NewsItem Post(NewsItem newsItem)
+        {
+            _context.NewsItems.Add(newsItem);
+            _context.SaveChanges();
+
+            return newsItem;
+        }
+
+        public List<NewsItem> GetBefore(DateTime date)
+        {
+            var newsItems = _context.NewsItems.Where(n => n.Created < date).Include("Authors").ToList();
+            if (newsItems == null) throw new Exception($"No news items before {date} found.");
+
+            return newsItems;
+        }
+
+        public List<NewsItem> GetAfter(DateTime date)
+        {
+            var newsItems = _context.NewsItems.Where(n => n.Created > date).Include("Authors").ToList();
+            if (newsItems == null) throw new Exception($"No news items after {date} found.");
+
+            return newsItems;
+        }
+
+        public List<NewsItem> GetBetween(DateTime startDate, DateTime endDate)
+        {
+            var newsItems = _context.NewsItems.Where(n => n.Created > startDate && n.Created < endDate).Include("Authors").ToList();
+            if (newsItems == null) throw new Exception($"No news items between {startDate} and {endDate} found.");
+
+            return newsItems;
         }
     }
 }

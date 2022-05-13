@@ -4,8 +4,16 @@ namespace NewsItemService.Interfaces
 {
     public interface INewsItemRepository
     {
-        Task<List<NewsItem>?> GetNewsItems(int authorId);
+        List<NewsItem> Get();
 
-        Task<List<NewsItem>?> GetNewsItemsBeforeDate(DateTime date);
+        NewsItem Get(int id);
+
+        NewsItem Post(NewsItem newsItem);
+
+        List<NewsItem> GetBefore(DateTime date);
+
+        List<NewsItem> GetAfter(DateTime date);
+
+        List<NewsItem> GetBetween(DateTime startDate, DateTime endDate);
     }
 }

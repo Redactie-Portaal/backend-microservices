@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NewsItemService.DTOs;
-using NewsItemService.Interfaces;
 using NewsItemService.Services;
 
 namespace NewsItemService.Controllers
@@ -10,53 +8,53 @@ namespace NewsItemService.Controllers
     [ApiController]
     public class NewsItemController : ControllerBase
     {
-        private NewsItemOverviewService _newsItemOverviewService;
-        private readonly INewsItemRepository _newsItemRepository;
+        private readonly NewsItemOverviewService _newsItemOverviewService;
+        private readonly AuthorService _authorService;
 
-        public NewsItemController(INewsItemRepository newsItemRepository)
+        public NewsItemController(NewsItemOverviewService newsItemOverviewService, AuthorService authorService)
         {
-            this._newsItemRepository = newsItemRepository;
-            this._newsItemOverviewService = new NewsItemOverviewService(this._newsItemRepository);
-        }
-
-        [HttpGet("author/{id}")]
-        public async Task<IActionResult> GetByAuthorId(int id)
-        {
-            if (id < 1) return BadRequest(new { message = "Given author id is not valid, id cannot be smaller than 1." });
-            var newsItems = await this._newsItemOverviewService.GetNewsItemsByAuthor(id);
-            if (newsItems == null) return NotFound(new { message = "Given author id does not exist." });
-            return Ok(newsItems);
+            _newsItemOverviewService = newsItemOverviewService;
+            _authorService = authorService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetByDate([FromQuery] string beforeDate, [FromQuery] string afterDate, [FromQuery] string duringData)
+        public IActionResult Get()
         {
-            if (beforeDate != string.Empty)
-            {
-                DateTime date;
-                if (DateTime.TryParse(beforeDate, out date))
-                {
-                    var newsItems = await this._newsItemOverviewService.GetNewsItemsBeforeDate(date);
-                    if (newsItems == null) return NotFound(new { message = "No news items found from before given date." });
-                    return Ok(newsItems);
-                }
-                else
-                {
-                    return BadRequest(new { message = "No valid date given." });
-                }
-            }
-            else if (afterDate != string.Empty)
-            {
-                throw new NotImplementedException();
-            }
-            else if (duringData != string.Empty)
-            {
-                throw new NotImplementedException();
-            }
-            else
-            {
-                return BadRequest(new { message = "No parameters given in the url." });
-            }
+            var newsItems = _newsItemOverviewService.Get();
+
+            return Ok(newsItems);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            if (id < 1) return BadRequest(new { message = "Given news item id is not valid, id cannot be smaller than 1." });
+
+            return Ok(this._newsItemOverviewService.Get(id));
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] createNewsItemDTO newsItemDTO)
+        {
+            return Ok(_newsItemOverviewService.Post(newsItemDTO));
+        }
+
+        [HttpGet("before")]
+        public IActionResult GetBefore(DateTime date)
+        {
+            return Ok(_newsItemOverviewService.GetBefore(date));
+        }
+
+        [HttpGet("after")]
+        public IActionResult GetAfter(DateTime date)
+        {
+            return Ok(_newsItemOverviewService.GetAfter(date));
+        }
+
+        [HttpGet("between")]
+        public IActionResult GetBetween(DateTime startDate, DateTime endDate)
+        {
+            return Ok(_newsItemOverviewService.GetBetween(startDate, endDate));
         }
     }
 }

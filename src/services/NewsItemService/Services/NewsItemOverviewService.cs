@@ -1,51 +1,75 @@
-﻿using NewsItemService.Data;
-using NewsItemService.DTOs;
+﻿using NewsItemService.DTOs;
 using NewsItemService.Entities;
 using NewsItemService.Interfaces;
+using NewsItemService.Helpers;
 
 namespace NewsItemService.Services
 {
     public class NewsItemOverviewService
     {
         private readonly INewsItemRepository _newsItemRepository;
+        private readonly IAuthorRepository _authorRepository;
         
-
-        public NewsItemOverviewService(INewsItemRepository newsItemRepository)
+        public NewsItemOverviewService(INewsItemRepository newsItemRepository, IAuthorRepository authorRepository)
         {
             this._newsItemRepository = newsItemRepository;
+            this._authorRepository = authorRepository;
         }
 
-        public async Task<List<GetNewsItemDTO>?> GetNewsItemsByAuthor(int authorID)
+        public List<NewsItemDTO> Get()
         {
-            List<NewsItem>? newsItems = await this._newsItemRepository.GetNewsItems(authorID);
+            var newsItems = this._newsItemRepository.Get();
 
-            if (newsItems == null) return null;
-
-            return ConvertToDTOs(newsItems);
+            return NewsItemHelper.ToDTO(newsItems);
         }
 
-        public async Task<List<GetNewsItemDTO>?> GetNewsItemsBeforeDate(DateTime date)
+        public NewsItemDTO Get(int id)
         {
-            List<NewsItem>? newsItems = await this._newsItemRepository.GetNewsItemsBeforeDate(date);
+            var newsItem = this._newsItemRepository.Get(id);
 
-            if (newsItems == null) return null;
-
-            return ConvertToDTOs(newsItems);
+            return NewsItemHelper.ToDTO(newsItem);
         }
 
-        private List<GetNewsItemDTO> ConvertToDTOs(List<NewsItem> newsItems)
+        public NewsItemDTO Post(createNewsItemDTO newsItemDTO) 
         {
-            List<GetNewsItemDTO> newsItemsDTO = new List<GetNewsItemDTO>();
-            foreach (NewsItem newsItem in newsItems)
+            var newsItem = new NewsItem()
             {
-                var names = new List<string>();
-                foreach (Author a in newsItem.Authors)
-                {
-                    names.Add(a.Name);
-                }
-                newsItemsDTO.Add(new GetNewsItemDTO() { NewsItemID = newsItem.Id, Name = newsItem.Name, Created = newsItem.Created, Updated = newsItem.Updated, Status = newsItem.Status, Authors = names });
+                Name = newsItemDTO.Name,
+                Status = newsItemDTO.Status,
+            };
+
+            newsItem.Authors = new List<Author>();
+            foreach (var id in newsItemDTO.AuthorIDs)
+            {
+                var author = _authorRepository.Get(id);
+
+                newsItem.Authors.Add(author);
             }
-            return newsItemsDTO;
+
+            _newsItemRepository.Post(newsItem);
+
+            return NewsItemHelper.ToDTO(newsItem);
+        }
+
+        public List<NewsItemDTO> GetBefore(DateTime date)
+        {
+            var newsItems = this._newsItemRepository.GetBefore(date);
+
+            return NewsItemHelper.ToDTO(newsItems);
+        }
+        
+        public List<NewsItemDTO> GetAfter(DateTime date)
+        {
+            var newsItems = this._newsItemRepository.GetAfter(date);
+
+            return NewsItemHelper.ToDTO(newsItems);
+        }
+
+        public List<NewsItemDTO> GetBetween(DateTime startDate, DateTime endDate)
+        {
+            var newsItems = this._newsItemRepository.GetBetween(startDate, endDate);
+
+            return NewsItemHelper.ToDTO(newsItems);
         }
     }
 }
