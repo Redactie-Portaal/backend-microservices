@@ -52,15 +52,33 @@ namespace NewsItemService.Data
                 else
                 {
                     await _dbContext.NewsItems.AddAsync(item);
-                    Save();
+                    await _dbContext.SaveChangesAsync();
                 }
             }
-            catch
+            catch (Exception)
             {
-                return new Dictionary<bool, string>() { { false, "fout" } };
+                throw;
+                //return new Dictionary<bool, string>() { { false, "fout" } };
             }
 
             return new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } };
+        }
+
+        public async Task<Dictionary<bool, Author>> GetAuthorById(int id)
+        {
+            try
+            {
+                var authors =  await _dbContext.Authors.Where(a => a.Id == id).FirstOrDefaultAsync();
+                if (authors == null)
+                {
+                    return new Dictionary<bool, Author>() { { false, null } };
+                }
+                return new Dictionary<bool, Author>() { {true, authors } };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public void Save()
@@ -81,7 +99,8 @@ namespace NewsItemService.Data
         }
 
         public void Dispose()
-        {   
+        {
+            //Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -89,5 +108,7 @@ namespace NewsItemService.Data
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

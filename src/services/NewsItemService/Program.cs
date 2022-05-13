@@ -15,8 +15,10 @@ builder.Services.AddScoped<INewsItemRepository, NewsItemRepository>();
 
 // Add the database context to the builder.
 builder.Services.AddDbContext<NewsItemServiceDatabaseContext>();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Needed for saving DateTime variables
 using var newsItemContext = new NewsItemServiceDatabaseContext();
 newsItemContext.Database.EnsureCreated();
+
 
 var app = builder.Build();
 

@@ -1,5 +1,6 @@
 
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using NewsItemService.Data;
 using NewsItemService.DTOs;
 using NewsItemService.Interfaces;
@@ -15,11 +16,11 @@ namespace NewsArticleService.Controllers
         private readonly NewsItemsService service;
         private readonly INewsItemRepository _newsItemRepository;
 
-        public NewsItemController(INewsItemRepository newsItemRepository, NewsItemsService service)
+        public NewsItemController(INewsItemRepository newsItemRepository)
         {
             _newsItemRepository = newsItemRepository;
             _newsItemStatusService = new NewsItemStatusService();
-            this.service = service;
+            this.service = new NewsItemsService(newsItemRepository);
         }
 
         [HttpPost("changeStatus")]
@@ -46,9 +47,9 @@ namespace NewsArticleService.Controllers
         }
 
         [HttpPost("createItem")]
-        public IActionResult Create([FromBody] CreateNewsItemDTO dto)
+        public async Task<IActionResult> Create([FromBody] CreateNewsItemDTO dto)
         {
-            bool createSuccess = service.CreateNewsItem(dto);
+            bool createSuccess = await service.CreateNewsItem(dto);
             if (createSuccess)
                 return StatusCode(201);
             else

@@ -9,17 +9,22 @@ namespace NewsItemService.Services
 {
     public class NewsItemsService
     {
-        private readonly ModelStateDictionary modelState;
+        private readonly ModelStateDictionary modelState = new ModelStateDictionary();
         private readonly INewsItemRepository repo;
 
-        public NewsItemsService(IActionContextAccessor modelState, INewsItemRepository repo)
+        //public NewsItemsService(IActionContextAccessor modelState, INewsItemRepository repo)
+        //{
+        //    if(modelState != null)
+        //        this.modelState = modelState.ActionContext.ModelState;
+        //    this.repo = repo;
+        //}
+
+        public NewsItemsService(INewsItemRepository repo)
         {
-            if(modelState != null)
-                this.modelState = modelState.ActionContext.ModelState;
             this.repo = repo;
         }
 
-        public bool CreateNewsItem(CreateNewsItemDTO dto)
+        public async Task<bool> CreateNewsItem(CreateNewsItemDTO dto)
         {
             bool success = false; 
 
@@ -37,9 +42,11 @@ namespace NewsItemService.Services
                 List<Author> authors = new();
                 foreach (var id in dto.AuthorIds)
                 {
+                    var author = await repo.GetAuthorById(id);
                     authors.Add(new Author()
                     {
-                        Id = id
+                        Id = author.FirstOrDefault().Value.Id,
+                        Name = author.FirstOrDefault().Value.Name
                     });
                 }
 
@@ -57,7 +64,7 @@ namespace NewsItemService.Services
                 };
                 try
                 {
-                    repo.CreateNewsItem(newsItem);
+                    await repo.CreateNewsItem(newsItem);
                     success = true;
                 }
                 catch
