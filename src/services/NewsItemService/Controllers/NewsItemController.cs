@@ -21,8 +21,10 @@ namespace NewsArticleService.Controllers
         public NewsItemController(INewsItemRepository newsItemRepository)
         {
             _newsItemRepository = newsItemRepository;
+            service = new NewsItemsService(newsItemRepository);
+
+            //TODO: remove this line that belongs to another branch
             _newsItemStatusService = new NewsItemStatusService();
-            this.service = new NewsItemsService(newsItemRepository);
         }
 
         //TODO: remove this code that belongs to another branch
