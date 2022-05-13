@@ -7,7 +7,7 @@ namespace NewsItemService.Services
 {
     public class NewsItemStatusService
     {
-
+        //TODO: remove this code that belongs to another branch
         public Dictionary<bool, string> CheckNewsItemValue(AddNewsItemStatus newsItemStatus)
         {
             if (newsItemStatus == default)

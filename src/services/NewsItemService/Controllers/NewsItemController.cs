@@ -12,7 +12,9 @@ namespace NewsArticleService.Controllers
     [Route("[controller]")]
     public class NewsItemController : ControllerBase
     {
+        //TODO: remove this line that belongs to another branch
         private readonly NewsItemStatusService _newsItemStatusService;
+
         private readonly NewsItemsService service;
         private readonly INewsItemRepository _newsItemRepository;
 
@@ -23,6 +25,8 @@ namespace NewsArticleService.Controllers
             this.service = new NewsItemsService(newsItemRepository);
         }
 
+        //TODO: remove this code that belongs to another branch
+        #region Remove this code, that is from another branch
         [HttpPost("changeStatus")]
         public async Task<IActionResult> AddNewsItemStatus(AddNewsItemStatus status)
         {
@@ -45,16 +49,17 @@ namespace NewsArticleService.Controllers
             // Return Ok message that status has been changed
             return Ok(new { message = result.FirstOrDefault().Value });
         }
+        #endregion
 
-        [HttpPost("createItem")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateNewsItemDTO dto)
         {
-            bool createSuccess = await service.CreateNewsItem(dto);
-            if (createSuccess)
-                return StatusCode(201);
+            var result = await service.CreateNewsItem(dto);
+            if (!result.FirstOrDefault().Key)
+            return BadRequest(new { message = result.SingleOrDefault().Value });
             else
             {
-                return BadRequest();
+                return Created("", new { message = result.SingleOrDefault().Value });
             }
         }
     }

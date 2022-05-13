@@ -12,71 +12,55 @@ namespace NewsItemService.Services
         private readonly ModelStateDictionary modelState = new ModelStateDictionary();
         private readonly INewsItemRepository repo;
 
-        //public NewsItemsService(IActionContextAccessor modelState, INewsItemRepository repo)
-        //{
-        //    if(modelState != null)
-        //        this.modelState = modelState.ActionContext.ModelState;
-        //    this.repo = repo;
-        //}
-
         public NewsItemsService(INewsItemRepository repo)
         {
             this.repo = repo;
         }
 
-        public async Task<bool> CreateNewsItem(CreateNewsItemDTO dto)
+        public async Task<Dictionary<bool, string>> CreateNewsItem(CreateNewsItemDTO dto)
         {
-            bool success = false; 
-
+            //TODO: add the checks for variable values to the controller
+            #region add these checks to the controller
             if (dto.Title == null || dto.Title.Trim() == string.Empty)
                 modelState.AddModelError("Title", "The title is required.");
             if (dto.AuthorIds.Count == 0)
                 modelState.AddModelError("UserID", "The user ID can't be 0 or smaller");
             if (dto.Content == null || dto.Content.Trim() == string.Empty)
                 modelState.AddModelError("Content", "Content is required.");
+            #endregion
 
             //Moeten nog wat meer checks bij en de ModelState misschien anders om het op dezelfde manier te doen als de rest?
-
-            if (modelState.IsValid)
+            List<Author> authors = new();
+            foreach (var id in dto.AuthorIds)
             {
-                List<Author> authors = new();
-                foreach (var id in dto.AuthorIds)
+                var author = await repo.GetAuthorById(id);
+                if (author.FirstOrDefault().Key == false)
                 {
-                    var author = await repo.GetAuthorById(id);
-                    authors.Add(new Author()
-                    {
-                        Id = author.FirstOrDefault().Value.Id,
-                        Name = author.FirstOrDefault().Value.Name
-                    });
+                    return new Dictionary<bool, string>() { { false, "Author does not exist" } };
                 }
+                authors.Add(author.FirstOrDefault().Value);
+            }
 
-                var newsItem = new NewsItem()
-                {
-                    Content = dto.Content,
-                    Title = dto.Title,
-                    Authors = authors,
-                    LocationDetails = dto.LocationDetails,
-                    ContactDetails = dto.ContactDetails,
-                    Region = dto.Region,
-                    Created = dto.CreationDate
+            var newsItem = new NewsItem()
+            {
+                Content = dto.Content,
+                Title = dto.Title,
+                Authors = authors,
+                LocationDetails = dto.LocationDetails,
+                ContactDetails = dto.ContactDetails,
+                Region = dto.Region,
+                Created = dto.CreationDate
 
-                    
-                };
-                try
-                {
-                    await repo.CreateNewsItem(newsItem);
-                    success = true;
-                }
-                catch
-                {
-                   //Something
-                }
-            }    
-            else
-                 success = false;
 
-            return success;
-                
+            };
+            try
+            {
+                return await repo.CreateNewsItem(newsItem);
+            }
+            catch (Exception)
+            {
+                throw; //Something
+            }
         }
     }
 }

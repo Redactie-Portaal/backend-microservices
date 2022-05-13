@@ -15,6 +15,8 @@ namespace NewsItemService.Data
             this._dbContext = context;
         }
 
+        //TODO: remove this code that belongs to another branch
+        #region Remove this code, that is from another branch
         public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatus newsItemStatus)
         {
             NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemStatus.NewsItemId);
@@ -39,6 +41,8 @@ namespace NewsItemService.Data
             await _dbContext.SaveChangesAsync();
             return new Dictionary<bool, string>() { { true, "Status changed to " + newsItemStatus.status.ToString() } };
         }
+        #endregion
+
         public async Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item)
         {
             try
@@ -52,13 +56,12 @@ namespace NewsItemService.Data
                 else
                 {
                     await _dbContext.NewsItems.AddAsync(item);
-                    await _dbContext.SaveChangesAsync();
+                    await Save();
                 }
             }
             catch (Exception)
             {
                 throw;
-                //return new Dictionary<bool, string>() { { false, "fout" } };
             }
 
             return new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } };
@@ -81,9 +84,9 @@ namespace NewsItemService.Data
             }
         }
 
-        public void Save()
+        public async Task Save()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -100,7 +103,6 @@ namespace NewsItemService.Data
 
         public void Dispose()
         {
-            //Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -108,7 +110,5 @@ namespace NewsItemService.Data
         {
             throw new NotImplementedException();
         }
-
-
     }
 }
