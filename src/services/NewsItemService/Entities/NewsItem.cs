@@ -18,8 +18,8 @@ namespace NewsItemService.Entities
 
         public string? Title { get; set; }
         public string? Content { get; set; }
-        public string? ContactInformation { get; set; }
-        public string? LocationInformation { get; set; }
+        public string? ContactDetails { get; set; }
+        public string? LocationDetails { get; set; }
         public string? Region { get; set; }
     }
 }

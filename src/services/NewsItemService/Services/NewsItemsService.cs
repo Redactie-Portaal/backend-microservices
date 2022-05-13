@@ -25,18 +25,35 @@ namespace NewsItemService.Services
 
             if (dto.Title == null || dto.Title.Trim() == string.Empty)
                 modelState.AddModelError("Title", "The title is required.");
-            if (dto.UserID <= 0)
+            if (dto.AuthorIds.Count == 0)
                 modelState.AddModelError("UserID", "The user ID can't be 0 or smaller");
             if (dto.Content == null || dto.Content.Trim() == string.Empty)
                 modelState.AddModelError("Content", "Content is required.");
 
+            //Moeten nog wat meer checks bij en de ModelState misschien anders om het op dezelfde manier te doen als de rest?
+
             if (modelState.IsValid)
             {
+                List<Author> authors = new();
+                foreach (var id in dto.AuthorIds)
+                {
+                    authors.Add(new Author()
+                    {
+                        Id = id
+                    });
+                }
+
                 var newsItem = new NewsItem()
                 {
                     Content = dto.Content,
                     Title = dto.Title,
-                    LocationInformation = dto.LocationInformation
+                    Authors = authors,
+                    LocationDetails = dto.LocationDetails,
+                    ContactDetails = dto.ContactDetails,
+                    Region = dto.Region,
+                    Created = dto.CreationDate
+
+                    
                 };
                 try
                 {

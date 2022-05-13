@@ -43,15 +43,24 @@ namespace NewsItemService.Data
         {
             try
             {
-                await _dbContext.NewsItems.AddAsync(item);
-                Save();
+                var duplicate = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Title == item.Title);
+
+                if (duplicate != null)
+                {
+                    return new Dictionary<bool, string>() { { false, "Can't create article with a title that has already been used" } };
+                }
+                else
+                {
+                    await _dbContext.NewsItems.AddAsync(item);
+                    Save();
+                }
             }
             catch
             {
                 return new Dictionary<bool, string>() { { false, "fout" } };
             }
 
-            return new Dictionary<bool, string>() { { true, "goed" } };
+            return new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } };
         }
 
         public void Save()
@@ -72,8 +81,7 @@ namespace NewsItemService.Data
         }
 
         public void Dispose()
-        {
-            Dispose(true);
+        {   
             GC.SuppressFinalize(this);
         }
 

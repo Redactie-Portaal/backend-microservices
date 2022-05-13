@@ -2,9 +2,17 @@
 {
     public class CreateNewsItemDTO
     {
-        public int UserID { get; set; }
+        public List<int> AuthorIds { get; set; }
         public string? Title { get; set; }
         public string? Content { get; set; }
-        public string? LocationInformation { get; set; }
+        public string? LocationDetails { get; set; }
+        public string? ContactDetails { get; set; }
+        public string? ProductionDate { get; set; }
+        public string? Region { get; set; }
+        public DateTime CreationDate { get; set; }
+
+        public string? VideoUrl { get; set; }
+        public string? PhotoUrl { get; set; }
+        public string? ÀudioUrl { get; set; }
     }
 }
