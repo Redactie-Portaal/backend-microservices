@@ -13,9 +13,11 @@ namespace NewsItemService.Data
             _context = context;
         }
 
-        public List<NewsItem> Get()
+        public List<NewsItem> Get(int page, int pageSize)
         {
-            var newsItems =  _context.NewsItems.Include("Authors").ToList();
+            var amountToSkip = (page - 1) * pageSize;
+
+            var newsItems =  _context.NewsItems.Include("Authors").Skip(amountToSkip).Take(pageSize).ToList();
             if (newsItems == null) throw new Exception("No news items found.");
 
             return newsItems;
@@ -37,26 +39,32 @@ namespace NewsItemService.Data
             return newsItem;
         }
 
-        public List<NewsItem> GetBefore(DateTime date)
+        public List<NewsItem> GetBefore(DateTime date, int page, int pageSize)
         {
-            var newsItems = _context.NewsItems.Where(n => n.Created < date).Include("Authors").ToList();
-            if (newsItems == null) throw new Exception($"No news items before {date} found.");
+            var amountToSkip = (page - 1) * pageSize;
+
+            var newsItems = _context.NewsItems.Where(n => n.Created < date).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
+            if (newsItems == null) throw new Exception($"No news items found.");
 
             return newsItems;
         }
 
-        public List<NewsItem> GetAfter(DateTime date)
+        public List<NewsItem> GetAfter(DateTime date, int page, int pageSize)
         {
-            var newsItems = _context.NewsItems.Where(n => n.Created > date).Include("Authors").ToList();
-            if (newsItems == null) throw new Exception($"No news items after {date} found.");
+            var amountToSkip = (page - 1) * pageSize;
+
+            var newsItems = _context.NewsItems.Where(n => n.Created > date).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
+            if (newsItems == null) throw new Exception($"No news items found.");
 
             return newsItems;
         }
 
-        public List<NewsItem> GetBetween(DateTime startDate, DateTime endDate)
+        public List<NewsItem> GetBetween(DateTime startDate, DateTime endDate, int page, int pageSize)
         {
-            var newsItems = _context.NewsItems.Where(n => n.Created > startDate && n.Created < endDate).Include("Authors").ToList();
-            if (newsItems == null) throw new Exception($"No news items between {startDate} and {endDate} found.");
+            var amountToSkip = (page - 1) * pageSize;
+
+            var newsItems = _context.NewsItems.Where(n => n.Created > startDate && n.Created < endDate).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
+            if (newsItems == null) throw new Exception($"No news items found.");
 
             return newsItems;
         }

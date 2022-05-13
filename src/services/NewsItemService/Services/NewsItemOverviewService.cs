@@ -16,9 +16,10 @@ namespace NewsItemService.Services
             this._authorRepository = authorRepository;
         }
 
-        public List<NewsItemDTO> Get()
+        public List<NewsItemDTO> Get(int page, int pageSize)
         {
-            var newsItems = this._newsItemRepository.Get();
+            var amountToSkip = (page - 1) * pageSize;
+            var newsItems = this._newsItemRepository.Get(page, pageSize);
 
             return NewsItemHelper.ToDTO(newsItems);
         }
@@ -51,23 +52,23 @@ namespace NewsItemService.Services
             return NewsItemHelper.ToDTO(newsItem);
         }
 
-        public List<NewsItemDTO> GetBefore(DateTime date)
+        public List<NewsItemDTO> GetBefore(DateTime date, int page, int pageSize)
         {
-            var newsItems = this._newsItemRepository.GetBefore(date);
+            var newsItems = this._newsItemRepository.GetBefore(date, page, pageSize);
 
             return NewsItemHelper.ToDTO(newsItems);
         }
         
-        public List<NewsItemDTO> GetAfter(DateTime date)
+        public List<NewsItemDTO> GetAfter(DateTime date, int page, int pageSize)
         {
-            var newsItems = this._newsItemRepository.GetAfter(date);
+            var newsItems = this._newsItemRepository.GetAfter(date, page, pageSize);
 
             return NewsItemHelper.ToDTO(newsItems);
         }
 
-        public List<NewsItemDTO> GetBetween(DateTime startDate, DateTime endDate)
+        public List<NewsItemDTO> GetBetween(DateTime startDate, DateTime endDate, int page, int pageSize)
         {
-            var newsItems = this._newsItemRepository.GetBetween(startDate, endDate);
+            var newsItems = this._newsItemRepository.GetBetween(startDate, endDate, page, pageSize);
 
             return NewsItemHelper.ToDTO(newsItems);
         }

@@ -11,6 +11,9 @@ namespace NewsItemService.Controllers
         private readonly NewsItemOverviewService _newsItemOverviewService;
         private readonly AuthorService _authorService;
 
+        private const int DEFAULT_PAGE = 1;
+        private const int DEFAULT_PAGE_SIZE = 10;
+
         public NewsItemController(NewsItemOverviewService newsItemOverviewService, AuthorService authorService)
         {
             _newsItemOverviewService = newsItemOverviewService;
@@ -18,9 +21,12 @@ namespace NewsItemService.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(int page = DEFAULT_PAGE, int pageSize = DEFAULT_PAGE_SIZE)
         {
-            var newsItems = _newsItemOverviewService.Get();
+            if (page == 0) page = DEFAULT_PAGE;
+            if (pageSize == 0 ) pageSize = int.MaxValue;
+
+            var newsItems = _newsItemOverviewService.Get(page, pageSize);
 
             return Ok(newsItems);
         }
@@ -40,21 +46,37 @@ namespace NewsItemService.Controllers
         }
 
         [HttpGet("before")]
-        public IActionResult GetBefore(DateTime date)
+        public IActionResult GetBefore(DateTime date, int page = DEFAULT_PAGE, int pageSize = DEFAULT_PAGE_SIZE)
         {
-            return Ok(_newsItemOverviewService.GetBefore(date));
+            if (date == DateTime.MinValue) return BadRequest(new { message = "Given date is not valid" });
+            
+            if (page == 0) page = DEFAULT_PAGE;
+            if (pageSize == 0 ) pageSize = int.MaxValue;
+
+            return Ok(_newsItemOverviewService.GetBefore(date, page, pageSize));
         }
 
         [HttpGet("after")]
-        public IActionResult GetAfter(DateTime date)
+        public IActionResult GetAfter(DateTime date, int page = DEFAULT_PAGE, int pageSize = DEFAULT_PAGE_SIZE)
         {
-            return Ok(_newsItemOverviewService.GetAfter(date));
+            if (date == DateTime.MinValue) return BadRequest(new { message = "Given date is not valid" });
+
+            if (page == 0) page = DEFAULT_PAGE;
+            if (pageSize == 0 ) pageSize = int.MaxValue;
+
+            return Ok(_newsItemOverviewService.GetAfter(date, page, pageSize));
         }
 
         [HttpGet("between")]
-        public IActionResult GetBetween(DateTime startDate, DateTime endDate)
+        public IActionResult GetBetween(DateTime startDate, DateTime endDate, int page = DEFAULT_PAGE, int pageSize = DEFAULT_PAGE_SIZE)
         {
-            return Ok(_newsItemOverviewService.GetBetween(startDate, endDate));
+            if (startDate == DateTime.MinValue) return BadRequest(new { message = "Given startDate is not valid" });
+            if (endDate == DateTime.MinValue) return BadRequest(new { message = "Given endDate is not valid" });
+
+            if (page == 0) page = DEFAULT_PAGE;
+            if (pageSize == 0 ) pageSize = int.MaxValue;
+
+            return Ok(_newsItemOverviewService.GetBetween(startDate, endDate, page, pageSize));
         }
     }
 }
