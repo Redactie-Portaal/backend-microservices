@@ -49,6 +49,9 @@ namespace NewsItemService.Tests.UnitTests
             };
         }
 
+
+        private void CreateNewsItemSuccessfully() { }
+
         /// <summary>
         /// Feed the virtual database data
         /// </summary>

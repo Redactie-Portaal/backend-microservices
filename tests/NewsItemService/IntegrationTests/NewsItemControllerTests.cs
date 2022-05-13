@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NewsArticleService.Controllers;
 using NewsItemService.Controllers;
 using NewsItemService.Data;
 using NewsItemService.Entities;

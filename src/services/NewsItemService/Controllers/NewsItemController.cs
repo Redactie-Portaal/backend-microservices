@@ -22,7 +22,7 @@ namespace NewsArticleService.Controllers
             this.service = service;
         }
 
-        [HttpPost]
+        [HttpPost("changeStatus")]
         public async Task<IActionResult> AddNewsItemStatus(AddNewsItemStatus status)
         {
             // Call to service to check if field is empty
@@ -45,7 +45,7 @@ namespace NewsArticleService.Controllers
             return Ok(new { message = result.FirstOrDefault().Value });
         }
 
-        [HttpPost]
+        [HttpPost("createItem")]
         public IActionResult Create([FromBody] CreateNewsItemDTO dto)
         {
             bool createSuccess = service.CreateNewsItem(dto);
