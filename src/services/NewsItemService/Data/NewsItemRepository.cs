@@ -71,12 +71,12 @@ namespace NewsItemService.Data
         {
             try
             {
-                var authors =  await _dbContext.Authors.Where(a => a.Id == id).FirstOrDefaultAsync();
-                if (authors == null)
+                var author =  await _dbContext.Authors.Where(a => a.Id == id).FirstOrDefaultAsync();
+                if (author == null)
                 {
                     return new Dictionary<bool, Author>() { { false, null } };
                 }
-                return new Dictionary<bool, Author>() { {true, authors } };
+                return new Dictionary<bool, Author>() { {true, author } };
             }
             catch (Exception)
             {

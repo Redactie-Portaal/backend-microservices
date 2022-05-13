@@ -5,9 +5,9 @@ using NewsItemService.Interfaces;
 
 namespace NewsItemService.Services
 {
+    //TODO: remove this code that belongs to another branch
     public class NewsItemStatusService
     {
-        //TODO: remove this code that belongs to another branch
         public Dictionary<bool, string> CheckNewsItemValue(AddNewsItemStatus newsItemStatus)
         {
             if (newsItemStatus == default)
