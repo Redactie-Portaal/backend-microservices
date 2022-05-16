@@ -1,4 +1,4 @@
-﻿namespace NewsItemService.Enums
+﻿namespace NewsItemService.Types
 {
     public enum NewsItemStatus
     {

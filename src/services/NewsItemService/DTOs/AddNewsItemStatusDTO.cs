@@ -1,4 +1,4 @@
-﻿using NewsItemService.Enums;
+﻿using NewsItemService.Types;
 
 namespace NewsItemService.DTOs
 {

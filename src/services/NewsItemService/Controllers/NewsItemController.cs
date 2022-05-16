@@ -3,6 +3,7 @@ using NewsItemService.Data;
 using NewsItemService.DTOs;
 using NewsItemService.Interfaces;
 using NewsItemService.Services;
+using NewsItemService.Types;
 
 namespace NewsItemService.Controllers
 {
@@ -11,10 +12,12 @@ namespace NewsItemService.Controllers
     public class NewsItemController : ControllerBase
     {
         private readonly NewsItemStatusService _newsItemStatusService;
+        private readonly IMessageProducer _producer;
         private INewsItemRepository _newsItemRepository;
 
-        public NewsItemController(INewsItemRepository newsItemRepository)
+        public NewsItemController(IMessageProducer producer ,INewsItemRepository newsItemRepository)
         {
+            _producer = producer;
             _newsItemRepository = newsItemRepository;
             _newsItemStatusService = new NewsItemStatusService();
         }
@@ -36,7 +39,9 @@ namespace NewsItemService.Controllers
                 return BadRequest(new { message = result.FirstOrDefault().Value });
             }
 
-            //TODO: INSERT RABBITMQ CALLS IF STATUS MESSAGE IS DISPOSE OR ARCHIVED
+            //RABBITMQ CALLS IF STATUS MESSAGE IS DISPOSE OR ARCHIVED
+            var newsItem = await _newsItemRepository.GetNewsItemAsync(status.NewsItemId);
+            _producer.SendMessage(_newsItemStatusService.NewsItemToDisposedDTO(newsItem), RoutingKeyType.NewsItemDispose);
 
             // Return Ok message that status has been changed
             return Ok(new { message = result.FirstOrDefault().Value });

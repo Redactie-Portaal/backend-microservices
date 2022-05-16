@@ -15,6 +15,16 @@ namespace NewsItemService.Data
             this._dbContext = context;
         }
 
+        public async Task<NewsItem> GetNewsItemAsync(int newsItemId)
+        {
+            NewsItem? newsItem = await _dbContext.NewsItems.Where(s => s.Id == newsItemId).Include(s => s.Authors).FirstOrDefaultAsync();
+            if (newsItem == default)
+            {
+                throw new ArgumentException("No newsitem found with this ID");
+            }
+            return newsItem;
+        }
+
         public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatusDTO newsItemStatus)
         {
             NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemStatus.NewsItemId);

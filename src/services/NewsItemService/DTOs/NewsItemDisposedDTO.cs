@@ -1,16 +1,13 @@
 ﻿using NewsItemService.Types;
-using System.ComponentModel.DataAnnotations;
 
-namespace NewsItemService.Entities
+namespace NewsItemService.DTOs
 {
-    public class NewsItem
+    public class NewsItemDisposedDTO
     {
-        [Key]
-        [Required]
         public int Id { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
-        public ICollection<Author> Authors { get; set; }
+        public List<int> AuthorIds { get; set; }
         public NewsItemStatus Status { get; set; }
     }
 }
