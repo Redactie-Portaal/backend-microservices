@@ -48,7 +48,7 @@ namespace NewsItemService
         {
             var controller = Initialize();
 
-            var result = controller.AddNewsItemStatus(new DTOs.AddNewsItemStatus { NewsItemId = 1, status = Enums.NewsItemStatus.Done });
+            var result = controller.AddNewsItemStatus(new DTOs.AddNewsItemStatusDTO { NewsItemId = 1, status = Enums.NewsItemStatus.Done });
             var resulttostring = result.Result as ObjectResult;
 
             var final = resulttostring.Value.GetType().GetProperty("message").GetValue(resulttostring.Value, null);

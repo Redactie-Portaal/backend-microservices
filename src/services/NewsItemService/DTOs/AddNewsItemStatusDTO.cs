@@ -2,7 +2,7 @@
 
 namespace NewsItemService.DTOs
 {
-    public class AddNewsItemStatus
+    public class AddNewsItemStatusDTO
     {
         public int NewsItemId { get; set; }
         public NewsItemStatus status { get; set; }

@@ -20,7 +20,7 @@ namespace NewsItemService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddNewsItemStatus(AddNewsItemStatus status)
+        public async Task<IActionResult> AddNewsItemStatus(AddNewsItemStatusDTO status)
         {
             // Call to service to check if field is empty
             var check = _newsItemStatusService.CheckNewsItemValue(status);

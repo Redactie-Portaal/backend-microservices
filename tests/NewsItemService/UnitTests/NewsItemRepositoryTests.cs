@@ -40,9 +40,9 @@ namespace NewsItemService.Tests.UnitTests
         /// <param name="ID">ID of newsItem</param>
         /// <param name="status">Status that the newsItem has to change to</param>
         /// <returns>AddNewsItemStatus</returns>
-        private AddNewsItemStatus CreateAddNewsItemStatus(int ID, Enums.NewsItemStatus status)
+        private AddNewsItemStatusDTO CreateAddNewsItemStatus(int ID, Enums.NewsItemStatus status)
         {
-            return new AddNewsItemStatus()
+            return new AddNewsItemStatusDTO()
             {
                 NewsItemId = ID,
                 status = status

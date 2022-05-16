@@ -8,7 +8,7 @@ namespace NewsItemService.Services
     public class NewsItemStatusService
     {
 
-        public Dictionary<bool, string> CheckNewsItemValue(AddNewsItemStatus newsItemStatus)
+        public Dictionary<bool, string> CheckNewsItemValue(AddNewsItemStatusDTO newsItemStatus)
         {
             if (newsItemStatus == default)
             {
