@@ -4,7 +4,7 @@ namespace NewsItemService.DTOs
 {
     public class createNewsItemDTO
     {
-        public string Name { get; set; }
+        public string Title { get; set; }
         public List<int>? AuthorIDs { get; set; }
         public List<int>? CategoryIDs { get; set; }
         public List<int>? PublicationIDs { get; set; }

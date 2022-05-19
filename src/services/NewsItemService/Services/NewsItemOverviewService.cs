@@ -35,7 +35,7 @@ namespace NewsItemService.Services
         {
             var newsItem = new NewsItem()
             {
-                Name = newsItemDTO.Name,
+                Title = newsItemDTO.Title,
                 Status = newsItemDTO.Status,
                 Created = DateTime.Now.ToUniversalTime()
             };
@@ -55,21 +55,21 @@ namespace NewsItemService.Services
 
         public List<NewsItemDTO> GetBefore(DateTime date, int page, int pageSize)
         {
-            var newsItems = this._newsItemRepository.GetBefore(date, page, pageSize);
+            var newsItems = this._newsItemRepository.GetBefore(date.ToUniversalTime(), page, pageSize);
 
             return NewsItemHelper.ToDTO(newsItems);
         }
         
         public List<NewsItemDTO> GetAfter(DateTime date, int page, int pageSize)
         {
-            var newsItems = this._newsItemRepository.GetAfter(date, page, pageSize);
+            var newsItems = this._newsItemRepository.GetAfter(date.ToUniversalTime(), page, pageSize);
 
             return NewsItemHelper.ToDTO(newsItems);
         }
 
         public List<NewsItemDTO> GetBetween(DateTime startDate, DateTime endDate, int page, int pageSize)
         {
-            var newsItems = this._newsItemRepository.GetBetween(startDate, endDate, page, pageSize);
+            var newsItems = this._newsItemRepository.GetBetween(startDate.ToUniversalTime(), endDate.ToUniversalTime(), page, pageSize);
 
             return NewsItemHelper.ToDTO(newsItems);
         }

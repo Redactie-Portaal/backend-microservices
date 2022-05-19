@@ -25,7 +25,7 @@ namespace NewsItemService.UnitTests
             var expected = new NewsItemDTO()
             {
                 Id = 1,
-                Name = "Title: 1",
+                Title = "Title: 1",
                 Created = new DateTime(2020, 1, 1),
                 Updated = new DateTime(2020, 1, 1),
                 Authors = new List<AuthorDTO>()
@@ -44,7 +44,7 @@ namespace NewsItemService.UnitTests
 
             // Assert
             Assert.Equal(expected.Id, newsItemDTO.Id);
-            Assert.Equal(expected.Name, newsItemDTO.Name);
+            Assert.Equal(expected.Title, newsItemDTO.Title);
             Assert.Equal(expected.Created, newsItemDTO.Created);
             Assert.Equal(expected.Updated, newsItemDTO.Updated);
             Assert.Equal(expected.Authors[0].Id, newsItemDTO.Authors[0].Id);
@@ -96,7 +96,7 @@ namespace NewsItemService.UnitTests
             {
                 new NewsItemDTO() {
                     Id = 1,
-                    Name = "Title: 1",
+                    Title = "Title: 1",
                     Created = new DateTime(2020, 1, 1),
                     Updated = new DateTime(2020, 1, 1),
                     Authors = new List<AuthorDTO>()
@@ -111,7 +111,7 @@ namespace NewsItemService.UnitTests
                 },
                 new NewsItemDTO() {
                     Id = 2,
-                    Name = "Title: 2",
+                    Title = "Title: 2",
                     Created = new DateTime(2020, 1, 1),
                     Updated = new DateTime(2020, 1, 1),
                     Authors = new List<AuthorDTO>()
@@ -126,7 +126,7 @@ namespace NewsItemService.UnitTests
                 },
                  new NewsItemDTO() {
                     Id = 3,
-                    Name = "Title: 3",
+                    Title = "Title: 3",
                     Created = new DateTime(2020, 1, 1),
                     Updated = new DateTime(2020, 1, 1),
                     Authors = new List<AuthorDTO>()
@@ -141,7 +141,7 @@ namespace NewsItemService.UnitTests
                 },
                  new NewsItemDTO() {
                     Id = 4,
-                    Name = "Title: 4",
+                    Title = "Title: 4",
                     Created = new DateTime(2020, 1, 1),
                     Updated = new DateTime(2020, 1, 1),
                     Authors = new List<AuthorDTO>()
@@ -156,7 +156,7 @@ namespace NewsItemService.UnitTests
                 },
                  new NewsItemDTO() {
                     Id = 5,
-                    Name = "Title: 5",
+                    Title = "Title: 5",
                     Created = new DateTime(2020, 1, 1),
                     Updated = new DateTime(2020, 1, 1),
                     Authors = new List<AuthorDTO>()
@@ -178,7 +178,7 @@ namespace NewsItemService.UnitTests
             Assert.Equal(expected.Count, newsItems.Count);
             for (int i = 0; i < 5; i++) {
                 Assert.Equal(expected[i].Id, newsItems[i].Id);
-                Assert.Equal(expected[i].Name, newsItems[i].Name);
+                Assert.Equal(expected[i].Title, newsItems[i].Title);
                 Assert.Equal(expected[i].Created, newsItems[i].Created);
                 Assert.Equal(expected[i].Updated, newsItems[i].Updated);
                 Assert.Equal(expected[i].Authors[0].Id, newsItems[i].Authors[0].Id);

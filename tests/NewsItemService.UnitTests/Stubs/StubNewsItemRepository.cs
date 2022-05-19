@@ -21,7 +21,7 @@ namespace NewsItemService.UnitTests.Stubs
                 _newsItems.Add(new NewsItem()
                 {
                     Id = i,
-                    Name = $"Title: {i}",
+                    Title = $"Title: {i}",
                     Created = new DateTime(2020, 1, 1),
                     Updated = new DateTime(2020, 1, 1),
                     Authors = new List<Author>()

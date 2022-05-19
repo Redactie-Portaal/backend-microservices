@@ -10,7 +10,7 @@ namespace NewsItemService.Helpers
             var newsItemDTO = new NewsItemDTO
             {
                 Id = newsItem.Id,
-                Name = newsItem.Name,
+                Title = newsItem.Title,
                 Created = newsItem.Created,
                 Updated = newsItem.Updated,
                 Status = newsItem.Status
@@ -52,7 +52,7 @@ namespace NewsItemService.Helpers
             return new NewsItem
             {
                 Id = newsItemDTO.Id,
-                Name = newsItemDTO.Name,
+                Title = newsItemDTO.Title,
                 Created = newsItemDTO.Created,
                 Updated = newsItemDTO.Updated,
                 Authors = authors,
