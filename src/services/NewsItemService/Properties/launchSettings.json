@@ -15,7 +15,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "redactieportaal_db_string": "Server=127.0.0.1;Port=1111;Database=redactieportaal;User Id=developer;Password=Flevoland;"
+        "redactieportaal_db_string": "Server=localhost;Port=5432;Database=redactieportaal;UserId=developer;Password=Flevoland"
       },
       "applicationUrl": "https://localhost:15000;http://localhost:5103",
       "dotnetRunMessages": true

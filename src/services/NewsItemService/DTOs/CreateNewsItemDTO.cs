@@ -1,12 +1,18 @@
-﻿namespace NewsItemService.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NewsItemService.DTOs
 {
     public class CreateNewsItemDTO
     {
+        [Required]
+        [MinLength(1)]
         public List<int> AuthorIds { get; set; }
-        public string? Title { get; set; }
+        [Required]
+        public string? Name { get; set; }
+        [Required]
         public string? Content { get; set; }
-        public string? LocationDetails { get; set; }
-        public string? ContactDetails { get; set; }
+        public string? LocationInformation { get; set; }
+        public string? ContactInformation { get; set; }
         public string? ProductionDate { get; set; }
         public string? Region { get; set; }
         public DateTime CreationDate { get; set; }

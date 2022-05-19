@@ -15,39 +15,11 @@ namespace NewsItemService.Data
             this._dbContext = context;
         }
 
-        //TODO: remove this code that belongs to another branch
-        #region Remove this code, that is from another branch
-        public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatus newsItemStatus)
-        {
-            NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemStatus.NewsItemId);
-
-            if (item == default)
-            {
-                return new Dictionary<bool, string>() { { false, "STATUS.NO_NEWSITEM" } };
-            }
-            if (item.Status == newsItemStatus.status)
-            {
-                return new Dictionary<bool, string>() { { false, "STATUS.DUPLICATE_STATUS" } };
-            }
-
-            item.Status = newsItemStatus.status;
-            item.Updated = DateTime.Now.ToUniversalTime();
-
-            if (!_dbContext.ChangeTracker.HasChanges())
-            {
-                return new Dictionary<bool, string>() { { false, "STATUS.NO_CHANGES_DETECTED" } };
-            }
-
-            await _dbContext.SaveChangesAsync();
-            return new Dictionary<bool, string>() { { true, "Status changed to " + newsItemStatus.status.ToString() } };
-        }
-        #endregion
-
         public async Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item)
         {
             try
             {
-                var duplicate = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Title == item.Title);
+                var duplicate = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Name == item.Name);
 
                 if (duplicate != null)
                 {
@@ -64,7 +36,7 @@ namespace NewsItemService.Data
                 throw;
             }
 
-            return new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } };
+            return new Dictionary<bool, string>() { { true, $"Article '{item.Name}' has been created succesfully" } };
         }
 
         public async Task<Dictionary<bool, Author>> GetAuthorById(int id)
