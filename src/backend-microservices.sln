@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{5110621B-0A76-439C-855D-4CE0A8D661BB}"
+	ProjectSection(SolutionItems) = preProject
+		FolderStructureAndPurpose.txt = FolderStructureAndPurpose.txt
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsFeedService", "services\NewsFeedService\NewsFeedService.csproj", "{7D60ABC8-89F9-402A-928C-794A841DCF22}"
 EndProject
@@ -36,6 +39,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Tests", "..\tests\UserService.Tests\UserService.Tests.csproj", "{860441F0-A3A4-4716-B462-9578084F7DCB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsItemService", "services\NewsItemService\NewsItemService.csproj", "{D10F9525-615B-4B33-8710-B5C1DA182051}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsItemService.Tests", "..\tests\NewsItemService\NewsItemService.Tests.csproj", "{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "librarys", "librarys", "{F81467EA-3C21-4DD1-9C13-40AAD372A95B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQLibrary", "RabbitMQLibrary\RabbitMQLibrary.csproj", "{ADEFDF9F-6AC2-46BF-AC15-E858AD7176BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +112,14 @@ Global
 		{D10F9525-615B-4B33-8710-B5C1DA182051}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D10F9525-615B-4B33-8710-B5C1DA182051}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D10F9525-615B-4B33-8710-B5C1DA182051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADEFDF9F-6AC2-46BF-AC15-E858AD7176BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADEFDF9F-6AC2-46BF-AC15-E858AD7176BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADEFDF9F-6AC2-46BF-AC15-E858AD7176BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADEFDF9F-6AC2-46BF-AC15-E858AD7176BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +139,8 @@ Global
 		{7DBDDF34-465B-496C-9C99-6A44D6DDE933} = {EBDE6BC6-1914-4142-86DE-9AA179187E92}
 		{860441F0-A3A4-4716-B462-9578084F7DCB} = {EBDE6BC6-1914-4142-86DE-9AA179187E92}
 		{D10F9525-615B-4B33-8710-B5C1DA182051} = {5110621B-0A76-439C-855D-4CE0A8D661BB}
+		{EFB8C443-DC7C-4C8C-BC33-3C832426ED4F} = {EBDE6BC6-1914-4142-86DE-9AA179187E92}
+		{ADEFDF9F-6AC2-46BF-AC15-E858AD7176BE} = {F81467EA-3C21-4DD1-9C13-40AAD372A95B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A8D569A9-FDF9-4F28-9008-A141A7165D97}
