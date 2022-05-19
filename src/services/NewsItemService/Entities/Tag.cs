@@ -2,7 +2,7 @@
 
 namespace NewsItemService.Entities
 {
-    public class Author
+    public class Tag
     {
         [Key]
         [Required]

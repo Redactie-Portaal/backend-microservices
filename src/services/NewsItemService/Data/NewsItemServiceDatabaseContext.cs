@@ -6,14 +6,14 @@ namespace NewsItemService.Data
     public class NewsItemServiceDatabaseContext : DbContext
     {
         /// <summary>
-        /// Constructor of the UserServiceDatabaseContext class
+        /// Constructor of the NewsItemServiceDatabaseContext class
         /// </summary>
         public NewsItemServiceDatabaseContext()
         {
         }
 
         /// <summary>
-        /// Constructor of the UserServiceDatabaseContext class with options, used for Unittesting
+        /// Constructor of the NewsItemServiceDatabaseContext class with options, used for Unittesting
         /// Database options can be given, to switch between local and remote database
         /// </summary>
         /// <param name="options">Database options</param>
@@ -22,11 +22,30 @@ namespace NewsItemService.Data
         }
 
         /// <summary>
-        /// DbSet for the User class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet for the NewsItem class, A DbSet represents the collection of all entities in the context. 
         /// DbSet objects are created from a DbContext using the DbContext.Set method.
         /// </summary>
         public DbSet<NewsItem> NewsItems { get; set; }
+        /// <summary>
+        /// DbSet for the Author class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
         public DbSet<Author> Authors { get; set; }
+        /// <summary>
+        /// DbSet for the Category class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
+        public DbSet<Category> Categories { get; set; }
+        /// <summary>
+        /// DbSet for the Tag class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
+        public DbSet<Tag> Tags { get; set; }
+        /// <summary>
+        /// DbSet for the Publication class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
+        public DbSet<Publication> Publications { get; set; }
 
         /// <summary>
         /// OnConfiguring builds the connection between the database and the API using the given connection string
