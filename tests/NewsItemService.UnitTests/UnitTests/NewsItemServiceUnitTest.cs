@@ -1,5 +1,6 @@
 using NewsItemService.DTOs;
 using NewsItemService.Services;
+using NewsItemService.Types;
 using NewsItemService.UnitTests.Stubs;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace NewsItemService.UnitTests
                         Name = "James"
                     }
                 },
-                Status = "Processing"
+                Status = NewsItemStatus.Done
             };
 
             // Act
@@ -106,7 +107,7 @@ namespace NewsItemService.UnitTests
                             Name = "James"
                         }
                     },
-                    Status = "Processing"
+                    Status = NewsItemStatus.Done
                 },
                 new NewsItemDTO() {
                     Id = 2,
@@ -121,7 +122,7 @@ namespace NewsItemService.UnitTests
                             Name = "James"
                         }
                     },
-                    Status = "Processing"
+                    Status = NewsItemStatus.Done
                 },
                  new NewsItemDTO() {
                     Id = 3,
@@ -136,7 +137,7 @@ namespace NewsItemService.UnitTests
                             Name = "James"
                         }
                     },
-                    Status = "Processing"
+                    Status = NewsItemStatus.Done
                 },
                  new NewsItemDTO() {
                     Id = 4,
@@ -151,7 +152,7 @@ namespace NewsItemService.UnitTests
                             Name = "James"
                         }
                     },
-                    Status = "Processing"
+                    Status = NewsItemStatus.Done
                 },
                  new NewsItemDTO() {
                     Id = 5,
@@ -166,7 +167,7 @@ namespace NewsItemService.UnitTests
                             Name = "James"
                         }
                     },
-                    Status = "Processing"
+                    Status = NewsItemStatus.Done
                 },
             };
 

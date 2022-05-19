@@ -14,14 +14,28 @@ namespace NewsItemService.Services
             this._authorRepository = authorRepository;
         }
 
-        public List<Author> Get() 
+        public List<AuthorDTO>? Get() 
         {
-            return this._authorRepository.Get();
+            var authors = _authorRepository.Get();
+            if (authors == null) return null;
+
+            return AuthorHelper.ToDTO(authors);
         }
 
-        public Author Get(int id)
+        public AuthorDTO? Get(int id)
         {
-            return this._authorRepository.Get(id);
+            var author = _authorRepository.Get(id);
+            if (author == null) return null;
+
+            return AuthorHelper.ToDTO(author);
+        }
+
+        public List<NewsItemDTO>? GetNewsItems(int id, int page, int pageSize)
+        {
+            var newsItems = _authorRepository.GetNewsItems(id, page, pageSize);
+            if (newsItems == null) return null;
+
+            return NewsItemHelper.ToDTO(newsItems, false);
         }
 
         public AuthorDTO Post(CreateAuthorDTO createAuthorDTO)

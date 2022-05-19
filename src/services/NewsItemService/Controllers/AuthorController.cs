@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using NewsItemService.Data;
 using NewsItemService.Entities;
-using NewsItemService.Helpers;
 using NewsItemService.DTOs;
 using NewsItemService.Services;
 
@@ -13,6 +11,9 @@ namespace NewsItemService.Controllers
     {
         private readonly AuthorService _authorService;
 
+        private const int DEFAULT_PAGE = 1;
+        private const int DEFAULT_PAGE_SIZE = 10;
+
         public AuthorController(AuthorService authorService)
         {
             _authorService = authorService;
@@ -21,30 +22,31 @@ namespace NewsItemService.Controllers
         [HttpGet()]
         public IActionResult Get()
         {
-            throw new NotImplementedException();
-            // return Ok(AuthorHelper.ToDTO(_context.Authors.ToList()));
+            var authors = _authorService.Get();
+            if (authors == null) return NotFound(new { message = "No authors found." });
+
+            return Ok(authors);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            throw new NotImplementedException();
-            // var author = _context.Authors.Find(id);
-            // if (author == null ) return NotFound();
+            var author = _authorService.Get(id);
+            if (author == null) return NotFound(new { message = "No author found." });
 
-            // return Ok(AuthorHelper.ToDTO(author));
+            return Ok(author);
         }
 
         [HttpGet("{id}/newsitems")]
-        public IActionResult GetNewsItems(int id)
+        public IActionResult GetNewsItems(int id, int page = DEFAULT_PAGE, int pageSize = DEFAULT_PAGE_SIZE)
         {
-            throw new NotImplementedException();
-            // var author = _context.Authors.Find(id);
+            if (page == 0) page = DEFAULT_PAGE;
+            if (pageSize == 0 ) pageSize = int.MaxValue;
 
-            // if (author == null) return NotFound($"Author with id {id} not found");
-            // if (author.NewsItems == null) return NotFound($"No news items found for author with id {id}");
+            var newsItems = _authorService.GetNewsItems(id, page, pageSize);
+            if (newsItems == null) return NotFound(new { message = "No news items found." });
 
-            // return Ok(NewsItemHelper.ToDTO(author.NewsItems.ToList()));
+            return Ok(newsItems);
         }
 
         [HttpPost]

@@ -16,7 +16,6 @@ namespace NewsItemService.Data
         public List<NewsItem> Get(int page, int pageSize)
         {
             var amountToSkip = (page - 1) * pageSize;
-
             var newsItems =  _context.NewsItems.Include("Authors").Skip(amountToSkip).Take(pageSize).ToList();
 
             return newsItems;

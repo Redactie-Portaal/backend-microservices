@@ -1,5 +1,6 @@
 ﻿using NewsItemService.Entities;
 using NewsItemService.Interfaces;
+using NewsItemService.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace NewsItemService.UnitTests.Stubs
                             Name = $"James"
                         }
                     },
-                    Status = "Processing"
+                    Status = NewsItemStatus.Done
                 });
             }
         }

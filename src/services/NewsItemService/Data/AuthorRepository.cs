@@ -13,22 +13,30 @@ namespace NewsItemService.Data
             _context = context;
         }
 
-        public List<Author> Get()
+        public List<Author>? Get()
         {
-            var authors = _context.Authors.ToList();
-            if (authors == null) throw new Exception("No authors found.");
-
-            return authors;
+            return _context.Authors.ToList();
         }
 
-        public Author Get(int id) {
+        public Author Get(int id)
+        {
             var author = _context.Authors.Include("NewsItems").FirstOrDefault(a => a.Id == id);
-            if (author == null) throw new Exception("Author not found.");
+            if (author == null) return null;
 
             return author;
         }
 
-        public Author Post(Author author) 
+        public List<NewsItem>? GetNewsItems(int id, int page, int pageSize)
+        {
+            var amountToSkip = (page - 1) * pageSize;
+            
+            var newsItems = _context.NewsItems.Where(n => n.Authors.Any(a => a.Id == id)).Skip(amountToSkip).Take(pageSize).ToList();
+            if (newsItems.Count <= 0) return null;
+
+            return newsItems;
+        }
+
+        public Author Post(Author author)
         {
             _context.Authors.Add(author);
             _context.SaveChanges();

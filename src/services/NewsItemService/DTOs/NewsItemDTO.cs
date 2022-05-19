@@ -1,3 +1,5 @@
+using NewsItemService.Types;
+
 namespace NewsItemService.DTOs
 {
     public class NewsItemDTO
@@ -7,6 +9,6 @@ namespace NewsItemService.DTOs
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public List<AuthorDTO> Authors { get; set; }
-        public string Status { get; set; }
+        public NewsItemStatus Status { get; set; }
     }
 }

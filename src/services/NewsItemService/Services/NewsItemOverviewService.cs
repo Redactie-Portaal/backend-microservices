@@ -18,7 +18,6 @@ namespace NewsItemService.Services
 
         public List<NewsItemDTO> Get(int page, int pageSize)
         {
-            var amountToSkip = (page - 1) * pageSize;
             var newsItems = this._newsItemRepository.Get(page, pageSize);
 
             return NewsItemHelper.ToDTO(newsItems);
@@ -38,6 +37,7 @@ namespace NewsItemService.Services
             {
                 Name = newsItemDTO.Name,
                 Status = newsItemDTO.Status,
+                Created = DateTime.Now.ToUniversalTime()
             };
 
             newsItem.Authors = new List<Author>();

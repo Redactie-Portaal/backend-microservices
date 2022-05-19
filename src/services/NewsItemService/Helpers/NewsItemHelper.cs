@@ -5,31 +5,37 @@ namespace NewsItemService.Helpers
 {
     class NewsItemHelper 
     {
-        public static NewsItemDTO ToDTO(NewsItem newsItem)
+        public static NewsItemDTO ToDTO(NewsItem newsItem, bool includeAuthors = true)
         {
-            var authors = new List<AuthorDTO>();
-            foreach (var author in newsItem.Authors)
-            {
-                authors.Add(AuthorHelper.ToDTO(author));
-            }
-
-            return new NewsItemDTO
+            var newsItemDTO = new NewsItemDTO
             {
                 Id = newsItem.Id,
                 Name = newsItem.Name,
                 Created = newsItem.Created,
                 Updated = newsItem.Updated,
-                Authors = authors,
                 Status = newsItem.Status
             };
+
+            if (includeAuthors) {
+                var authors = new List<AuthorDTO>();
+
+                foreach (var author in newsItem.Authors)
+                {
+                    authors.Add(AuthorHelper.ToDTO(author));
+                }
+
+                newsItemDTO.Authors = authors;
+            }
+
+            return newsItemDTO;
         }
 
-        public static List<NewsItemDTO> ToDTO(List<NewsItem> newsItems)
+        public static List<NewsItemDTO> ToDTO(List<NewsItem> newsItems, bool includeAuthors = true)
         {
             List<NewsItemDTO> newsItemDTOs = new List<NewsItemDTO>();
             foreach (NewsItem newsItem in newsItems)
             {
-                newsItemDTOs.Add(NewsItemHelper.ToDTO(newsItem));
+                newsItemDTOs.Add(NewsItemHelper.ToDTO(newsItem, includeAuthors));
             }
 
             return newsItemDTOs;
