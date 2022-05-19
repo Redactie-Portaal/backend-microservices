@@ -38,7 +38,7 @@ namespace NewsItemService.Services
                 LocationInformation = dto.LocationInformation,
                 ContactInformation = dto.ContactInformation,
                 Region = dto.Region,
-                Created = dto.CreationDate
+                Created = dto.CreationDate.ToUniversalTime()
             };
             try
             {
