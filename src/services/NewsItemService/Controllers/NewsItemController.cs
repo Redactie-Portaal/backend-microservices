@@ -15,12 +15,15 @@ namespace NewsArticleService.Controllers
         //TODO: remove this line that belongs to another branch
         private readonly NewsItemsService newsItemService;
         private readonly INewsItemRepository _newsItemRepository;
+        private readonly IAuthorRepository _authorRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public NewsItemController(INewsItemRepository newsItemRepository)
+        public NewsItemController(INewsItemRepository newsItemRepository, IAuthorRepository authorRepository, ICategoryRepository categoryRepository)
         {
             _newsItemRepository = newsItemRepository;
-            newsItemService = new NewsItemsService(newsItemRepository);
-
+            _authorRepository = authorRepository;
+            _categoryRepository = categoryRepository;
+            newsItemService = new NewsItemsService(_newsItemRepository, _authorRepository, _categoryRepository);
         }
 
         [HttpPost]

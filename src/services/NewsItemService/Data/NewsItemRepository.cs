@@ -39,23 +39,6 @@ namespace NewsItemService.Data
             return new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } };
         }
 
-        public async Task<Dictionary<bool, Author>> GetAuthorById(int id)
-        {
-            try
-            {
-                var author =  await _dbContext.Authors.Where(a => a.Id == id).FirstOrDefaultAsync();
-                if (author == null)
-                {
-                    return new Dictionary<bool, Author>() { { false, null } };
-                }
-                return new Dictionary<bool, Author>() { {true, author } };
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public async Task Save()
         {
             await _dbContext.SaveChangesAsync();

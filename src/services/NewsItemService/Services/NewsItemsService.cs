@@ -10,13 +10,15 @@ namespace NewsItemService.Services
     public class NewsItemsService
     {
         private readonly ModelStateDictionary modelState = new ModelStateDictionary();
-        private readonly INewsItemRepository newsitemRepository;
-        private readonly ICategoryRepository categoryRepository;
+        private readonly INewsItemRepository _newsItemRepository;
+        private readonly IAuthorRepository _authorRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public NewsItemsService(INewsItemRepository repo, ICategoryRepository categoryRepository)
+        public NewsItemsService(INewsItemRepository repo, IAuthorRepository authorRepository, ICategoryRepository categoryRepository)
         {
-            newsitemRepository = repo;
-            categoryRepository = categoryRepository;
+            _newsItemRepository = repo;
+            _authorRepository = authorRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<Dictionary<bool, string>> CreateNewsItem(CreateNewsItemDTO dto)
@@ -24,12 +26,26 @@ namespace NewsItemService.Services
             List<Author> authors = new();
             foreach (var id in dto.AuthorIds)
             {
-                var author = await newsitemRepository.GetAuthorById(id);
+                var author = await _authorRepository.GetAuthorById(id);
                 if (author.FirstOrDefault().Key == false)
                 {
                     return new Dictionary<bool, string>() { { false, "Author does not exist" } };
                 }
                 authors.Add(author.FirstOrDefault().Value);
+            }
+
+            List<Category> categories = new();
+            if (dto.CategoryIds.Count != 0)
+            {
+                foreach (var id in dto.CategoryIds)
+                {
+                    var category = await _categoryRepository.GetCategoryById(id);
+                    if (category.FirstOrDefault().Key == false)
+                    {
+                        return new Dictionary<bool, string>() { { false, "Category does not exist" } };
+                    }
+                    categories.Add(category.FirstOrDefault().Value);
+                }
             }
 
             var newsItem = new NewsItem()
@@ -40,27 +56,12 @@ namespace NewsItemService.Services
                 LocationInformation = dto.LocationInformation,
                 ContactInformation = dto.ContactInformation,
                 Region = dto.Region,
-                Created = dto.ProductionDate.ToUniversalTime()
+                Created = dto.ProductionDate.ToUniversalTime(),
+                Categories = categories
             };
-
-            if (dto.CategoryIds.Count != 0)
-            {
-                //newsItem.Categories = new List<Category>();
-
-                foreach (var id in dto.CategoryIds)
-                {
-                    var category = await categoryRepository.GetCategoryById(id);
-                    if (category.FirstOrDefault().Key == false)
-                    {
-                        return new Dictionary<bool, string>() { { false, "Category does not exist" } };
-                    }
-                    authors.Add(category.FirstOrDefault().Value);
-                }
-
-            }
             try
             {
-                return await newsitemRepository.CreateNewsItem(newsItem);
+                return await _newsItemRepository.CreateNewsItem(newsItem);
             }
             catch (Exception)
             {
