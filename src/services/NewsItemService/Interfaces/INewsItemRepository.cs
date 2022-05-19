@@ -6,7 +6,7 @@ namespace NewsItemService.Interfaces
     {
         List<NewsItem> Get(int page, int pageSize);
 
-        NewsItem Get(int id);
+        NewsItem? Get(int id);
 
         NewsItem Post(NewsItem newsItem);
 

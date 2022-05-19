@@ -3,6 +3,7 @@ using NewsItemService.Data;
 using NewsItemService.Entities;
 using NewsItemService.Helpers;
 using NewsItemService.DTOs;
+using NewsItemService.Services;
 
 namespace NewsItemService.Controllers
 {
@@ -10,82 +11,85 @@ namespace NewsItemService.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        private readonly NewsItemServiceDatabaseContext _context;
+        private readonly AuthorService _authorService;
 
-        public AuthorController(NewsItemServiceDatabaseContext context)
+        public AuthorController(AuthorService authorService)
         {
-            _context = context;
+            _authorService = authorService;
         }
 
         [HttpGet()]
         public IActionResult Get()
         {
-            return Ok(AuthorHelper.ToDTO(_context.Authors.ToList()));
+            throw new NotImplementedException();
+            // return Ok(AuthorHelper.ToDTO(_context.Authors.ToList()));
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var author = _context.Authors.Find(id);
-            if (author == null ) return NotFound();
+            throw new NotImplementedException();
+            // var author = _context.Authors.Find(id);
+            // if (author == null ) return NotFound();
 
-            return Ok(AuthorHelper.ToDTO(author));
+            // return Ok(AuthorHelper.ToDTO(author));
         }
 
         [HttpGet("{id}/newsitems")]
         public IActionResult GetNewsItems(int id)
         {
-            var author = _context.Authors.Find(id);
+            throw new NotImplementedException();
+            // var author = _context.Authors.Find(id);
 
-            if (author == null) return NotFound($"Author with id {id} not found");
-            if (author.NewsItems == null) return NotFound($"No news items found for author with id {id}");
+            // if (author == null) return NotFound($"Author with id {id} not found");
+            // if (author.NewsItems == null) return NotFound($"No news items found for author with id {id}");
 
-            return Ok(NewsItemHelper.ToDTO(author.NewsItems.ToList()));
+            // return Ok(NewsItemHelper.ToDTO(author.NewsItems.ToList()));
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Author author)
+        public AuthorDTO Post([FromBody] CreateAuthorDTO author)
         {
-            _context.Authors.Add(author);
-            _context.SaveChanges();
-
-            return Ok(author);
+            var authorDTO = _authorService.Post(author);
+            return authorDTO;
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Author author)
         {
-            Author? authorToUpdate = _context.Authors.Find(id);
+            throw new NotImplementedException();
+            // Author? authorToUpdate = _context.Authors.Find(id);
 
-            if (authorToUpdate == null)
-            {
-                return NotFound();
-            }
+            // if (authorToUpdate == null)
+            // {
+            //     return NotFound();
+            // }
 
-            if (author.Name != null)
-            {
-                authorToUpdate.Name = author.Name;
-            }
+            // if (author.Name != null)
+            // {
+            //     authorToUpdate.Name = author.Name;
+            // }
 
-            _context.SaveChanges();
+            // _context.SaveChanges();
 
-            return Ok(authorToUpdate);
+            // return Ok(authorToUpdate);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            Author? authorToDelete = _context.Authors.Find(id);
+            throw new NotImplementedException();
+            // Author? authorToDelete = _context.Authors.Find(id);
 
-            if (authorToDelete == null)
-            {
-                return NotFound();
-            }
+            // if (authorToDelete == null)
+            // {
+            //     return NotFound();
+            // }
 
-            _context.Authors.Remove(authorToDelete);
-            _context.SaveChanges();
+            // _context.Authors.Remove(authorToDelete);
+            // _context.SaveChanges();
 
-            return Ok(authorToDelete);
+            // return Ok(authorToDelete);
         }
     }
 }

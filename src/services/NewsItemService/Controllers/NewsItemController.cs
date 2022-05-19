@@ -34,9 +34,12 @@ namespace NewsItemService.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            if (id < 1) return BadRequest(new { message = "Given news item id is not valid, id cannot be smaller than 1." });
+            if (id < 1) return BadRequest(new { message = "ID cannot be smaller than one." });
 
-            return Ok(this._newsItemOverviewService.Get(id));
+            var newsItemDTO = this._newsItemOverviewService.Get(id);
+            if (newsItemDTO == null) return NotFound(new { message = "News item with given id does not exist." });
+
+            return Ok(newsItemDTO);
         }
 
         [HttpPost]

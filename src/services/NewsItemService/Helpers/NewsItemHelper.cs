@@ -7,8 +7,6 @@ namespace NewsItemService.Helpers
     {
         public static NewsItemDTO ToDTO(NewsItem newsItem)
         {
-            // throw new Exception(newsItem.Authors != null ? "Authors" : "No authors");
-
             var authors = new List<AuthorDTO>();
             foreach (var author in newsItem.Authors)
             {

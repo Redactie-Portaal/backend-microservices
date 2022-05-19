@@ -24,9 +24,10 @@ namespace NewsItemService.Services
             return NewsItemHelper.ToDTO(newsItems);
         }
 
-        public NewsItemDTO Get(int id)
+        public NewsItemDTO? Get(int id)
         {
             var newsItem = this._newsItemRepository.Get(id);
+            if (newsItem == null) return null;
 
             return NewsItemHelper.ToDTO(newsItem);
         }

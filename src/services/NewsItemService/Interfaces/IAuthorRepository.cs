@@ -7,5 +7,7 @@ namespace NewsItemService.Interfaces
         List<Author> Get();
 
         Author Get(int id);
+
+        Author Post(Author author);
     }
 }

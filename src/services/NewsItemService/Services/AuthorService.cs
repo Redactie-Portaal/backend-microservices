@@ -1,4 +1,6 @@
+using NewsItemService.DTOs;
 using NewsItemService.Entities;
+using NewsItemService.Helpers;
 using NewsItemService.Interfaces;
 
 namespace NewsItemService.Services
@@ -20,6 +22,16 @@ namespace NewsItemService.Services
         public Author Get(int id)
         {
             return this._authorRepository.Get(id);
+        }
+
+        public AuthorDTO Post(CreateAuthorDTO createAuthorDTO)
+        {
+            var author = new Author
+            {
+                Name = createAuthorDTO.Name
+            };
+
+            return AuthorHelper.ToDTO(_authorRepository.Post(author));
         }
     }
 }

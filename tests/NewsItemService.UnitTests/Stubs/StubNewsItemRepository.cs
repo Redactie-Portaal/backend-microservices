@@ -3,34 +3,69 @@ using NewsItemService.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NewsItemService.UnitTests.Stubs
 {
     public class StubNewsItemRepository : INewsItemRepository
     {
-        public Task<List<NewsItem>?> GetNewsItems(int authorId)
-        {
-            if (authorId == 1)
-            {
-                var author = new Author() { Id = 1, Name = "Robert Bever" };
-                var newsItems = new List<NewsItem>() { new NewsItem() { Id = 1, Name = "Vogel valt uit nest.", Status = "Processing", Created = System.DateTime.Now, Updated = System.DateTime.Now, Authors = new List<Author>() { author } } };
-                return Task.FromResult(newsItems);
-            }
-            if (authorId == 2) return Task.FromResult<List<NewsItem>?>(null);
-            if (authorId == 5)
-            {
-                var author = new Author() { Id = 1, Name = "Robert Bever" };
-                var authorTwo = new Author() { Id = 5, Name = "Harold LoopDeLaInfinite" };
-                var newsItems = new List<NewsItem>() {
-                    new NewsItem() { Id = 1, Name = "Vogel valt uit nest.", Status = "Processing", Authors = new List<Author>() { authorTwo } },
-                    new NewsItem() { Id = 2, Name = "Papegaai krijgt medaille.", Status = "Archived", Authors = new List<Author>() { author, authorTwo } }
-                };
-                return Task.FromResult(newsItems);
-            } 
+        private List<NewsItem> _newsItems { get; set; }
 
-            return Task.FromResult<List<NewsItem>?>(null);
+        public StubNewsItemRepository()
+        {
+            var newsItemsCount = 100;
+            _newsItems = new List<NewsItem>();
+
+            for (int i = 1; i <= newsItemsCount; i++)
+            {
+                _newsItems.Add(new NewsItem()
+                {
+                    Id = i,
+                    Name = $"Title: {i}",
+                    Created = new DateTime(2020, 1, 1),
+                    Updated = new DateTime(2020, 1, 1),
+                    Authors = new List<Author>()
+                    {
+                        new Author()
+                        {
+                            Id = 1,
+                            Name = $"James"
+                        }
+                    },
+                    Status = "Processing"
+                });
+            }
+        }
+
+        public List<NewsItem> Get(int page, int pageSize)
+        {
+            var amountToSkip = (page - 1) * pageSize;
+
+            return _newsItems.Skip(amountToSkip).Take(pageSize).ToList();
+        }
+
+        public NewsItem? Get(int id)
+        {
+            return _newsItems.FirstOrDefault(n => n.Id == id);
+        }
+
+        public List<NewsItem> GetAfter(DateTime date, int page, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<NewsItem> GetBefore(DateTime date, int page, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<NewsItem> GetBetween(DateTime startDate, DateTime endDate, int page, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public NewsItem Post(NewsItem newsItem)
+        {
+            throw new NotImplementedException();
         }
     }
 }

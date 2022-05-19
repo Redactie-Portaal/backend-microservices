@@ -18,15 +18,13 @@ namespace NewsItemService.Data
             var amountToSkip = (page - 1) * pageSize;
 
             var newsItems =  _context.NewsItems.Include("Authors").Skip(amountToSkip).Take(pageSize).ToList();
-            if (newsItems == null) throw new Exception("No news items found.");
 
             return newsItems;
         }
 
-        public NewsItem Get(int id)
+        public NewsItem? Get(int id)
         {
             var newsItem = _context.NewsItems.FirstOrDefault(n => n.Id == id);
-            if (newsItem == null) throw new Exception("News item not found.");
 
             return newsItem;
         }
