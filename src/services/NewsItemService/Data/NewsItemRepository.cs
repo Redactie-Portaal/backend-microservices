@@ -19,7 +19,7 @@ namespace NewsItemService.Data
         {
             try
             {
-                var duplicate = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Name == item.Name);
+                var duplicate = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Title == item.Title);
 
                 if (duplicate != null)
                 {
@@ -36,7 +36,7 @@ namespace NewsItemService.Data
                 throw;
             }
 
-            return new Dictionary<bool, string>() { { true, $"Article '{item.Name}' has been created succesfully" } };
+            return new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } };
         }
 
         public async Task<Dictionary<bool, Author>> GetAuthorById(int id)
