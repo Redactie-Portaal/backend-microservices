@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.Json;
 
+[assembly: InternalsVisibleTo("NewsItemService.Tests")]
 namespace RabbitMQLibrary.Producer
 {
     internal class MessageProducer : IMessageProducer

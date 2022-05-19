@@ -42,8 +42,17 @@ namespace NewsItemService.Controllers
             }
 
             //RABBITMQ CALLS IF STATUS MESSAGE IS DISPOSE OR ARCHIVED
-            var newsItem = await _newsItemRepository.GetNewsItemAsync(status.NewsItemId);
-            _producer.PublishMessageAsync(RoutingKeyType.NewsItemDispose, _newsItemStatusService.NewsItemToDisposedDTO(newsItem));
+            if (status.status == NewsItemStatus.Dispose)
+            {
+                var newsItem = await _newsItemRepository.GetNewsItemAsync(status.NewsItemId);
+                if (newsItem == default)
+                {
+                    return BadRequest(new { message = result.FirstOrDefault().Value });
+                }
+
+                _producer.PublishMessageAsync(RoutingKeyType.NewsItemDispose, _newsItemStatusService.NewsItemToDisposedDTO(newsItem));
+            }
+            
 
             // Return Ok message that status has been changed
             return Ok(new { message = result.FirstOrDefault().Value });

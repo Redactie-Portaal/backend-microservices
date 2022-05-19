@@ -1,4 +1,4 @@
-﻿using ArchiveService.DbContexts;
+﻿using ArchiveService.Data;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -10,26 +10,37 @@ namespace ArchiveService.Messaging
     public class RabbitMQWorker : BackgroundService
     {
         private readonly ILogger<RabbitMQWorker> _logger;
- 
+        private ConnectionFactory _factory;
+        private IConnection _connection;
         private IModel _channel;
-        private readonly ArchiveServiceDatabaseContext _dbContext;
-        private readonly RabbitMqConnection _connection;
+     
 
-        public RabbitMQWorker(ILogger<RabbitMQWorker> logger, ArchiveServiceDatabaseContext dbContext, RabbitMqConnection connection)
+        public RabbitMQWorker(ILogger<RabbitMQWorker> logger)
         {
             _logger = logger;
-            _dbContext = dbContext;
-            _connection = connection;
+          
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
+            string? password = Environment.GetEnvironmentVariable("redactieportaal_rabbitmq_pass") ?? throw new ArgumentNullException("No Password Found");
+
+            _factory = new ConnectionFactory()
+            {
+                HostName = "localhost",
+                UserName = "guest",
+                Password = password,
+                DispatchConsumersAsync = true
+            };
+
+            _connection = _factory.CreateConnection();
             _channel = _connection.CreateModel();
 
-            _channel.ExchangeDeclare(exchange: "user-exchange",
+            _channel.ExchangeDeclare(exchange: "news-item-exchange",
+                                     durable: true,
                                      type: ExchangeType.Topic);
 
-            _channel.QueueDeclare(queue: "user-queue",
+            _channel.QueueDeclare(queue: "news-item-queue",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
@@ -37,14 +48,16 @@ namespace ArchiveService.Messaging
 
             var routingKeys = new[]
             {
-                RoutingKeyType.UserCreated,
-                RoutingKeyType.UserUpdated,
-                RoutingKeyType.UserDeleted
+                RoutingKeyType.NewsItemDeleted,
+                RoutingKeyType.NewsItemCreated,
+                RoutingKeyType.NewsItemDispose,
+                RoutingKeyType.NewsItemArchive,
+                RoutingKeyType.NewsItemUpdated
             };
             foreach (var routingKey in routingKeys)
             {
-                _channel.QueueBind(queue: "user-queue",
-                                   exchange: "user-exchange",
+                _channel.QueueBind(queue: "news-item-queue",
+                                   exchange: "news-item-exchange",
                                    routingKey: routingKey);
             }
 
@@ -70,63 +83,20 @@ namespace ArchiveService.Messaging
 
                 _logger.LogInformation($"Received message: {message} with routingkey: {eventArgs.RoutingKey}");
 
-                var user = JsonConvert.DeserializeObject<User>(message);
-                if (user != null)
+                switch (eventArgs.RoutingKey)
                 {
-                    switch (eventArgs.RoutingKey)
-                    {
-                        case RoutingKeyType.UserCreated:
-                            _workoutContext.Users.Add(user);
-                            _workoutContext.SaveChanges();
+                    case RoutingKeyType.NewsItemDispose:
 
-                            _logger.LogInformation($"User {user.Username} added to database");
-
-                            break;
-                        case RoutingKeyType.UserUpdated:
-                            User? userToUpdate = _workoutContext.Users.Find(user.Id);
-                            if (userToUpdate == null)
-                            {
-                                // add user
-                                _workoutContext.Users.Add(user);
-
-                                _logger.LogInformation($"User {user.Username} with id {user.Id} didn't exist in database, added to database");
-                            }
-                            else
-                            {
-                                // update user
-                                userToUpdate.Username = user.Username;
-                                userToUpdate.FirstName = user.FirstName;
-                                userToUpdate.LastName = user.LastName;
-
-                                _logger.LogInformation($"User {user.Username} updated in database");
-                            }
-
-                            _workoutContext.SaveChanges();
-
-                            break;
-                        case RoutingKeyType.UserDeleted:
-                            User? userToDelete = _workoutContext.Users.Find(user.Id);
-
-                            if (userToDelete != null)
-                            {
-                                _workoutContext.Users.Remove(userToDelete);
-                                _workoutContext.SaveChanges();
-
-                                _logger.LogInformation($"User {user.Username} deleted from database");
-                            }
-                            else
-                            {
-                                _logger.LogInformation($"User {user.Username} with id {user.Id} doesn't exist in database, nothing to delete");
-                            }
-
-                            break;
-                    }
+                        break;
+                    default:
+                        break;
                 }
 
+                //var user = JsonConvert.DeserializeObject<User>(message);
                 await Task.Delay(1000);
             };
 
-            _channel.BasicConsume(queue: "user-queue",
+            _channel.BasicConsume(queue: "news-item-queue",
                                   autoAck: true,
                                   consumer: consumer);
 
@@ -142,5 +112,5 @@ namespace ArchiveService.Messaging
             return base.StopAsync(cancellationToken);
         }
     }
-}
+
 }
