@@ -1,6 +1,6 @@
 using NewsItemService.Data;
 using NewsItemService.Interfaces;
-using NewsItemService.Messaging;
+using RabbitMQLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddMessageProducing("user-exchange");
 builder.Services.AddScoped<INewsItemRepository, NewsItemRepository>();
-builder.Services.AddSingleton<IMessageProducer, RabbitMQProducer>();
 
 // Add the database context to the builder.
 builder.Services.AddDbContext<NewsItemServiceDatabaseContext>();

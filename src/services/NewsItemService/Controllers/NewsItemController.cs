@@ -4,6 +4,8 @@ using NewsItemService.DTOs;
 using NewsItemService.Interfaces;
 using NewsItemService.Services;
 using NewsItemService.Types;
+using RabbitMQLibrary;
+using RabbitMQLibrary.Producer;
 
 namespace NewsItemService.Controllers
 {
@@ -41,7 +43,7 @@ namespace NewsItemService.Controllers
 
             //RABBITMQ CALLS IF STATUS MESSAGE IS DISPOSE OR ARCHIVED
             var newsItem = await _newsItemRepository.GetNewsItemAsync(status.NewsItemId);
-            _producer.SendMessage(_newsItemStatusService.NewsItemToDisposedDTO(newsItem), RoutingKeyType.NewsItemDispose);
+            _producer.PublishMessageAsync(RoutingKeyType.NewsItemDispose, _newsItemStatusService.NewsItemToDisposedDTO(newsItem));
 
             // Return Ok message that status has been changed
             return Ok(new { message = result.FirstOrDefault().Value });

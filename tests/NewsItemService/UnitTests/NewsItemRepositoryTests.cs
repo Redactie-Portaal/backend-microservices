@@ -2,6 +2,7 @@
 using NewsItemService.Data;
 using NewsItemService.DTOs;
 using NewsItemService.Entities;
+using NewsItemService.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace NewsItemService.Tests.UnitTests
         /// <param name="ID">ID of newsItem</param>
         /// <param name="status">Status that the newsItem has to change to</param>
         /// <returns>AddNewsItemStatus</returns>
-        private AddNewsItemStatusDTO CreateAddNewsItemStatus(int ID, Enums.NewsItemStatus status)
+        private AddNewsItemStatusDTO CreateAddNewsItemStatus(int ID, NewsItemStatus status)
         {
             return new AddNewsItemStatusDTO()
             {
@@ -62,8 +63,8 @@ namespace NewsItemService.Tests.UnitTests
 
             var newsItems = new List<NewsItem>
             {
-                new NewsItem { Id = 1, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now, Status = Enums.NewsItemStatus.Publication},
-                new NewsItem { Id = 3, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now, Status = Enums.NewsItemStatus.Publication}
+                new NewsItem { Id = 1, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now, Status = NewsItemStatus.Publication},
+                new NewsItem { Id = 3, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now, Status = NewsItemStatus.Publication}
             };
 
             if (!context.NewsItems.Any())
@@ -78,23 +79,23 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Update_DuplicateStatusEntry_ReturnsDUPLICATE_STATUS()
         {
-            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(3, Enums.NewsItemStatus.Publication));
+            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(3, NewsItemStatus.Publication));
             Assert.Equal(result, new Dictionary<bool, string>() { { false, "STATUS.DUPLICATE_STATUS" } });
         }
 
         [Fact]
         public async Task Update_NewsItemStatusDone_ReturnsStatusChangedToDone()
         {
-            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(1, Enums.NewsItemStatus.Done));
+            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(1, NewsItemStatus.Done));
 
-            Assert.Equal(result, new Dictionary<bool, string>() { { true, "Status changed to " + Enums.NewsItemStatus.Done } });
+            Assert.Equal(result, new Dictionary<bool, string>() { { true, "Status changed to " + NewsItemStatus.Done } });
         }
 
         [Fact]
         public async Task Update_NonExistentEntry_ReturnsNO_NEWSITEM()
         {
             // ID 2 does not exist in the database
-            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(2, Enums.NewsItemStatus.Done));
+            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(2, NewsItemStatus.Done));
             Assert.Equal(result, new Dictionary<bool, string>() { { false, "STATUS.NO_NEWSITEM" } });
         }
 
