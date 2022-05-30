@@ -51,17 +51,23 @@ namespace NewsItemService.UnitTests.Stubs
 
         public List<NewsItem> GetAfter(DateTime date, int page, int pageSize)
         {
-            throw new NotImplementedException();
+            var amountToSkip = (page - 1) * pageSize;
+
+            return _newsItems.Skip(amountToSkip).Take(pageSize).ToList();
         }
 
         public List<NewsItem> GetBefore(DateTime date, int page, int pageSize)
         {
-            throw new NotImplementedException();
+            var amountToSkip = (page - 1) * pageSize;
+
+            return _newsItems.Skip(amountToSkip).Take(pageSize).ToList();
         }
 
         public List<NewsItem> GetBetween(DateTime startDate, DateTime endDate, int page, int pageSize)
         {
-            throw new NotImplementedException();
+            var amountToSkip = (page - 1) * pageSize;
+
+            return _newsItems.Skip(amountToSkip).Take(pageSize).ToList();
         }
 
         public NewsItem Post(NewsItem newsItem)

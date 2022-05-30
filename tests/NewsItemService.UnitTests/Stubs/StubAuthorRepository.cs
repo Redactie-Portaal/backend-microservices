@@ -16,6 +16,11 @@ namespace NewsItemService.UnitTests.Stubs
             throw new System.NotImplementedException();
         }
 
+        public List<NewsItem>? GetNewsItems(int id, int page, int pageSize)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Author Post(Author author)
         {
             throw new System.NotImplementedException();
