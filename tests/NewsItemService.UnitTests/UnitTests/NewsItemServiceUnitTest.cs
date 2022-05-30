@@ -18,7 +18,7 @@ namespace NewsItemService.UnitTests
             this._service = new NewsItemOverviewService(new StubNewsItemRepository(), new StubAuthorRepository());
         }
 
-        #region Get()
+        #region Get() Tests
         [Fact]
         public void GetSingleNewsItem()
         {
@@ -189,7 +189,7 @@ namespace NewsItemService.UnitTests
         }
         #endregion
 
-        #region GetBefore()
+        #region GetBefore() Tests
         [Fact]
         public void GetBeforeDate()
         {
@@ -291,7 +291,7 @@ namespace NewsItemService.UnitTests
         }
         #endregion
 
-        #region GetAfter()
+        #region GetAfter() Tests
         [Fact]
         public void GetAfterDate()
         {
@@ -393,7 +393,7 @@ namespace NewsItemService.UnitTests
         }
         #endregion
 
-        #region GetBetween()
+        #region GetBetween() Tests
         [Fact]
         public void GetBetweenDate()
         {
