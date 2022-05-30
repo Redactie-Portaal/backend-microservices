@@ -19,8 +19,9 @@ namespace NewsItemService.Services
         private readonly IMediaNewsItemRepository _mediaNewsItemRepository;
         private readonly ISourceLocationRepository _sourceLocationRepository;
         private readonly ISourcePersonRepository _sourcePersonRepository;
+        private readonly INoteRepository _noteRepository;
 
-        public NewsItemsService(INewsItemRepository repo, IAuthorRepository authorRepository, ICategoryRepository categoryRepository, IPublicationRepository publicationRepository, ITagRepository tagRepository, IMediaRepository mediaRepository, IMediaNewsItemRepository mediaNewsItemRepository, ISourceLocationRepository sourceLocationRepository, ISourcePersonRepository sourcePersonRepository)
+        public NewsItemsService(INewsItemRepository repo, IAuthorRepository authorRepository, ICategoryRepository categoryRepository, IPublicationRepository publicationRepository, ITagRepository tagRepository, IMediaRepository mediaRepository, IMediaNewsItemRepository mediaNewsItemRepository, ISourceLocationRepository sourceLocationRepository, ISourcePersonRepository sourcePersonRepository, INoteRepository noteRepository)
         {
             _newsItemRepository = repo;
             _authorRepository = authorRepository;
@@ -31,6 +32,7 @@ namespace NewsItemService.Services
             _mediaNewsItemRepository = mediaNewsItemRepository;
             _sourceLocationRepository = sourceLocationRepository;
             _sourcePersonRepository = sourcePersonRepository;
+            _noteRepository = noteRepository;
         }
 
         public async Task<Dictionary<bool, string>> CreateNewsItem(CreateNewsItemDTO dto)
@@ -88,8 +90,97 @@ namespace NewsItemService.Services
                 }
             }
 
+            List<SourceLocation> sourceLocations = new();
+            if (dto.SourceLocationDTOs.Count != 0)
+            {
+                foreach (var sourceLocale in dto.SourceLocationDTOs)
+                {
+                    var sourceLocation = await _sourceLocationRepository.GetSourceLocation(sourceLocale);
+                    if (sourceLocation.FirstOrDefault().Key == false)
+                    {
+                        SourceLocation newSourceLocation = new SourceLocation()
+                        {
+                            StreetName = sourceLocale.StreetName,
+                            HouseNumber = sourceLocale.HouseNumber,
+                            PostalCode = sourceLocale.PostalCode,
+                            City = sourceLocale.City,
+                            Province = sourceLocale.Province,
+                            Country = sourceLocale.Country
+                        };
+                        await _sourceLocationRepository.CreateSourceLocation(newSourceLocation);
+                        var newlyStoredSouceLocation = await _sourceLocationRepository.GetSourceLocation(sourceLocale);
+                        sourceLocations.Add(newlyStoredSouceLocation.SingleOrDefault().Value);
+                    }
+                    else
+                    {
+                        sourceLocations.Add(sourceLocation.SingleOrDefault().Value);
+                    }
+                }
+            }
 
-            //TODO: add ${MediaDTO}, ${SourceLocationDTO}, ${SourcePersonDTO}, ${NoteDTO}
+            List<SourcePerson> sourcePeople = new();
+            if (dto.SourcePersonDTOs.Count != 0)
+            {
+                foreach (var sourcePersona in dto.SourcePersonDTOs)
+                {
+                    var sourcePerson = await _sourcePersonRepository.GetSourcePerson(sourcePersona);
+                    if (sourcePerson.FirstOrDefault().Key == false)
+                    {
+                        SourcePerson newSourcePerson = new SourcePerson()
+                        {
+                            Name = sourcePersona.Name,
+                            Email = sourcePersona.Email,
+                            Phone = sourcePersona.Phone
+                        };
+                        await _sourcePersonRepository.CreateSourcePerson(newSourcePerson);
+                        var newlyStoredSourcePerson = await _sourcePersonRepository.GetSourcePerson(sourcePersona);
+                        sourcePeople.Add(newlyStoredSourcePerson.SingleOrDefault().Value);
+                    }
+                    else
+                    {
+                        sourcePeople.Add(sourcePerson.SingleOrDefault().Value);
+                    }
+                }
+            }
+
+            List<MediaNewsItem> mediaNewsItems = new();
+            if (dto.MediaDTOs.Count != 0)
+            {
+                foreach (var medium in dto.MediaDTOs)
+                {
+                    var media = await _mediaRepository.GetMediaByFilename(medium.FileName);
+                    if (media.FirstOrDefault().Key == false)
+                    {
+                        Media newMedia = new Media()
+                        {
+                            FileName = medium.FileName,
+                            FileContent = Convert.FromBase64String(medium.FileContent)
+                        };
+                        var newFile = await _mediaRepository.SaveMedia(newMedia);
+                        var newMediaNewsItem = new MediaNewsItem() { MediaId = newFile.SingleOrDefault().Value, IsSource = medium.isSource };
+                        mediaNewsItems.Add(newMediaNewsItem);
+                    }
+                    else
+                    {
+                        var newMediaNewsItem = new MediaNewsItem() { MediaId = media.SingleOrDefault().Value.Id, IsSource = medium.isSource };
+                        mediaNewsItems.Add(newMediaNewsItem);
+                    }
+                }
+            }
+
+            Note note = new Note();
+            if (dto.NoteDTO != null)
+            {
+                var author = await _authorRepository.GetAuthorById(dto.NoteDTO.AuthorId);
+                if (author.FirstOrDefault().Key == false)
+                {
+                    return new Dictionary<bool, string>() { { false, "Author does not exist" } };
+                }
+
+                note.Author = author.FirstOrDefault().Value;
+                note.Text = dto.NoteDTO.Text;
+                note.Updated = dto.NoteDTO.Updated;
+            }
 
             var newsItem = new NewsItem()
             {
@@ -101,13 +192,21 @@ namespace NewsItemService.Services
                 EndDate = dto.EndDate.ToUniversalTime(),
                 Categories = categories,
                 Tags = tags,
-                Publications = publications
+                Publications = publications,
+                SourceLocations = sourceLocations,
+                SourcePeople = sourcePeople,
+                MediaNewsItems = mediaNewsItems // TODO: pay attention to this line
             };
             try
             {
-                return await _newsItemRepository.CreateNewsItem(newsItem);
+                var result = await _newsItemRepository.CreateNewsItem(newsItem);
+                var newlyCreatedNewsItem = await _newsItemRepository.GetNewsItemById(Convert.ToInt32(result.SingleOrDefault().Value));
 
-                //TODO: The note will be saved, after creating the news item.
+                note.NewsItem = newlyCreatedNewsItem.SingleOrDefault().Value;
+
+                await _noteRepository.CreateNote(note);
+
+                return new Dictionary<bool, string>() { { true, string.Empty } };
                 //TODO: Add reference of new item to MediaNewsItem, after creating the news item.
             }
             catch (Exception)

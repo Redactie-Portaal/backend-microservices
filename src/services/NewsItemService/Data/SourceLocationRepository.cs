@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NewsItemService.DTOs;
 using NewsItemService.Entities;
 using NewsItemService.Interfaces;
 
@@ -8,25 +9,31 @@ namespace NewsItemService.Data
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
+        private readonly ILogger _logger;
 
-        public SourceLocationRepository(NewsItemServiceDatabaseContext context)
+        public SourceLocationRepository(NewsItemServiceDatabaseContext context, ILogger<SourceLocationRepository> logger)
         {
             this._dbContext = context;
+            this._logger = logger;
         }
 
-        public async Task<Dictionary<bool, SourceLocation>> GetSourceLocationById(int id)
+        public async Task<Dictionary<bool, SourceLocation>> GetSourceLocation(AddSourceLocationDTO addSourceLocationDTO)
         {
             try
             {
-                var sourceLocation = await _dbContext.SourceLocations.Where(a => a.Id == id).FirstOrDefaultAsync();
+                var sourceLocation = await _dbContext.SourceLocations
+                    .Where(p => p.PostalCode == addSourceLocationDTO.PostalCode)
+                    .Where(h => h.HouseNumber == addSourceLocationDTO.HouseNumber)
+                    .Where(c => c.Country == addSourceLocationDTO.Country).FirstOrDefaultAsync();
                 if (sourceLocation == null)
                 {
                     return new Dictionary<bool, SourceLocation>() { { false, null } };
                 }
                 return new Dictionary<bool, SourceLocation>() { { true, sourceLocation } };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError("There is a problem with retrieving the SourceLocation. Error message: {Message}", ex.Message);
                 throw;
             }
         }
@@ -44,20 +51,16 @@ namespace NewsItemService.Data
                 else
                 {
                     await _dbContext.SourceLocations.AddAsync(sourceLocation);
-                    await Save();
+                    await _dbContext.SaveChangesAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError("There is a problem with creating the SourceLocation. Error message: {Message}", ex.Message);
                 throw;
             }
 
             return new Dictionary<bool, string>() { { false, $"SourceLocation has been created succesfully" } };
-        }
-
-        public async Task Save()
-        {
-            await _dbContext.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)

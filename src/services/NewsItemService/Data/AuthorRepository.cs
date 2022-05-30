@@ -8,15 +8,12 @@ namespace NewsItemService.Data
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
+        private readonly ILogger _logger;
 
-        public AuthorRepository(NewsItemServiceDatabaseContext context)
+        public AuthorRepository(NewsItemServiceDatabaseContext context, ILogger<AuthorRepository> logger)
         {
             this._dbContext = context;
-        }
-
-        public AuthorRepository()
-        {
-
+            this._logger = logger;
         }
 
         public async Task<Dictionary<bool, Author>> GetAuthorById(int id)
@@ -30,8 +27,9 @@ namespace NewsItemService.Data
                 }
                 return new Dictionary<bool, Author>() { { true, author } };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                this._logger.LogError("There is a problem with retrieving the Author. Error message: {Message}", ex.Message);
                 throw;
             }
         }

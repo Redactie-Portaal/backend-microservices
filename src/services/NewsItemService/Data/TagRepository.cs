@@ -8,10 +8,12 @@ namespace NewsItemService.Data
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
+        private readonly ILogger _logger;
 
-        public TagRepository(NewsItemServiceDatabaseContext context)
+        public TagRepository(NewsItemServiceDatabaseContext context, ILogger<TagRepository> logger)
         {
             this._dbContext = context;
+            this._logger = logger;
         }
 
         public async Task<Dictionary<bool, Tag>> GetTagById(int id)
@@ -25,8 +27,9 @@ namespace NewsItemService.Data
                 }
                 return new Dictionary<bool, Tag>() { { true, tag } };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError("There is a problem with retrieving the Tag. Error message: {Message}", ex.Message);
                 throw;
             }
         }

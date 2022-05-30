@@ -8,10 +8,12 @@ namespace NewsItemService.Data
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
+        private readonly ILogger _logger;
 
-        public MediaNewsItemRepository(NewsItemServiceDatabaseContext context)
+        public MediaNewsItemRepository(NewsItemServiceDatabaseContext context, ILogger<MediaNewsItemRepository> logger)
         {
             this._dbContext = context;
+            this._logger = logger;
         }
 
         public async Task<Dictionary<bool, MediaNewsItem>> GetMediaNewsItemById(int newsItemId)
@@ -25,8 +27,9 @@ namespace NewsItemService.Data
                 }
                 return new Dictionary<bool, MediaNewsItem>() { { true, mediaNewsItem } };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                this._logger.LogError("There is a problem with retrieving the MediaNewsItem. Error message: {Message}", ex.Message);
                 throw;
             }
         }
@@ -39,25 +42,21 @@ namespace NewsItemService.Data
 
                 if (duplicate != null)
                 {
-                    return new Dictionary<bool, string>() { { false, "Can't create article with a title that has already been used" } };
+                    return new Dictionary<bool, string>() { { false, "MediaNewsItem is already present" } };
                 }
                 else
                 {
                     await _dbContext.MediaNewsItems.AddAsync(mediaNewsItem);
-                    await Save();
+                    await _dbContext.SaveChangesAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                this._logger.LogError("There is a problem with saving the MediaNewsItem. Error message: {Message}", ex.Message);
                 throw;
             }
 
             return new Dictionary<bool, string>() { { false, $"MediaNewsItem has been created succesfully" } };
-        }
-
-        public async Task Save()
-        {
-            await _dbContext.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)

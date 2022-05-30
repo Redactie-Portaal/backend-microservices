@@ -6,11 +6,18 @@ using Google.Apis.Util.Store;
 using Microsoft.AspNetCore.StaticFiles;
 using NewsItemService.Entities;
 using NewsItemService.Interfaces;
+using System.Text;
 
 namespace NewsItemService.Data
 {
     public class MediaRepository : IMediaRepository
     {
+        private readonly ILogger _logger;
+        public MediaRepository(ILogger<MediaRepository> logger)
+        {
+            this._logger = logger;
+        }
+
         internal async Task<DriveService> Authenticate()
         {
             UserCredential credential;
@@ -22,7 +29,6 @@ namespace NewsItemService.Data
                     "user", CancellationToken.None, new FileDataStore("Drive.ListDrive"));
             }
 
-            // Create Drive API service.
             var service = new DriveService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
@@ -35,75 +41,79 @@ namespace NewsItemService.Data
         {
             var driveService = await Authenticate();
 
-            // Retrieve file information by name
-            var fileSearch = driveService.Files.List();
-            fileSearch.Q = $"name = {fileName}";
-            var file = await fileSearch.ExecuteAsync();
-
-            if (file.Files.Count == 0)
+            try
             {
-                return new Dictionary<bool, Media>() { { false, null } };
-            }
+                var fileSearch = driveService.Files.List();
+                fileSearch.Q = $"name = {fileName}";
+                var file = await fileSearch.ExecuteAsync();
 
-            // Get specific file data by Drive Id
-            var fileRequest = driveService.Files.Get(file.Files[0].Id);
-
-            var fileStream = new MemoryStream();
-            // Add a handler which will be notified on progress changes.
-            // It will notify on each chunk download and when the
-            // download is completed or failed.
-            fileRequest.MediaDownloader.ProgressChanged +=
-                progress =>
+                if (file.Files.Count == 0)
                 {
-                    switch (progress.Status)
+                    return new Dictionary<bool, Media>() { { false, null } };
+                }
+
+                var fileRequest = driveService.Files.Get(file.Files[0].Id);
+
+                var fileStream = new MemoryStream();
+                fileRequest.MediaDownloader.ProgressChanged +=
+                    progress =>
                     {
-                        case DownloadStatus.Downloading:
-                            {
-                                Console.WriteLine(progress.BytesDownloaded);
-                                break;
-                            }
-                        case DownloadStatus.Completed:
-                            {
-                                Console.WriteLine("Download complete.");
-                                break;
-                            }
-                        case DownloadStatus.Failed:
-                            {
-                                Console.WriteLine("Download failed.");
-                                break;
-                            }
-                    }
-                };
-            fileRequest.Download(fileStream);
+                        switch (progress.Status)
+                        {
+                            case DownloadStatus.Downloading:
+                                {
+                                    this._logger.LogInformation("File is downloading from Google Drive. Downloaded bytes thus far: {ByteAmount}", progress.BytesDownloaded);
+                                    break;
+                                }
+                            case DownloadStatus.Completed:
+                                {
+                                    this._logger.LogInformation("File downloaded from Google Drive successfully.");
+                                    Console.WriteLine("Download complete.");
+                                    break;
+                                }
+                            case DownloadStatus.Failed:
+                                {
+                                    this._logger.LogError("File downloaded from Google Drive failed.");
+                                    break;
+                                }
+                        }
+                    };
+                fileRequest.Download(fileStream);
 
-            var media = new Media();
+                var media = new Media();
 
-            media.Id = file.Files[0].Id;
-            media.FileName = file.Files[0].Name;
-            media.Source = "Google Drive";
+                media.Id = file.Files[0].Id;
+                media.FileName = file.Files[0].Name;
+                media.Source = "Google Drive";
 
-            var contentType = file.Files[0].MimeType;
-            if (contentType.Contains("application"))
-            {
-                media.NewsItemMediaType = Types.NewsItemMediaType.Document;
+                var contentType = file.Files[0].MimeType;
+                if (contentType.Contains("application"))
+                {
+                    media.NewsItemMediaType = Types.NewsItemMediaType.Document;
+                }
+                else if (contentType.Contains("audio"))
+                {
+                    media.NewsItemMediaType = Types.NewsItemMediaType.Audio;
+                }
+                else if (contentType.Contains("image"))
+                {
+                    media.NewsItemMediaType = Types.NewsItemMediaType.Picture;
+                }
+                else if (contentType.Contains("video"))
+                {
+                    media.NewsItemMediaType = Types.NewsItemMediaType.Video;
+                }
+                else
+                {
+                    media.NewsItemMediaType = Types.NewsItemMediaType.Document;
+                }
+                return new Dictionary<bool, Media>() { { true, media } };
             }
-            else if (contentType.Contains("audio"))
+            catch (Exception ex)
             {
-                media.NewsItemMediaType = Types.NewsItemMediaType.Audio;
+                this._logger.LogError("There is a problem with retrieve the Google Drive File. Error message: {Message}", ex.Message);
+                throw;
             }
-            else if (contentType.Contains("image"))
-            {
-                media.NewsItemMediaType = Types.NewsItemMediaType.Picture;
-            }
-            else if (contentType.Contains("video"))
-            {
-                media.NewsItemMediaType = Types.NewsItemMediaType.Video;
-            }
-            else
-            {
-                media.NewsItemMediaType = Types.NewsItemMediaType.Document;
-            }
-            return new Dictionary<bool, Media>() { { true, media } };
         }
 
         public async Task<Dictionary<bool, string>> SaveMedia(Media media)
@@ -117,15 +127,25 @@ namespace NewsItemService.Data
             provider.TryGetContentType(media.FileName, out var contentType);
             file.MimeType = contentType;
 
-            var fileUpload = driveService.Files.Create(file).ExecuteAsync();
+            MemoryStream fileStream = new MemoryStream(media.FileContent);
 
-            if (fileUpload.IsCompletedSuccessfully)
+            try
             {
-                return new Dictionary<bool, string>() { { true, string.Empty } };
+                var fileUpload = driveService.Files.Create(file, fileStream, file.MimeType);
+                var result = await fileUpload.UploadAsync();
+
+                if (result.Status == Google.Apis.Upload.UploadStatus.Failed)
+                {
+                    this._logger.LogError("The file upload to Google Drive failed. Error message: {Message}", result.Exception);
+                    throw result.Exception;
+                }
+                return new Dictionary<bool, string>() { { true, fileUpload.ResponseBody.Id } };
+
             }
-            else
+            catch (Exception ex)
             {
-                return new Dictionary<bool, string>() { { false, "File could not be saved" } };
+                this._logger.LogError("There is a problem with uploading the file to Google Drive. Error message: {Message}", ex.Message);
+                throw;
             }
         }
     }

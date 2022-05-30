@@ -4,34 +4,41 @@ using NewsItemService.Interfaces;
 
 namespace NewsItemService.Data
 {
-    public class PublicationRepository : IPublicationRepository, IDisposable
+    public class NoteRepository : INoteRepository, IDisposable
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
         private readonly ILogger _logger;
 
-        public PublicationRepository(NewsItemServiceDatabaseContext context, ILogger<PublicationRepository> logger)
+        public NoteRepository(NewsItemServiceDatabaseContext context, ILogger<NoteRepository> logger)
         {
             this._dbContext = context;
             this._logger = logger;
         }
 
-        public async Task<Dictionary<bool, Publication>> GetPublicationById(int id)
+        public async Task<Dictionary<bool, string>> CreateNote(Note note)
         {
             try
             {
-                var publication = await _dbContext.Publications.Where(a => a.Id == id).FirstOrDefaultAsync();
-                if (publication == null)
+                var duplicate = await _dbContext.Notes.FirstOrDefaultAsync(x => x.Text == note.Text);
+
+                if (duplicate != null)
                 {
-                    return new Dictionary<bool, Publication>() { { false, null } };
+                    return new Dictionary<bool, string>() { { false, "Can't create note because it is already present." } };
                 }
-                return new Dictionary<bool, Publication>() { { true, publication } };
+                else
+                {
+                    await _dbContext.Notes.AddAsync(note);
+                    await _dbContext.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError("There is a problem with retrieving the Publication. Error message: {Message}", ex.Message);
+                _logger.LogError("There is a problem with retrieving the Note. Error message: {Message}", ex.Message);
                 throw;
             }
+
+            return new Dictionary<bool, string>() { { false, $"Note has been created succesfully" } };
         }
 
         protected virtual void Dispose(bool disposing)

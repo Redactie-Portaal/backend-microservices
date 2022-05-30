@@ -5,6 +5,7 @@ namespace NewsItemService.Interfaces
 {
     public interface INewsItemRepository : IDisposable
     {
+        Task<Dictionary<bool, NewsItem>> GetNewsItemById(int newsItemId);
         Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item);
     }
 }

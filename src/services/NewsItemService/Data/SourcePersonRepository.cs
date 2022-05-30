@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NewsItemService.DTOs;
 using NewsItemService.Entities;
 using NewsItemService.Interfaces;
 
@@ -8,25 +9,30 @@ namespace NewsItemService.Data
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
+        private readonly ILogger _logger;
 
-        public SourcePersonRepository(NewsItemServiceDatabaseContext context)
+        public SourcePersonRepository(NewsItemServiceDatabaseContext context, ILogger<SourcePersonRepository> logger)
         {
             this._dbContext = context;
+            this._logger = logger;
         }
 
-        public async Task<Dictionary<bool, SourcePerson>> GetSourcePersonById(int id)
+        public async Task<Dictionary<bool, SourcePerson>> GetSourcePerson(AddSourcePersonDTO addSourcePersonDTO)
         {
             try
             {
-                var sourcePerson = await _dbContext.SourcePeople.Where(a => a.Id == id).FirstOrDefaultAsync();
+                var sourcePerson = await _dbContext.SourcePeople
+                    .Where(p => p.Phone == addSourcePersonDTO.Phone)
+                    .Where(n => n.Name == addSourcePersonDTO.Name).FirstOrDefaultAsync();
                 if (sourcePerson == null)
                 {
                     return new Dictionary<bool, SourcePerson>() { { false, null } };
                 }
                 return new Dictionary<bool, SourcePerson>() { { true, sourcePerson } };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError("There is a problem with retrieving the SourcePerson. Error message: {Message}", ex.Message);
                 throw;
             }
         }
@@ -44,20 +50,16 @@ namespace NewsItemService.Data
                 else
                 {
                     await _dbContext.SourcePeople.AddAsync(sourcePerson);
-                    await Save();
+                    await _dbContext.SaveChangesAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError("There is a problem with creating a SourcePerson. Error message: {Message}", ex.Message);
                 throw;
             }
 
             return new Dictionary<bool, string>() { { false, $"sourcePerson has been created succesfully" } };
-        }
-
-        public async Task Save()
-        {
-            await _dbContext.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)

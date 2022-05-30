@@ -23,8 +23,9 @@ namespace NewsArticleService.Controllers
         private readonly IMediaNewsItemRepository _mediaNewsItemRepository;
         private readonly ISourceLocationRepository _sourceLocationRepository;
         private readonly ISourcePersonRepository _sourcePersonRepository;
+        private readonly INoteRepository _noteRepository;
 
-        public NewsItemController(INewsItemRepository newsItemRepository, IAuthorRepository authorRepository, ICategoryRepository categoryRepository, IPublicationRepository publicationRepository, ITagRepository tagRepository, IMediaRepository mediaRepository, IMediaNewsItemRepository mediaNewsItemRepository, ISourceLocationRepository sourceLocationRepository, ISourcePersonRepository sourcePersonRepository)
+        public NewsItemController(INewsItemRepository newsItemRepository, IAuthorRepository authorRepository, ICategoryRepository categoryRepository, IPublicationRepository publicationRepository, ITagRepository tagRepository, IMediaRepository mediaRepository, IMediaNewsItemRepository mediaNewsItemRepository, ISourceLocationRepository sourceLocationRepository, ISourcePersonRepository sourcePersonRepository, INoteRepository noteRepository)
         {
             _newsItemRepository = newsItemRepository;
             _authorRepository = authorRepository;
@@ -35,8 +36,9 @@ namespace NewsArticleService.Controllers
             _mediaNewsItemRepository = mediaNewsItemRepository;
             _sourceLocationRepository = sourceLocationRepository;
             _sourcePersonRepository = sourcePersonRepository;
+            _noteRepository = noteRepository;
 
-            newsItemService = new NewsItemsService(_newsItemRepository, _authorRepository, _categoryRepository, _publicationRepository, _tagRepository, _mediaRepository, _mediaNewsItemRepository, _sourceLocationRepository, _sourcePersonRepository);
+            newsItemService = new NewsItemsService(_newsItemRepository, _authorRepository, _categoryRepository, _publicationRepository, _tagRepository, _mediaRepository, _mediaNewsItemRepository, _sourceLocationRepository, _sourcePersonRepository, _noteRepository);
         }
 
         [HttpPost]
