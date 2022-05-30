@@ -14,11 +14,11 @@ namespace NewsItemService.Data
             this._dbContext = context;
         }
 
-        public async Task<Dictionary<bool, MediaNewsItem>> GetMediaNewsItemById(int id)
+        public async Task<Dictionary<bool, MediaNewsItem>> GetMediaNewsItemById(int newsItemId)
         {
             try
             {
-                var mediaNewsItem = await _dbContext.MediaNewsItems.Where(a => a.Id == id).FirstOrDefaultAsync();
+                var mediaNewsItem = await _dbContext.MediaNewsItems.Where(a => a.NewsItemId == newsItemId).FirstOrDefaultAsync();
                 if (mediaNewsItem == null)
                 {
                     return new Dictionary<bool, MediaNewsItem>() { { false, null } };
@@ -35,7 +35,7 @@ namespace NewsItemService.Data
         {
             try
             {
-                var duplicate = await _dbContext.MediaNewsItems.FirstOrDefaultAsync(x => x.Id == mediaNewsItem.Id);
+                var duplicate = await _dbContext.MediaNewsItems.FirstOrDefaultAsync(x => x.NewsItemId == mediaNewsItem.NewsItemId);
 
                 if (duplicate != null)
                 {

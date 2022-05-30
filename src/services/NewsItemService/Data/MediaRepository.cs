@@ -78,8 +78,7 @@ namespace NewsItemService.Data
 
             var media = new Media();
 
-            //TODO: use the DTO instead of the Entity
-            //media.Id = file.Files[0].Id;
+            media.Id = file.Files[0].Id;
             media.FileName = file.Files[0].Name;
             media.Source = "Google Drive";
 

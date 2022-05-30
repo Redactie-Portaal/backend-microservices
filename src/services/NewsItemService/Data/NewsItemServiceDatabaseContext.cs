@@ -47,11 +47,6 @@ namespace NewsItemService.Data
         /// </summary>
         public DbSet<Publication> Publications { get; set; }
         /// <summary>
-        /// DbSet for the Media class, A DbSet represents the collection of all entities in the context. 
-        /// DbSet objects are created from a DbContext using the DbContext.Set method.
-        /// </summary>
-        public DbSet<Media> Medias { get; set; }
-        /// <summary>
         /// DbSet for the MediaNewsItem class, A DbSet represents the collection of all entities in the context. 
         /// DbSet objects are created from a DbContext using the DbContext.Set method.
         /// </summary>
@@ -94,8 +89,7 @@ namespace NewsItemService.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MediaNewsItem>().HasKey(a => new { a.MediaId, a.NewsItemId });
-            modelBuilder.Entity<MediaNewsItem>().HasOne(x => x.Media).WithMany(y => y.MediaNewsItems).HasForeignKey(x => x.MediaId);
+            modelBuilder.Entity<MediaNewsItem>().HasKey(a => new { a.NewsItemId });
             modelBuilder.Entity<MediaNewsItem>().HasOne(x => x.NewsItem).WithMany(y => y.MediaNewsItems).HasForeignKey(x => x.NewsItemId);
         }
     }
