@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NewsArticleService.Controllers;
-using NewsItemService.Controllers;
 using NewsItemService.Data;
 using NewsItemService.Entities;
 using NewsItemService.Services;
@@ -26,14 +25,14 @@ namespace NewsItemService
             }
             var repo = new NewsItemRepository(context);
 
-            return new NewsItemController(repo);
+            return new NewsItemController(repo, new AuthorRepository(context), new CategoryRepository(context));
         }
 
         private void SeedProductInMemoryDatabaseWithData(NewsItemServiceDatabaseContext context)
         {
             var newsItems = new List<NewsItem>
             {
-                new NewsItem { Id = 1, Authors = null, Created = DateTime.Now, Updated = DateTime.Now, Status = Enums.NewsItemStatus.Publication}
+                new NewsItem { Id = 8, Authors = null, Created = DateTime.Now, Updated = DateTime.Now}
             };
 
             if (!context.NewsItems.Any())
@@ -44,16 +43,18 @@ namespace NewsItemService
             context.SaveChanges();
         }
 
+
         [Fact]
-        private async Task ChangeNewsItemStatus()
+        private async Task CreateNewsItemSuccessfully()
         {
             var controller = Initialize();
 
-            var result = controller.AddNewsItemStatus(new DTOs.AddNewsItemStatus { NewsItemId = 1, status = Enums.NewsItemStatus.Done });
+            List<int> authorIds = new() { 1 };
+            var result = controller.Create(new DTOs.CreateNewsItemDTO { AuthorIds = authorIds, Title = "Test title", Content = "Test content" });
             var resulttostring = result.Result as ObjectResult;
 
             var final = resulttostring.Value.GetType().GetProperty("message").GetValue(resulttostring.Value, null);
-            Assert.Equal(final, "Status changed to Done");
+            Assert.Equal("Author does not exist", final);
         }
     }
 }

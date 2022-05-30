@@ -36,7 +36,7 @@ namespace NewsItemService.Data
                 throw;
             }
 
-            return new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } };
+            return new Dictionary<bool, string>() { { false, $"Article '{item.Title}' has been created succesfully" } };
         }
 
         public async Task Save()

@@ -21,6 +21,7 @@ namespace NewsItemService.Tests.UnitTests
         /// NewsItemRepository for testing purposes
         /// </summary>
         private NewsItemRepository repo { get; set; }
+        private readonly NewsItemServiceDatabaseContext context;
 
         /// <summary>
         /// Constructor to setup the in memory database, and add to the context to use.
@@ -28,79 +29,99 @@ namespace NewsItemService.Tests.UnitTests
         public NewsItemRepositoryTests()
         {
             var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>().UseInMemoryDatabase(databaseName: "InMemoryProductDb_" + "NewsItem").Options;
-            var context = new NewsItemServiceDatabaseContext(options);
-            SeedProductInMemoryDatabaseWithData(context);
+            context = new NewsItemServiceDatabaseContext(options);
+            //SeedProductInMemoryDatabaseWithData(context);
             
             this.repo = new NewsItemRepository(context);
         }
 
-        /// <summary>
-        /// Create a new AddNewsItemStatus object, with parameters
-        /// </summary>
-        /// <param name="ID">ID of newsItem</param>
-        /// <param name="status">Status that the newsItem has to change to</param>
-        /// <returns>AddNewsItemStatus</returns>
-        private AddNewsItemStatus CreateAddNewsItemStatus(int ID, Enums.NewsItemStatus status)
-        {
-            return new AddNewsItemStatus()
-            {
-                NewsItemId = ID,
-                status = status
-            };
-        }
 
-
-        private void CreateNewsItemSuccessfully() { }
 
         /// <summary>
         /// Feed the virtual database data
         /// </summary>
         /// <param name="context">Context used for the repository</param>
-        private void SeedProductInMemoryDatabaseWithData(NewsItemServiceDatabaseContext context)
+        //private void SeedProductInMemoryDatabaseWithData(NewsItemServiceDatabaseContext context)
+        //{
+        //    var authors = new List<Author>()
+        //    {
+        //        new Author(){ Id = 1, Name = "TestAuthor", NewsItems = null}
+        //    };
+
+        //    var newsItems = new List<NewsItem>
+        //    {
+        //        new NewsItem { Id = 2, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now },
+        //        new NewsItem { Id = 3, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now }
+        //    };
+
+        //    if (!context.NewsItems.Any())
+        //    {
+        //        context.NewsItems.AddRange(newsItems);
+        //    }
+
+        //    context.SaveChanges();
+        //}
+
+        [Fact]
+        private async Task CreateNewsItemSuccessfully()
         {
             var authors = new List<Author>()
             {
-                new Author(){ Id = 1, Name = "TestAuthor", NewsItems = null}
+                new Author(){ Id = 5, Name = "TestAuthor", NewsItems = null}
             };
 
-            var newsItems = new List<NewsItem>
+            NewsItem item = new()
             {
-                new NewsItem { Id = 1, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now, Status = Enums.NewsItemStatus.Publication},
-                new NewsItem { Id = 3, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now, Status = Enums.NewsItemStatus.Publication}
+                Id = 66,
+                Authors = authors,
+                Created = DateTime.Now,
+                Title = "test title"
+
             };
 
-            if (!context.NewsItems.Any())
-            {
-                context.NewsItems.AddRange(newsItems);
-            }
+            var result = await repo.CreateNewsItem(item);
+            var createdNewsItem = context.NewsItems.Find(66);
 
+
+            Assert.Equal(result, new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } });
+            Assert.NotNull(createdNewsItem);
+
+        }
+
+        [Fact]
+        private async Task CreateNewsItemFailBecauseNoAuthors()
+        {
+            var authors = new List<Author>()
+            {
+             
+            };
+
+            NewsItem itemDupe = new()
+            {
+                Id = 68,
+                Authors = authors,
+                Created = DateTime.Now,
+                Title = "test title"
+
+            };
+
+            context.NewsItems.Add(itemDupe);
             context.SaveChanges();
+
+            NewsItem item = new()
+            {
+                Id = 67,
+                Authors = authors,
+                Created = DateTime.Now,
+                Title = "test title"
+
+            };
+
+            var result = await repo.CreateNewsItem(item);
+
+
+            Assert.Equal(result, new Dictionary<bool, string>() { { true, $"Can't create article with a title that has already been used" } });
+
         }
-
-        #region Start of tests (Be carefull where u place the update entries, since it will update the database which could mess with the other tests)
-        [Fact]
-        public async Task Update_DuplicateStatusEntry_ReturnsDUPLICATE_STATUS()
-        {
-            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(3, Enums.NewsItemStatus.Publication));
-            Assert.Equal(result, new Dictionary<bool, string>() { { false, "STATUS.DUPLICATE_STATUS" } });
-        }
-
-        [Fact]
-        public async Task Update_NewsItemStatusDone_ReturnsStatusChangedToDone()
-        {
-            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(1, Enums.NewsItemStatus.Done));
-
-            Assert.Equal(result, new Dictionary<bool, string>() { { true, "Status changed to " + Enums.NewsItemStatus.Done } });
-        }
-
-        [Fact]
-        public async Task Update_NonExistentEntry_ReturnsNO_NEWSITEM()
-        {
-            // ID 2 does not exist in the database
-            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(2, Enums.NewsItemStatus.Done));
-            Assert.Equal(result, new Dictionary<bool, string>() { { false, "STATUS.NO_NEWSITEM" } });
-        }
-
-        #endregion
     }
 }
