@@ -15,6 +15,13 @@ builder.Services.AddScoped<INewsItemRepository, NewsItemRepository>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+builder.Services.AddScoped<IMediaNewsItemRepository, MediaNewsItemRepository>();
+builder.Services.AddScoped<IMediaRepository, MediaRepository>();
+builder.Services.AddScoped<IPublicationRepository, PublicationRepository>();
+builder.Services.AddScoped<ISourceLocationRepository, SourceLocationRepository>();
+builder.Services.AddScoped<ISourcePersonRepository, SourcePersonRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
+
 // Add the database context to the builder.
 builder.Services.AddDbContext<NewsItemServiceDatabaseContext>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Needed for saving DateTime variables
