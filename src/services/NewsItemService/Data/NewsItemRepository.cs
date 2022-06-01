@@ -39,7 +39,7 @@ namespace NewsItemService.Data
                 throw;
             }
 
-            return new Dictionary<bool, string>() { { false, Convert.ToString(item.Id) } };
+            return new Dictionary<bool, string>() { { false, $"Article '{item.Title}' has been created succesfully" } };
         }
 
         public async Task<Dictionary<bool, NewsItem>> GetNewsItemById(int newsItemId)

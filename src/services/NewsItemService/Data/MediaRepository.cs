@@ -32,7 +32,7 @@ namespace NewsItemService.Data
             var service = new DriveService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
-                ApplicationName = "OFMicroservicesDotnet"
+                ApplicationName = "OFFRedactieportaalMicroservices"
             });
             return service;
         }
@@ -45,6 +45,8 @@ namespace NewsItemService.Data
             {
                 var fileSearch = driveService.Files.List();
                 fileSearch.Q = $"name = '{fileName}'";
+
+                this._logger.LogInformation("Searching for file in Google Drive.");
                 var file = await fileSearch.ExecuteAsync();
 
                 if (file.Files.Count == 0)
@@ -52,6 +54,7 @@ namespace NewsItemService.Data
                     return new Dictionary<bool, Media>() { { false, null } };
                 }
 
+                this._logger.LogInformation("Getting file metadata from Google Drive.");
                 var fileRequest = driveService.Files.Get(file.Files[0].Id);
 
                 var fileStream = new MemoryStream();
@@ -67,24 +70,23 @@ namespace NewsItemService.Data
                                 }
                             case DownloadStatus.Completed:
                                 {
-                                    this._logger.LogInformation("File downloaded from Google Drive successfully.");
-                                    Console.WriteLine("Download complete.");
+                                    this._logger.LogInformation("File successfully downloaded from Google Drive.");
                                     break;
                                 }
                             case DownloadStatus.Failed:
                                 {
-                                    this._logger.LogError("File downloaded from Google Drive failed.");
+                                    this._logger.LogError("Failed to download file from Google Drive.");
                                     break;
                                 }
                         }
                     };
+                this._logger.LogInformation("Downloading file from Google Drive.");
                 fileRequest.Download(fileStream);
 
                 var media = new Media();
 
                 media.Id = file.Files[0].Id;
                 media.FileName = file.Files[0].Name;
-                media.Source = "Google Drive";
 
                 var contentType = file.Files[0].MimeType;
                 if (contentType.Contains("audio"))
@@ -107,7 +109,7 @@ namespace NewsItemService.Data
             }
             catch (Exception ex)
             {
-                this._logger.LogError("There is a problem with retrieve the Google Drive File. Error message: {Message}", ex.Message);
+                this._logger.LogError("There is a problem with retrieve the file from Google Drive. Error message: {Message}", ex.Message);
                 throw;
             }
         }
@@ -128,6 +130,8 @@ namespace NewsItemService.Data
             try
             {
                 var fileUpload = driveService.Files.Create(file, fileStream, file.MimeType);
+
+                this._logger.LogInformation("Uploading file to Google Drive.");
                 var result = await fileUpload.UploadAsync();
 
                 if (result.Status == Google.Apis.Upload.UploadStatus.Failed)
@@ -135,6 +139,7 @@ namespace NewsItemService.Data
                     this._logger.LogError("The file upload to Google Drive failed. Error message: {Message}", result.Exception);
                     throw result.Exception;
                 }
+                this._logger.LogInformation("File upload to Google Drive succeeded.");
                 return new Dictionary<bool, string>() { { true, fileUpload.ResponseBody.Id } };
 
             }

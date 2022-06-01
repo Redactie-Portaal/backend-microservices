@@ -9,7 +9,6 @@ namespace NewsItemService.Services
 {
     public class NewsItemsService
     {
-        private readonly ModelStateDictionary modelState = new ModelStateDictionary();
         private readonly INewsItemRepository _newsItemRepository;
         private readonly IAuthorRepository _authorRepository;
         private readonly ICategoryRepository _categoryRepository;
@@ -203,12 +202,12 @@ namespace NewsItemService.Services
 
             try
             {
-                var result = await _newsItemRepository.CreateNewsItem(newsItem);
-                if (!result.SingleOrDefault().Key)
-                {
-                    return new Dictionary<bool, string>() { { false, result.SingleOrDefault().Value } };
-                }
-                return new Dictionary<bool, string>() { { true, result.SingleOrDefault().Value } };
+                return await _newsItemRepository.CreateNewsItem(newsItem);
+                //if (!result.SingleOrDefault().Key)
+                //{
+                //    return new Dictionary<bool, string>() { { false, result.SingleOrDefault().Value } };
+                //}
+                //return new Dictionary<bool, string>() { { true, result.SingleOrDefault().Value } };
             }
             catch (Exception)
             {
