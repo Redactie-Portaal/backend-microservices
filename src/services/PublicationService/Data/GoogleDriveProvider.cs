@@ -9,6 +9,13 @@ namespace PublicationService.Data
 {
     public class GoogleDriveProvider : IMediaProvider
     {
+        private readonly ILogger _logger;
+
+        public GoogleDriveProvider(ILogger<GoogleDriveProvider> logger)
+        {
+            this._logger = logger;
+        }
+
         internal async Task<DriveService> Authenticate()
         {
             UserCredential credential;
@@ -17,10 +24,9 @@ namespace PublicationService.Data
                 credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.FromStreamAsync(authStream).Result.Secrets,
                     new[] { DriveService.Scope.Drive },
-                    "user", CancellationToken.None, new FileDataStore("Drive.ListDrive"));
+                    "user", CancellationToken.None, new FileDataStore("PublicationGDrive"));
             }
 
-            // Create Drive API service.
             var service = new DriveService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
@@ -33,47 +39,55 @@ namespace PublicationService.Data
         {
             var driveService = await Authenticate();
 
-            // Retrieve file information by name
-            var fileSearch = driveService.Files.List();
-            fileSearch.Q = $"name = {fileName}";
-            var file = await fileSearch.ExecuteAsync();
-
-            if (file.Files.Count == 0)
+            try
             {
-                return new Dictionary<bool, byte[]>() { { false, null} };
-            }
+                var fileSearch = driveService.Files.List();
+                fileSearch.Q = $"name = '{fileName}'";
 
-            // Get specific file data by Drive Id
-            var fileRequest = driveService.Files.Get(file.Files[0].Id);
+                this._logger.LogInformation("Searching for file in Google Drive.");
+                var file = await fileSearch.ExecuteAsync();
 
-            var fileStream = new MemoryStream();
-            // Add a handler which will be notified on progress changes.
-            // It will notify on each chunk download and when the
-            // download is completed or failed.
-            fileRequest.MediaDownloader.ProgressChanged +=
-                progress =>
+                if (file.Files.Count == 0)
                 {
-                    switch (progress.Status)
+                    return new Dictionary<bool, byte[]>() { { false, null } };
+                }
+
+                this._logger.LogInformation("Getting file metadata from Google Drive.");
+                var fileRequest = driveService.Files.Get(file.Files[0].Id);
+
+                var fileStream = new MemoryStream();
+                fileRequest.MediaDownloader.ProgressChanged +=
+                    progress =>
                     {
-                        case DownloadStatus.Downloading:
-                            {
-                                Console.WriteLine(progress.BytesDownloaded);
-                                break;
-                            }
-                        case DownloadStatus.Completed:
-                            {
-                                Console.WriteLine("Download complete.");
-                                break;
-                            }
-                        case DownloadStatus.Failed:
-                            {
-                                Console.WriteLine("Download failed.");
-                                break;
-                            }
-                    }
-                };
-            fileRequest.Download(fileStream);
-            return new Dictionary<bool, byte[]>() { { true, fileStream.ToArray() } };
+                        switch (progress.Status)
+                        {
+                            case DownloadStatus.Downloading:
+                                {
+                                    this._logger.LogInformation("File is downloading from Google Drive. Downloaded bytes thus far: {ByteAmount}", progress.BytesDownloaded);
+                                    break;
+                                }
+                            case DownloadStatus.Completed:
+                                {
+                                    this._logger.LogInformation("File successfully downloaded from Google Drive.");
+                                    break;
+                                }
+                            case DownloadStatus.Failed:
+                                {
+                                    this._logger.LogError("Failed to download file from Google Drive.");
+                                    break;
+                                }
+                        }
+                    };
+                this._logger.LogInformation("Downloading file from Google Drive.");
+                fileRequest.Download(fileStream);
+
+                return new Dictionary<bool, byte[]>() { { true, fileStream.ToArray() } };
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("There is a problem with retrieve the file from Google Drive. Error message: {Message}", ex.Message);
+                throw;
+            }
         }
     }
 }

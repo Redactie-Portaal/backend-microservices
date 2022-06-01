@@ -1,7 +1,9 @@
-﻿namespace PublicationService.Interfaces
+﻿using PublicationService.DTOs;
+
+namespace PublicationService.Interfaces
 {
     public interface IPublicationService
     {
-        Task<Dictionary<bool, string>> PublishStory(string text, string fileName);
+        Task<Dictionary<bool, string>> PublishNewsItem(PublishNewsItemDTO publishNewsItemDTO);
     }
 }

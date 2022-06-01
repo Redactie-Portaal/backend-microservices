@@ -1,5 +1,6 @@
 using PublicationService.Data;
 using PublicationService.Interfaces;
+using PublicationService.Messaging;
 using PublicationService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +12,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IPublicationService, TwitterService>();
-builder.Services.AddScoped<IMediaProvider, GoogleDriveProvider>();
+builder.Services.AddHostedService<RabbitMQWorker>();
+
+builder.Services.AddSingleton<IPublicationService, TwitterService>();
+builder.Services.AddSingleton<IMediaProvider, GoogleDriveProvider>();
 
 var app = builder.Build();
 

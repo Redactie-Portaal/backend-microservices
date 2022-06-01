@@ -12,4 +12,8 @@
     <PackageReference Include="TweetinviAPI" Version="5.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\RabbitMQLibrary\RabbitMQLibrary.csproj" />
+  </ItemGroup>
+
 </Project>
