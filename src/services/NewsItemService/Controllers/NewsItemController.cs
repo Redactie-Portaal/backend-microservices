@@ -42,7 +42,7 @@ namespace NewsArticleService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateNewsItemDTO dto)
+        public async Task<IActionResult> Create(CreateNewsItemDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest();

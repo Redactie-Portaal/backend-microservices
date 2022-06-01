@@ -157,18 +157,18 @@ namespace NewsItemService.Services
                             FileContent = Convert.FromBase64String(medium.FileContent)
                         };
                         var newFile = await _mediaRepository.SaveMedia(newMedia);
-                        var newMediaNewsItem = new MediaNewsItem() { MediaId = newFile.SingleOrDefault().Value, IsSource = medium.isSource };
+                        var newMediaNewsItem = new MediaNewsItem() { MediaId = newFile.SingleOrDefault().Value, IsSource = medium.IsSource };
                         mediaNewsItems.Add(newMediaNewsItem);
                     }
                     else
                     {
-                        var newMediaNewsItem = new MediaNewsItem() { MediaId = media.SingleOrDefault().Value.Id, IsSource = medium.isSource };
+                        var newMediaNewsItem = new MediaNewsItem() { MediaId = media.SingleOrDefault().Value.Id, IsSource = medium.IsSource };
                         mediaNewsItems.Add(newMediaNewsItem);
                     }
                 }
             }
 
-            Note note = new Note();
+            List<Note> notes = new();
             if (dto.NoteDTO != null)
             {
                 var author = await _authorRepository.GetAuthorById(dto.NoteDTO.AuthorId);
@@ -176,10 +176,12 @@ namespace NewsItemService.Services
                 {
                     return new Dictionary<bool, string>() { { false, "Author does not exist" } };
                 }
-
+                Note note = new Note();
                 note.Author = author.FirstOrDefault().Value;
                 note.Text = dto.NoteDTO.Text;
                 note.Updated = dto.NoteDTO.Updated;
+
+                notes.Add(note);
             }
 
             var newsItem = new NewsItem()
@@ -195,19 +197,29 @@ namespace NewsItemService.Services
                 Publications = publications,
                 SourceLocations = sourceLocations,
                 SourcePeople = sourcePeople,
-                MediaNewsItems = mediaNewsItems // TODO: pay attention to this line
+                Notes = notes
             };
+            return await SaveCreatedNewsItem(newsItem, notes, mediaNewsItems);
+        }
+
+        public async Task<Dictionary<bool, string>> SaveCreatedNewsItem(NewsItem newsItem, List<Note> notes, List<MediaNewsItem> mediaNewsItems)
+        {
             try
             {
                 var result = await _newsItemRepository.CreateNewsItem(newsItem);
                 var newlyCreatedNewsItem = await _newsItemRepository.GetNewsItemById(Convert.ToInt32(result.SingleOrDefault().Value));
 
-                note.NewsItem = newlyCreatedNewsItem.SingleOrDefault().Value;
+                //notes[0].NewsItem = newlyCreatedNewsItem.SingleOrDefault().Value;
+                //await _noteRepository.CreateNote(notes[0]);
 
-                await _noteRepository.CreateNote(note);
+                foreach (var mediaNewsItem in mediaNewsItems)
+                {
+                    mediaNewsItem.NewsItemId = newlyCreatedNewsItem.SingleOrDefault().Value.Id;
+                    mediaNewsItem.NewsItem = newlyCreatedNewsItem.SingleOrDefault().Value;
+                    await _mediaNewsItemRepository.CreateMediaNewsItem(mediaNewsItem);
+                }
 
                 return new Dictionary<bool, string>() { { true, string.Empty } };
-                //TODO: Add reference of new item to MediaNewsItem, after creating the news item.
             }
             catch (Exception)
             {

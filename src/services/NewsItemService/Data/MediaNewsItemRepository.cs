@@ -38,7 +38,7 @@ namespace NewsItemService.Data
         {
             try
             {
-                var duplicate = await _dbContext.MediaNewsItems.FirstOrDefaultAsync(x => x.NewsItemId == mediaNewsItem.NewsItemId);
+                var duplicate = await _dbContext.MediaNewsItems.FirstOrDefaultAsync(x => x.MediaId == mediaNewsItem.MediaId);
 
                 if (duplicate != null)
                 {
@@ -46,6 +46,8 @@ namespace NewsItemService.Data
                 }
                 else
                 {
+                    //_dbContext.Entry(mediaNewsItem.NewsItem).CurrentValues.SetValues(mediaNewsItem.NewsItem);
+                    _dbContext.Entry(mediaNewsItem.NewsItem).State = EntityState.Detached;
                     await _dbContext.MediaNewsItems.AddAsync(mediaNewsItem);
                     await _dbContext.SaveChangesAsync();
                 }

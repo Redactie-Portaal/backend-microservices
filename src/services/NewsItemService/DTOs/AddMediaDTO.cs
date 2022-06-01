@@ -6,9 +6,8 @@ namespace NewsItemService.DTOs
     {
         [Required]
         public string FileName { get; set; } = string.Empty;
-        [Required]
         public string FileContent { get; set; } = string.Empty;
         [Required]
-        public bool isSource { get; set; }
+        public bool IsSource { get; set; }
     }
 }

@@ -27,5 +27,6 @@ namespace NewsItemService.Entities
 
         public ICollection<SourceLocation> SourceLocations { get; set; }
         public ICollection<SourcePerson> SourcePeople { get; set; }
+        public ICollection<Note> Notes { get; set; }
     }
 }

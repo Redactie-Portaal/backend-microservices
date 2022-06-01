@@ -11,19 +11,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<INewsItemRepository, NewsItemRepository>();
-builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddSingleton<INewsItemRepository, NewsItemRepository>();
+builder.Services.AddSingleton<IAuthorRepository, AuthorRepository>();
+builder.Services.AddSingleton<ICategoryRepository, CategoryRepository>();
 
-builder.Services.AddScoped<IMediaNewsItemRepository, MediaNewsItemRepository>();
-builder.Services.AddScoped<IMediaRepository, MediaRepository>();
-builder.Services.AddScoped<IPublicationRepository, PublicationRepository>();
-builder.Services.AddScoped<ISourceLocationRepository, SourceLocationRepository>();
-builder.Services.AddScoped<ISourcePersonRepository, SourcePersonRepository>();
-builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddSingleton<IMediaNewsItemRepository, MediaNewsItemRepository>();
+builder.Services.AddSingleton<IMediaRepository, MediaRepository>();
+builder.Services.AddSingleton<INoteRepository, NoteRepository>();
+builder.Services.AddSingleton<IPublicationRepository, PublicationRepository>();
+builder.Services.AddSingleton<ISourceLocationRepository, SourceLocationRepository>();
+builder.Services.AddSingleton<ISourcePersonRepository, SourcePersonRepository>();
+builder.Services.AddSingleton<ITagRepository, TagRepository>();
 
 // Add the database context to the builder.
-builder.Services.AddDbContext<NewsItemServiceDatabaseContext>();
+builder.Services.AddSingleton<NewsItemServiceDatabaseContext>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Needed for saving DateTime variables
 using var newsItemContext = new NewsItemServiceDatabaseContext();
 newsItemContext.Database.EnsureCreated();

@@ -44,7 +44,7 @@ namespace NewsItemService.Data
             try
             {
                 var fileSearch = driveService.Files.List();
-                fileSearch.Q = $"name = {fileName}";
+                fileSearch.Q = $"name = '{fileName}'";
                 var file = await fileSearch.ExecuteAsync();
 
                 if (file.Files.Count == 0)
@@ -87,11 +87,7 @@ namespace NewsItemService.Data
                 media.Source = "Google Drive";
 
                 var contentType = file.Files[0].MimeType;
-                if (contentType.Contains("application"))
-                {
-                    media.NewsItemMediaType = Types.NewsItemMediaType.Document;
-                }
-                else if (contentType.Contains("audio"))
+                if (contentType.Contains("audio"))
                 {
                     media.NewsItemMediaType = Types.NewsItemMediaType.Audio;
                 }
