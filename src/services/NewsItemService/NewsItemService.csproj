@@ -21,5 +21,12 @@
   <ItemGroup>
     <Folder Include="Services\" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="google_client_secret.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 		
 </Project>

@@ -203,11 +203,6 @@ namespace NewsItemService.Services
             try
             {
                 return await _newsItemRepository.CreateNewsItem(newsItem);
-                //if (!result.SingleOrDefault().Key)
-                //{
-                //    return new Dictionary<bool, string>() { { false, result.SingleOrDefault().Value } };
-                //}
-                //return new Dictionary<bool, string>() { { true, result.SingleOrDefault().Value } };
             }
             catch (Exception)
             {

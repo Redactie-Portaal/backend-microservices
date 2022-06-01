@@ -26,13 +26,13 @@ namespace NewsItemService.Data
                 credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.FromStreamAsync(authStream).Result.Secrets,
                     new[] { DriveService.Scope.Drive },
-                    "user", CancellationToken.None, new FileDataStore("Drive.ListDrive"));
+                    "user", CancellationToken.None, new FileDataStore("GDrive"));
             }
 
             var service = new DriveService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
-                ApplicationName = "OFFRedactieportaalMicroservices"
+                ApplicationName = "OFRedactieportaalMicroservices"
             });
             return service;
         }
