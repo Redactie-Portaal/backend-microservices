@@ -46,8 +46,6 @@ namespace NewsItemService.Data
                 }
                 else
                 {
-                    //_dbContext.Entry(mediaNewsItem.NewsItem).CurrentValues.SetValues(mediaNewsItem.NewsItem);
-                    _dbContext.Entry(mediaNewsItem.NewsItem).State = EntityState.Detached;
                     await _dbContext.MediaNewsItems.AddAsync(mediaNewsItem);
                     await _dbContext.SaveChangesAsync();
                 }

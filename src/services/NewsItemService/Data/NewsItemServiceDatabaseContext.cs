@@ -86,11 +86,5 @@ namespace NewsItemService.Data
 
             base.OnConfiguring(optionsBuilder);
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<MediaNewsItem>().HasKey(a => new { a.NewsItemId });
-            modelBuilder.Entity<MediaNewsItem>().HasOne(x => x.NewsItem).WithMany(y => y.MediaNewsItems).HasForeignKey(x => x.NewsItemId);
-        }
     }
 }

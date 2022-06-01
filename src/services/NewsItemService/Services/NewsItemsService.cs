@@ -197,29 +197,14 @@ namespace NewsItemService.Services
                 Publications = publications,
                 SourceLocations = sourceLocations,
                 SourcePeople = sourcePeople,
-                Notes = notes
+                Notes = notes,
+                MediaNewsItems = mediaNewsItems
             };
-            return await SaveCreatedNewsItem(newsItem, notes, mediaNewsItems);
-        }
 
-        public async Task<Dictionary<bool, string>> SaveCreatedNewsItem(NewsItem newsItem, List<Note> notes, List<MediaNewsItem> mediaNewsItems)
-        {
             try
             {
                 var result = await _newsItemRepository.CreateNewsItem(newsItem);
-                var newlyCreatedNewsItem = await _newsItemRepository.GetNewsItemById(Convert.ToInt32(result.SingleOrDefault().Value));
-
-                //notes[0].NewsItem = newlyCreatedNewsItem.SingleOrDefault().Value;
-                //await _noteRepository.CreateNote(notes[0]);
-
-                foreach (var mediaNewsItem in mediaNewsItems)
-                {
-                    mediaNewsItem.NewsItemId = newlyCreatedNewsItem.SingleOrDefault().Value.Id;
-                    mediaNewsItem.NewsItem = newlyCreatedNewsItem.SingleOrDefault().Value;
-                    await _mediaNewsItemRepository.CreateMediaNewsItem(mediaNewsItem);
-                }
-
-                return new Dictionary<bool, string>() { { true, string.Empty } };
+                return new Dictionary<bool, string>() { { true, result.SingleOrDefault().Value } };
             }
             catch (Exception)
             {
