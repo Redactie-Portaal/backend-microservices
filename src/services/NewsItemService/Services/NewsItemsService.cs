@@ -41,7 +41,7 @@ namespace NewsItemService.Services
             foreach (var id in dto.AuthorIds)
             {
                 var author = await _authorRepository.GetAuthorById(id);
-                if (author.FirstOrDefault().Key == false)
+                if (!author.FirstOrDefault().Key)
                 {
                     return new Dictionary<bool, string>() { { false, "Author does not exist" } };
                 }
@@ -54,7 +54,7 @@ namespace NewsItemService.Services
                 foreach (var id in dto.CategoryIds)
                 {
                     var category = await _categoryRepository.GetCategoryById(id);
-                    if (category.FirstOrDefault().Key == false)
+                    if (!category.FirstOrDefault().Key)
                     {
                         return new Dictionary<bool, string>() { { false, "Category does not exist" } };
                     }
@@ -68,7 +68,7 @@ namespace NewsItemService.Services
                 foreach (var id in dto.TagIds)
                 {
                     var tag = await _tagRepository.GetTagById(id);
-                    if (tag.FirstOrDefault().Key == false)
+                    if (!tag.FirstOrDefault().Key)
                     {
                         return new Dictionary<bool, string>() { { false, "Tag does not exist" } };
                     }
@@ -82,7 +82,7 @@ namespace NewsItemService.Services
                 foreach (var id in dto.PublicationIds)
                 {
                     var publication = await _publicationRepository.GetPublicationById(id);
-                    if (publication.FirstOrDefault().Key == false)
+                    if (!publication.FirstOrDefault().Key)
                     {
                         return new Dictionary<bool, string>() { { false, "Tag does not exist" } };
                     }
@@ -96,7 +96,7 @@ namespace NewsItemService.Services
                 foreach (var sourceLocale in dto.SourceLocationDTOs)
                 {
                     var sourceLocation = await _sourceLocationRepository.GetSourceLocation(sourceLocale);
-                    if (sourceLocation.FirstOrDefault().Key == false)
+                    if (!sourceLocation.FirstOrDefault().Key)
                     {
                         SourceLocation newSourceLocation = new SourceLocation()
                         {
@@ -124,7 +124,7 @@ namespace NewsItemService.Services
                 foreach (var sourcePersona in dto.SourcePersonDTOs)
                 {
                     var sourcePerson = await _sourcePersonRepository.GetSourcePerson(sourcePersona);
-                    if (sourcePerson.FirstOrDefault().Key == false)
+                    if (!sourcePerson.FirstOrDefault().Key)
                     {
                         SourcePerson newSourcePerson = new SourcePerson()
                         {
@@ -149,7 +149,7 @@ namespace NewsItemService.Services
                 foreach (var medium in dto.MediaDTOs)
                 {
                     var media = await _mediaRepository.GetMediaByFilename(medium.FileName);
-                    if (media.FirstOrDefault().Key == false)
+                    if (!media.FirstOrDefault().Key)
                     {
                         Media newMedia = new Media()
                         {
@@ -172,7 +172,7 @@ namespace NewsItemService.Services
             if (dto.NoteDTO != null)
             {
                 var author = await _authorRepository.GetAuthorById(dto.NoteDTO.AuthorId);
-                if (author.FirstOrDefault().Key == false)
+                if (!author.FirstOrDefault().Key)
                 {
                     return new Dictionary<bool, string>() { { false, "Author does not exist" } };
                 }
@@ -204,6 +204,10 @@ namespace NewsItemService.Services
             try
             {
                 var result = await _newsItemRepository.CreateNewsItem(newsItem);
+                if (!result.SingleOrDefault().Key)
+                {
+                    return new Dictionary<bool, string>() { { false, result.SingleOrDefault().Value } };
+                }
                 return new Dictionary<bool, string>() { { true, result.SingleOrDefault().Value } };
             }
             catch (Exception)
