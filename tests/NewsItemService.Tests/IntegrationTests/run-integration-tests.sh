@@ -14,6 +14,10 @@
 
 printf "Message: Helper script for running Integration tests. \n"
 
+printf "Message: Going to the working directory of the Integration tests."
+cd $1/IntegrationTests
+printf '\n'
+
 printf "Message: current working directory: "
 echo $PWD
 printf '\n'
@@ -31,6 +35,14 @@ do
   sleep 5s
 done
 printf "\n"
+
+printf "Message: Going back to the directory of the project file."
+cd ../
+printf '\n'
+
+printf "Message: current working directory: "
+echo $PWD
+printf '\n'
 
 printf "Message: The environment is ready. Time to run the integration tests. \n"
 printf "Message: Command that executed: {dotnet test --logger 'trx;LogFileName=test-results.trx' --collect:'XPlat Code Coverage'} \n"
