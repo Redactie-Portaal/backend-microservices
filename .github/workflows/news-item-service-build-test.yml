@@ -1,0 +1,37 @@
+name: Build and Test NewsItemService
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feature-**
+    paths:
+      - "src/services/NewsItemService/**"
+      - "tests/NewsItemService.**/**"
+      - "tests/NewsItemService/**"
+      - ".github/workflows/news-item-service-build-test.yml"
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - "src/services/NewsItemService/**"
+      - "tests/NewsItemService.**/**"
+      - "tests/NewsItemService/**"
+      - ".github/workflows/news-item-service-build-test.yml"
+
+jobs:
+  news-item-service-build-unit-test:
+    uses: "./.github/workflows/template-build-unit-test.yml"
+    with:
+      project-location: "src/services/NewsItemService"
+      test-location: "tests/NewsItemService"
+      project-name: "NewsItemService"
+  news-item-service-sonarqube-test:
+    uses: "./.github/workflows/template-sonarqube.yml"
+    with:
+      project-location: "src\\services\\NewsItemService"
+    secrets:
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      action-github_token: ${{ secrets.GITHUB_TOKEN }}

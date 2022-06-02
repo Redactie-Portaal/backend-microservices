@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NewsItemService.Data;
 using NewsItemService.DTOs;
 using NewsItemService.Entities;
@@ -22,6 +23,7 @@ namespace NewsItemService.Tests.UnitTests
         /// </summary>
         private NewsItemRepository repo { get; set; }
         private readonly NewsItemServiceDatabaseContext context;
+        private readonly ILogger<NewsItemRepository> _logger;
 
         /// <summary>
         /// Constructor to setup the in memory database, and add to the context to use.
@@ -31,8 +33,7 @@ namespace NewsItemService.Tests.UnitTests
             var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>().UseInMemoryDatabase(databaseName: "InMemoryProductDb_" + "NewsItem").Options;
             context = new NewsItemServiceDatabaseContext(options);
             //SeedProductInMemoryDatabaseWithData(context);
-            
-            this.repo = new NewsItemRepository(context);
+            this.repo = new NewsItemRepository(context, _logger);
         }
 
 
@@ -120,7 +121,7 @@ namespace NewsItemService.Tests.UnitTests
             var result = await repo.CreateNewsItem(item);
 
 
-            Assert.Equal(result, new Dictionary<bool, string>() { { true, $"Can't create article with a title that has already been used" } });
+            Assert.Equal(result, new Dictionary<bool, string>() { { false, $"Can't create newsItem with a title that has already been used" } });
 
         }
     }

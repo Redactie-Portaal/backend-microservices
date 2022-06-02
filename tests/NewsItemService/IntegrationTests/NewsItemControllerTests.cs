@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NewsArticleService.Controllers;
 using NewsItemService.Data;
 using NewsItemService.Entities;
@@ -15,6 +16,18 @@ namespace NewsItemService
 {
     public class NewsItemControllerTests
     {
+        private readonly ILogger<NewsItemRepository> _newsItemLogger;
+        private readonly ILogger<AuthorRepository> _authorLogger;
+        private readonly ILogger<CategoryRepository> _categoryLogger;
+
+        private readonly ILogger<PublicationRepository> _publicationLogger;
+        private readonly ILogger<TagRepository> _tagLogger;
+        private readonly ILogger<MediaRepository> _mediaLogger;
+        private readonly ILogger<MediaNewsItemRepository> _mediaNewsItemLogger;
+        private readonly ILogger<SourceLocationRepository> _sourceLocationLogger;
+        private readonly ILogger<SourcePersonRepository> _sourcePersonLogger;
+        private readonly ILogger<NoteRepository> _noteLogger;
+
         private NewsItemController Initialize(bool seed = true, [CallerMemberName] string callerName = "")
         {
             var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>().UseInMemoryDatabase(databaseName: "InMemoryProductDb_" + callerName).Options;
@@ -23,9 +36,18 @@ namespace NewsItemService
             {
                 SeedProductInMemoryDatabaseWithData(context);
             }
-            var repo = new NewsItemRepository(context);
+            var newsItemRepo = new NewsItemRepository(context, _newsItemLogger);
 
-            return new NewsItemController(repo, new AuthorRepository(context), new CategoryRepository(context));
+            return new NewsItemController(newsItemRepo, 
+                new AuthorRepository(context, _authorLogger), 
+                new CategoryRepository(context, _categoryLogger),
+                new PublicationRepository(context, _publicationLogger),
+                new TagRepository(context, _tagLogger),
+                new MediaRepository(_mediaLogger),
+                new MediaNewsItemRepository(context, _mediaNewsItemLogger),
+                new SourceLocationRepository(context, _sourceLocationLogger),
+                new SourcePersonRepository(context, _sourcePersonLogger),
+                new NoteRepository(context, _noteLogger));
         }
 
         private void SeedProductInMemoryDatabaseWithData(NewsItemServiceDatabaseContext context)
