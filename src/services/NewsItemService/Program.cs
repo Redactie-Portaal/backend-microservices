@@ -1,6 +1,8 @@
 using NewsItemService.Data;
 using NewsItemService.Interfaces;
 using NewsItemService.Services;
+using RabbitMQLibrary;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddMessageProducing("news-item-exchange");
 builder.Services.AddScoped<INewsItemRepository, NewsItemRepository>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

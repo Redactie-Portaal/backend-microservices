@@ -1,5 +1,5 @@
 
-﻿using NewsItemService.Types;
+using NewsItemService.Types;
 using System.ComponentModel.DataAnnotations;
 
 namespace NewsItemService.Entities
