@@ -38,7 +38,7 @@ jobs:
         run: dotnet build ${{ inputs.project-location }} --no-restore --configuration Release 
       
       - name: "Executing helper script for running Integration tests"
-        run: bash ${{ inputs.test-location }}/IntegrationTests/run-integration-tests.sh ${{ inputs.test-location }} {{ inputs.namespace-name }} 
+        run: bash ${{ inputs.test-location }}/IntegrationTests/run-integration-tests.sh ${{ inputs.test-location }} ${{ inputs.namespace-name }} 
 
       - name: 'Create Test Report'
         uses: dorny/test-reporter@v1
