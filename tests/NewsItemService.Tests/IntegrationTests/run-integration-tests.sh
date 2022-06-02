@@ -34,5 +34,5 @@ printf "\n"
 
 printf "Message: The environment is ready. Time to run the integration tests. \n"
 printf "Message: Command that executed: {dotnet test --logger 'trx;LogFileName=test-results.trx' --collect:'XPlat Code Coverage'} \n"
-dotnet test $1 --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+dotnet test $1 --filter FullyQualifiedName~$2 --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
 printf "\n"
