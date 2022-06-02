@@ -38,7 +38,7 @@ namespace PublicationService.Services
                 var uploadedImage = await twitterClient.Upload.UploadTweetImageAsync(picture.SingleOrDefault().Value);
 
                 this._logger.LogInformation("Publishing tweet to Twitter, with the uploaded file.");
-                await twitterClient.Tweets.PublishTweetAsync(new PublishTweetParameters(publishNewsItemDTO.Content + "by " + publishNewsItemDTO.Authors[0])
+                await twitterClient.Tweets.PublishTweetAsync(new PublishTweetParameters(publishNewsItemDTO.Summary + "by " + publishNewsItemDTO.Authors[0])
                 {
                     Medias = { uploadedImage }
                 });
