@@ -24,10 +24,4 @@
     <ProjectReference Include="..\..\src\services\NewsItemService\NewsItemService.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="IntegrationTests\appsettings.test.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

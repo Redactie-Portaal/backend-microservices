@@ -7,7 +7,7 @@ on:
       - feature-**
     paths:
       - "src/services/NewsItemService/**"
-      - "tests/NewsItemService.**/**"
+      - "tests/NewsItemService.Tests/**"
       - ".github/workflows/news-item-service-build-test.yml"
   pull_request:
     branches:
@@ -15,15 +15,21 @@ on:
       - dev
     paths:
       - "src/services/NewsItemService/**"
-      - "tests/NewsItemService.**/**"
+      - "tests/NewsItemService.Tests/**"
       - ".github/workflows/news-item-service-build-test.yml"
 
 jobs:
-  news-item-service-build-unit-test:
+  news-item-service-build-unit-tests:
     uses: "./.github/workflows/template-build-unit-test.yml"
     with:
       project-location: "src/services/NewsItemService"
-      test-location: "tests/NewsItemService.UnitTests"
+      test-location: "tests/NewsItemService.Tests"
+      project-name: "NewsItemService"
+  news-item-service-integration-tests:
+    uses: "./.github/workflows/template-integration-test.yml"
+    with:
+      project-location: "src/services/NewsItemService"
+      test-location: "tests/NewsItemService.Tests"
       project-name: "NewsItemService"
   news-item-service-sonarqube-test:
     uses: "./.github/workflows/template-sonarqube.yml"

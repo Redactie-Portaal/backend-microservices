@@ -1,4 +1,4 @@
-name: "build & unit tests template"
+name: "integration tests template"
 on:
   workflow_call:
     inputs:
@@ -16,7 +16,7 @@ on:
         description: "name of the project"
 
 jobs:
-  build-unit-tests:
+  integration-tests:
     runs-on: ubuntu-20.04
     steps:
       - name: 'checkout project code'
@@ -33,8 +33,8 @@ jobs:
       - name: 'Build release version'
         run: dotnet build ${{ inputs.project-location }} --no-restore --configuration Release 
       
-      - name: 'Running unit tests'
-        run: dotnet test ${{ inputs.test-location }}/UnitTests --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+      - name: "Executing helper script for running Integration tests"
+        run: bash ${{ inputs.test-location }}/IntegrationTests/run-integration-tests.sh ${{ inputs.test-location }}/IntegrationTests
 
       - name: 'Create Test Report'
         uses: dorny/test-reporter@v1
