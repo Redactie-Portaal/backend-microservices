@@ -37,8 +37,15 @@ namespace PublicationService.Services
                 this._logger.LogInformation("Uploading file to Twitter.");
                 var uploadedImage = await twitterClient.Upload.UploadTweetImageAsync(picture.SingleOrDefault().Value);
 
+                string tags = "";
+                foreach (var tag in publishNewsItemDTO.Tags)
+                {
+                    tags += tag + " ";
+                }
+
                 this._logger.LogInformation("Publishing tweet to Twitter, with the uploaded file.");
-                await twitterClient.Tweets.PublishTweetAsync(new PublishTweetParameters(publishNewsItemDTO.Summary + "by " + publishNewsItemDTO.Authors[0])
+                
+                await twitterClient.Tweets.PublishTweetAsync(new PublishTweetParameters(publishNewsItemDTO.Summary + "" + tags)
                 {
                     Medias = { uploadedImage }
                 });
