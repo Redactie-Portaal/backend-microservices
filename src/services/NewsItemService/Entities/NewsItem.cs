@@ -10,6 +10,7 @@ namespace NewsItemService.Entities
         [Required]
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
+        public string Summary { get; set; } = string.Empty;
         public ICollection<Author> Authors { get; set; }
         public ICollection<Category> Categories { get; set; }
         public ICollection<Publication> Publications { get; set; }

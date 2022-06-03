@@ -20,7 +20,16 @@ namespace NewsItemService.Services
         private readonly ISourcePersonRepository _sourcePersonRepository;
         private readonly INoteRepository _noteRepository;
 
-        public NewsItemsService(INewsItemRepository repo, IAuthorRepository authorRepository, ICategoryRepository categoryRepository, IPublicationRepository publicationRepository, ITagRepository tagRepository, IMediaRepository mediaRepository, IMediaNewsItemRepository mediaNewsItemRepository, ISourceLocationRepository sourceLocationRepository, ISourcePersonRepository sourcePersonRepository, INoteRepository noteRepository)
+        public NewsItemsService(INewsItemRepository repo,
+                                IAuthorRepository authorRepository,
+                                ICategoryRepository categoryRepository,
+                                IPublicationRepository publicationRepository,
+                                ITagRepository tagRepository,
+                                IMediaRepository mediaRepository,
+                                IMediaNewsItemRepository mediaNewsItemRepository,
+                                ISourceLocationRepository sourceLocationRepository,
+                                ISourcePersonRepository sourcePersonRepository,
+                                INoteRepository noteRepository)
         {
             _newsItemRepository = repo;
             _authorRepository = authorRepository;
@@ -186,6 +195,7 @@ namespace NewsItemService.Services
             var newsItem = new NewsItem()
             {
                 Content = dto.Content,
+                Summary = dto.Summary,
                 Title = dto.Title,
                 Authors = authors,
                 Status = Types.NewsItemStatus.Done,
