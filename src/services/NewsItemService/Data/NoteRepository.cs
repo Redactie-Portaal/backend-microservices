@@ -4,34 +4,41 @@ using NewsItemService.Interfaces;
 
 namespace NewsItemService.Data
 {
-    public class AuthorRepository: IAuthorRepository, IDisposable
+    public class NoteRepository : INoteRepository, IDisposable
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
         private readonly ILogger _logger;
 
-        public AuthorRepository(NewsItemServiceDatabaseContext context, ILogger<AuthorRepository> logger)
+        public NoteRepository(NewsItemServiceDatabaseContext context, ILogger<NoteRepository> logger)
         {
             this._dbContext = context;
             this._logger = logger;
         }
 
-        public async Task<Dictionary<bool, Author>> GetAuthorById(int id)
+        public async Task<Dictionary<bool, string>> CreateNote(Note note)
         {
             try
             {
-                var author = await _dbContext.Authors.Where(a => a.Id == id).FirstOrDefaultAsync();
-                if (author == null)
+                var duplicate = await _dbContext.Notes.FirstOrDefaultAsync(x => x.Text == note.Text);
+
+                if (duplicate != null)
                 {
-                    return new Dictionary<bool, Author>() { { false, null } };
+                    return new Dictionary<bool, string>() { { false, "Can't create note because it is already present." } };
                 }
-                return new Dictionary<bool, Author>() { { true, author } };
+                else
+                {
+                    await _dbContext.Notes.AddAsync(note);
+                    await _dbContext.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
-                this._logger.LogError("There is a problem with retrieving the Author. Error message: {Message}", ex.Message);
+                _logger.LogError("There is a problem with retrieving the Note. Error message: {Message}", ex.Message);
                 throw;
             }
+
+            return new Dictionary<bool, string>() { { false, $"Note has been created succesfully" } };
         }
 
         protected virtual void Dispose(bool disposing)

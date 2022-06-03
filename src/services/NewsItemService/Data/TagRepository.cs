@@ -4,32 +4,32 @@ using NewsItemService.Interfaces;
 
 namespace NewsItemService.Data
 {
-    public class AuthorRepository: IAuthorRepository, IDisposable
+    public class TagRepository : ITagRepository, IDisposable
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
         private readonly ILogger _logger;
 
-        public AuthorRepository(NewsItemServiceDatabaseContext context, ILogger<AuthorRepository> logger)
+        public TagRepository(NewsItemServiceDatabaseContext context, ILogger<TagRepository> logger)
         {
             this._dbContext = context;
             this._logger = logger;
         }
 
-        public async Task<Dictionary<bool, Author>> GetAuthorById(int id)
+        public async Task<Dictionary<bool, Tag>> GetTagById(int id)
         {
             try
             {
-                var author = await _dbContext.Authors.Where(a => a.Id == id).FirstOrDefaultAsync();
-                if (author == null)
+                var tag = await _dbContext.Tags.Where(a => a.Id == id).FirstOrDefaultAsync();
+                if (tag == null)
                 {
-                    return new Dictionary<bool, Author>() { { false, null } };
+                    return new Dictionary<bool, Tag>() { { false, null } };
                 }
-                return new Dictionary<bool, Author>() { { true, author } };
+                return new Dictionary<bool, Tag>() { { true, tag } };
             }
             catch (Exception ex)
             {
-                this._logger.LogError("There is a problem with retrieving the Author. Error message: {Message}", ex.Message);
+                _logger.LogError("There is a problem with retrieving the Tag. Error message: {Message}", ex.Message);
                 throw;
             }
         }

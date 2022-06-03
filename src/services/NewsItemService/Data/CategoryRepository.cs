@@ -8,10 +8,12 @@ namespace NewsItemService.Data
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
+        private readonly ILogger _logger;
 
-        public CategoryRepository(NewsItemServiceDatabaseContext context)
+        public CategoryRepository(NewsItemServiceDatabaseContext context, ILogger<CategoryRepository> logger)
         {
             this._dbContext = context;
+            this._logger = logger;
         }
 
         public async Task<Dictionary<bool, Category>> GetCategoryById(int id)
@@ -25,8 +27,9 @@ namespace NewsItemService.Data
                 }
                 return new Dictionary<bool, Category>() { { true, category } };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                this._logger.LogError("There is a problem with retrieving the Category. Error message: {Message}", ex.Message);
                 throw;
             }
         }

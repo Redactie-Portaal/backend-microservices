@@ -20,17 +20,13 @@ namespace NewsItemService.Entities
         public DateTime EndDate { get; set; }
         public bool ReadyToCheck { get; set; }
         public string Content { get; set; } = string.Empty;
-
-        public string ContactInformation { get; set; } = string.Empty;
-        public string LocationInformation { get; set; } = string.Empty;
         public string InfoFeed { get; set; } = string.Empty;
-        public string Region { get; set; } = string.Empty;
-        public string SourceData { get; set; } = string.Empty;
         public string Copyright { get; set; } = string.Empty;
-        public string AudioUrl { get; set; } = string.Empty;
-        public string PictureUrl { get; set; } = string.Empty;
-        public string VideoUrl { get; set; } = string.Empty;
-        public string DocumentUrl { get; set; } = string.Empty;
         public string SocialMediaUrl { get; set; } = string.Empty;
+        public ICollection<MediaNewsItem> MediaNewsItems { get; set; }
+
+        public ICollection<SourceLocation> SourceLocations { get; set; }
+        public ICollection<SourcePerson> SourcePeople { get; set; }
+        public ICollection<Note> Notes { get; set; }
     }
 }

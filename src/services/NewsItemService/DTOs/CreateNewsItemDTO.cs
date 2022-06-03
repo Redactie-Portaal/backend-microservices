@@ -8,19 +8,22 @@ namespace NewsItemService.DTOs
         [MinLength(1)]
         public List<int> AuthorIds { get; set; }
         [Required]
-        public string? Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         [Required]
-        public string? Content { get; set; }
-        public string? LocationInformation { get; set; }
-        public string? ContactInformation { get; set; }
+        public string Content { get; set; } = string.Empty;
+        [Required]
         public DateTime ProductionDate { get; set; }
-        public string? Region { get; set; }
+        [Required]
         public DateTime EndDate { get; set; }
 
-        public List<int> CategoryIds { get; set; }
+        public List<int>? CategoryIds { get; set; }
+        public List<int>? TagIds { get; set; }
+        public List<int> PublicationIds { get; set; }
 
-        public string? VideoUrl { get; set; }
-        public string? PhotoUrl { get; set; }
-        public string? ÀudioUrl { get; set; }
+        public List<AddMediaDTO> MediaDTOs { get; set; }
+        public List<AddSourceLocationDTO> SourceLocationDTOs { get; set; }
+        public List<AddSourcePersonDTO> SourcePersonDTOs { get; set; }
+
+        public AddNoteDTO? NoteDTO { get; set; }
     }
 }

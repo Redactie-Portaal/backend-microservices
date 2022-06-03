@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NewsItemService.Data;
 using NewsItemService.DTOs;
 using NewsItemService.Entities;
@@ -23,17 +25,22 @@ namespace NewsItemService.Tests.UnitTests
         /// </summary>
         private NewsItemRepository repo { get; set; }
         private readonly NewsItemServiceDatabaseContext context;
+        private readonly ILogger<NewsItemRepository> _logger;
 
         /// <summary>
         /// Constructor to setup the in memory database, and add to the context to use.
         /// </summary>
         public NewsItemRepositoryTests()
         {
-            var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>().UseInMemoryDatabase(databaseName: "InMemoryProductDb_" + "NewsItem").Options;
+            var serviceProvider = new ServiceCollection()
+                                    .AddEntityFrameworkInMemoryDatabase()
+                                    .BuildServiceProvider();
+
+            var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>().UseInMemoryDatabase(databaseName: "InMemoryProductDb_" + "NewsItem").UseInternalServiceProvider(serviceProvider).Options;
             context = new NewsItemServiceDatabaseContext(options);
             SeedProductInMemoryDatabaseWithData(context);
             
-            this.repo = new NewsItemRepository(context);
+            this.repo = new NewsItemRepository(context, _logger);
         }
 
 
@@ -60,13 +67,13 @@ namespace NewsItemService.Tests.UnitTests
         {
             var authors = new List<Author>()
             {
-                new Author(){ Id = 1, Name = "TestAuthor", NewsItems = null}
+                new Author(){ Id = 2, Name = "TestAuthor", NewsItems = null}
             };
 
             var newsItems = new List<NewsItem>
             {
-                new NewsItem { Id = 2, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now },
-                new NewsItem { Id = 3, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now }
+                new NewsItem { Id = 4, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now },
+                new NewsItem { Id = 5, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now }
             };
 
             if (!context.NewsItems.Any())
@@ -133,9 +140,7 @@ namespace NewsItemService.Tests.UnitTests
 
             var result = await repo.CreateNewsItem(item);
 
-
-            Assert.Equal(new Dictionary<bool, string>() { { false, $"Can't create article with a title that has already been used" } }, result);
-
+            Assert.Equal(new Dictionary<bool, string>() { { false, $"Can't create newsItem with a title that has already been used" } }, result);
         }
 
         #region Start of tests (Be carefull where u place the update entries, since it will update the database which could mess with the other tests)

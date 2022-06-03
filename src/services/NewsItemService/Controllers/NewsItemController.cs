@@ -22,21 +22,44 @@ namespace NewsArticleService.Controllers
         private readonly ICategoryRepository _categoryRepository;
         private readonly NewsItemStatusService _newsItemStatusService;
         private readonly IMessageProducer _producer;
+        private readonly IPublicationRepository _publicationRepository;
+        private readonly ITagRepository _tagRepository;
+        private readonly IMediaRepository _mediaRepository;
+        private readonly IMediaNewsItemRepository _mediaNewsItemRepository;
+        private readonly ISourceLocationRepository _sourceLocationRepository;
+        private readonly ISourcePersonRepository _sourcePersonRepository;
+        private readonly INoteRepository _noteRepository;
+
         public NewsItemController(IMessageProducer producer,
                                   INewsItemRepository newsItemRepository,
                                   IAuthorRepository authorRepository,
-                                  ICategoryRepository categoryRepository)
+                                  ICategoryRepository categoryRepository,
+                                  IPublicationRepository publicationRepository,
+                                  ITagRepository tagRepository,
+                                  IMediaRepository mediaRepository,
+                                  IMediaNewsItemRepository mediaNewsItemRepository,
+                                  ISourceLocationRepository sourceLocationRepository,
+                                  ISourcePersonRepository sourcePersonRepository,
+                                  INoteRepository noteRepository)
         {
             _producer = producer;
             _newsItemRepository = newsItemRepository;
             _authorRepository = authorRepository;
             _categoryRepository = categoryRepository;
-            newsItemService = new NewsItemsService(_newsItemRepository, _authorRepository, _categoryRepository);
+            _publicationRepository = publicationRepository;
+            _tagRepository = tagRepository;
+            _mediaRepository = mediaRepository;
+            _mediaNewsItemRepository = mediaNewsItemRepository;
+            _sourceLocationRepository = sourceLocationRepository;
+            _sourcePersonRepository = sourcePersonRepository;
+            _noteRepository = noteRepository;
+
             _newsItemStatusService = new NewsItemStatusService();
+            newsItemService = new NewsItemsService(_newsItemRepository, _authorRepository, _categoryRepository, _publicationRepository, _tagRepository, _mediaRepository, _mediaNewsItemRepository, _sourceLocationRepository, _sourcePersonRepository, _noteRepository);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateNewsItemDTO dto)
+        public async Task<IActionResult> Create(CreateNewsItemDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -82,6 +105,25 @@ namespace NewsArticleService.Controllers
 
             // Return Ok message that status has been changed
             return Ok(new { message = result.FirstOrDefault().Value });
+        }
+
+
+        [HttpGet("publication/{id}")]
+        public async Task<IActionResult> GetPublicationById(int id)
+        {
+            if(id > 0)
+            {
+                try
+                {
+                    var publication = _publicationRepository.GetPublicationById(id).Result;
+                    return Ok(publication);
+                }
+                catch(Exception e)
+                {
+                    return Problem("Error:" + e.Message);
+                }
+            };
+            return BadRequest(new { message = "ID cannot be smaller than one." });
         }
     }
 }
