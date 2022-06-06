@@ -18,7 +18,7 @@ namespace PublicationService.Services
             this._logger = logger;
         }
 
-        internal TwitterClient Authenticate()
+        public TwitterClient Authenticate()
         {
             IConfiguration conf = (new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("secrets.json").Build());
             var twitterClient = new TwitterClient(conf["Twitter:KEY"], conf["Twitter:SECRET"], conf["Twitter:ACCESS_TOKEN"], conf["Twitter:ACCESS_TOKEN_SECRET"]);
@@ -47,7 +47,7 @@ namespace PublicationService.Services
             }
             catch (Exception exception)
             {
-                Console.WriteLine("Error with publishing tweet. Message: {message}", exception.Message);
+                this._logger.LogError("Error with publishing tweet. Message: {message}", exception.Message);
                 throw;
             }
         }

@@ -43,6 +43,7 @@ namespace PublicationService.Data
             {
                 var fileSearch = driveService.Files.List();
                 fileSearch.Q = $"name = '{fileName}'";
+                fileSearch.Fields = "*";
 
                 this._logger.LogInformation("Searching for file in Google Drive.");
                 var file = await fileSearch.ExecuteAsync();
@@ -50,6 +51,16 @@ namespace PublicationService.Data
                 if (file.Files.Count == 0)
                 {
                     throw new Exception("Specified file not found in Google Drive.");
+                }
+
+                if (file.Files[0].MimeType.Contains("image") && file.Files[0].Size > 5242880)
+                {
+                    throw new Exception("File is too large to be used for publication.");
+                }
+
+                if (file.Files[0].MimeType.Contains("video") && file.Files[0].Size > 15728640)
+                {
+                    throw new Exception("File is too large to be used for publication.");
                 }
 
                 this._logger.LogInformation("Getting file metadata from Google Drive.");
