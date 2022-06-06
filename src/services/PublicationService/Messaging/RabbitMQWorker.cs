@@ -19,11 +19,12 @@ namespace PublicationService.Messaging
         private readonly IMediaProvider _mediaProvider;
         private readonly ILogger<IPublicationService> _publicationServiceLogger;
 
-        public RabbitMQWorker(ILogger<RabbitMQWorker> logger, IPublicationService publicationService, IMediaProvider mediaProvider)
+        public RabbitMQWorker(ILogger<RabbitMQWorker> logger, IPublicationService publicationService, IMediaProvider mediaProvider, ILogger<IPublicationService> publicationServiceLogger)
         {
             _logger = logger;
             _publicationService = publicationService;
             _mediaProvider = mediaProvider;
+            _publicationServiceLogger = publicationServiceLogger;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)

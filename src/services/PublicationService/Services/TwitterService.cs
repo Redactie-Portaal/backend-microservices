@@ -25,7 +25,7 @@ namespace PublicationService.Services
 
         public async Task<Dictionary<bool, string>> PublishNewsItem(PublishNewsItemDTO publishNewsItemDTO)
         {
-            var picture = await this._mediaProvider.RetrieveMedia(publishNewsItemDTO.MediaFileNames[0]);
+            var picture = await this._mediaProvider.RetrieveMedia(publishNewsItemDTO.Pictures[0].FileName);
             if (picture.SingleOrDefault().Key == false)
             {
                 return new Dictionary<bool, string>() { { false, "Problem with retrieving the picture" } };
@@ -34,13 +34,14 @@ namespace PublicationService.Services
             try
             {
                 var twitterClient = Authenticate();
-                this._logger.LogInformation("Uploading file to Twitter.");
+                this._logger.LogInformation("Uploading media to Twitter.");
+
                 var uploadedImage = await twitterClient.Upload.UploadTweetImageAsync(picture.SingleOrDefault().Value);
 
                 string tags = "";
                 foreach (var tag in publishNewsItemDTO.Tags)
                 {
-                    tags += tag + " ";
+                    tags += " #" + tag;
                 }
 
                 this._logger.LogInformation("Publishing tweet to Twitter, with the uploaded file.");
