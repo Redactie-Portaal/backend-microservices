@@ -2,6 +2,6 @@
 {
     public interface IMediaProvider
     {
-        Task<Dictionary<bool, byte[]>> RetrieveMedia(string fileName);
+        Task<Dictionary<string, byte[]>> RetrieveMedia(string fileName);
     }
 }

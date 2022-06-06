@@ -35,7 +35,7 @@ namespace PublicationService.Data
             return service;
         }
 
-        public async Task<Dictionary<bool, byte[]>> RetrieveMedia(string fileName)
+        public async Task<Dictionary<string, byte[]>> RetrieveMedia(string fileName)
         {
             var driveService = await Authenticate();
 
@@ -49,7 +49,7 @@ namespace PublicationService.Data
 
                 if (file.Files.Count == 0)
                 {
-                    return new Dictionary<bool, byte[]>() { { false, null } };
+                    throw new Exception("Specified file not found in Google Drive.");
                 }
 
                 this._logger.LogInformation("Getting file metadata from Google Drive.");
@@ -81,7 +81,7 @@ namespace PublicationService.Data
                 this._logger.LogInformation("Downloading file from Google Drive.");
                 fileRequest.Download(fileStream);
 
-                return new Dictionary<bool, byte[]>() { { true, fileStream.ToArray() } };
+                return new Dictionary<string, byte[]>() { { file.Files[0].MimeType, fileStream.ToArray() } };
             }
             catch (Exception ex)
             {

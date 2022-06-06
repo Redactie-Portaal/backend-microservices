@@ -4,6 +4,6 @@ namespace PublicationService.Interfaces
 {
     public interface IPublicationService
     {
-        Task<Dictionary<bool, string>> PublishNewsItem(PublishNewsItemDTO publishNewsItemDTO);
+        Task PublishNewsItem(PublishNewsItemDTO publishNewsItemDTO);
     }
 }

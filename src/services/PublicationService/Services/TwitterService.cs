@@ -1,6 +1,7 @@
 ﻿using PublicationService.DTOs;
 using PublicationService.Interfaces;
 using Tweetinvi;
+using Tweetinvi.Models;
 using Tweetinvi.Parameters;
 
 namespace PublicationService.Services
@@ -9,6 +10,7 @@ namespace PublicationService.Services
     {
         private readonly IMediaProvider _mediaProvider;
         private readonly ILogger _logger;
+        private List<IMedia> twitterMedias = new List<IMedia>();
 
         public TwitterService(IMediaProvider mediaProvider, ILogger<IPublicationService> logger)
         {
@@ -23,20 +25,12 @@ namespace PublicationService.Services
             return twitterClient;
         }
 
-        public async Task<Dictionary<bool, string>> PublishNewsItem(PublishNewsItemDTO publishNewsItemDTO)
+        public async Task PublishNewsItem(PublishNewsItemDTO publishNewsItemDTO)
         {
-            var picture = await this._mediaProvider.RetrieveMedia(publishNewsItemDTO.Pictures[0].FileName);
-            if (picture.SingleOrDefault().Key == false)
-            {
-                return new Dictionary<bool, string>() { { false, "Problem with retrieving the picture" } };
-            }
-
             try
             {
                 var twitterClient = Authenticate();
-                this._logger.LogInformation("Uploading media to Twitter.");
-
-                var uploadedImage = await twitterClient.Upload.UploadTweetImageAsync(picture.SingleOrDefault().Value);
+                await PrepareMedia(twitterClient, publishNewsItemDTO);
 
                 string tags = "";
                 foreach (var tag in publishNewsItemDTO.Tags)
@@ -44,19 +38,52 @@ namespace PublicationService.Services
                     tags += " #" + tag;
                 }
 
-                this._logger.LogInformation("Publishing tweet to Twitter, with the uploaded file.");
-                
-                await twitterClient.Tweets.PublishTweetAsync(new PublishTweetParameters(publishNewsItemDTO.Summary + "" + tags)
+                this._logger.LogInformation("Publishing tweet to Twitter, with the specified file(s).");
+                await twitterClient.Tweets.PublishTweetAsync(new PublishTweetParameters(publishNewsItemDTO.Summary + " " + tags)
                 {
-                    Medias = { uploadedImage }
+                    Medias = twitterMedias
                 });
+                this._logger.LogInformation("Successfully published tweet to Twitter.");
             }
             catch (Exception exception)
             {
                 Console.WriteLine("Error with publishing tweet. Message: {message}", exception.Message);
                 throw;
             }
-            return new Dictionary<bool, string>() { { true, string.Empty } };
+        }
+
+        public async Task PrepareMedia(TwitterClient twitterClient, PublishNewsItemDTO publishNewsItemDTO)
+        {
+            List<byte[]> retrievedPictures = new List<byte[]>();
+            List<byte[]> retrievedVideos = new List<byte[]>();
+
+            if (publishNewsItemDTO.Medias.Count != 0)
+            {
+                this._logger.LogInformation("Uploading media to Twitter.");
+                foreach (var media in publishNewsItemDTO.Medias)
+                {
+                    var result = await this._mediaProvider.RetrieveMedia(media.FileName);
+                    if (result.SingleOrDefault().Key.Contains("image"))
+                    {
+                        retrievedPictures.Add(result.SingleOrDefault().Value);
+                    }
+                    if (result.SingleOrDefault().Key.Contains("video"))
+                    {
+                        retrievedVideos.Add(result.SingleOrDefault().Value);
+                    }
+                }
+
+                foreach (var picture in retrievedPictures)
+                {
+                    var uploadedImage = await twitterClient.Upload.UploadTweetImageAsync(picture);
+                    twitterMedias.Add(uploadedImage);
+                }
+                foreach (var video in retrievedVideos)
+                {
+                    var uploadedVideo = await twitterClient.Upload.UploadTweetVideoAsync(video);
+                    twitterMedias.Add(uploadedVideo);
+                }
+            }
         }
     }
 }

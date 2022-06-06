@@ -93,7 +93,7 @@ namespace PublicationService.Messaging
                 switch (eventArgs.RoutingKey)
                 {
                     case RoutingKeyType.NewsItemPublishTwitter:
-                        _logger.LogInformation("something needs to be published");
+                        _logger.LogInformation("NewsItem will be published to Twitter.");
                         var publishNewsItemDTO = JsonConvert.DeserializeObject<PublishNewsItemDTO>(message);
 
                         _publicationService = new TwitterService(_mediaProvider, _publicationServiceLogger);
