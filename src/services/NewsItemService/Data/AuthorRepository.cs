@@ -10,9 +10,9 @@ namespace NewsItemService.Data
         private bool disposed = false;
         private readonly ILogger _logger;
 
-        public AuthorRepository(NewsItemServiceDatabaseContext context, ILogger<AuthorRepository> logger)
+        public AuthorRepository(NewsItemServiceDatabaseContext dbContext, ILogger<AuthorRepository> logger)
         {
-            this._dbContext = context;
+            this._dbContext = dbContext;
             this._logger = logger;
         }
 
@@ -36,12 +36,12 @@ namespace NewsItemService.Data
         
         public List<Author>? Get()
         {
-            return _context.Authors.ToList();
+            return _dbContext.Authors.ToList();
         }
 
         public Author Get(int id)
         {
-            var author = _context.Authors.Include("NewsItems").FirstOrDefault(a => a.Id == id);
+            var author = _dbContext.Authors.Include("NewsItems").FirstOrDefault(a => a.Id == id);
             if (author == null) return null;
 
             return author;
@@ -51,7 +51,7 @@ namespace NewsItemService.Data
         {
             var amountToSkip = (page - 1) * pageSize;
             
-            var newsItems = _context.NewsItems.Where(n => n.Authors.Any(a => a.Id == id)).Skip(amountToSkip).Take(pageSize).ToList();
+            var newsItems = _dbContext.NewsItems.Where(n => n.Authors.Any(a => a.Id == id)).Skip(amountToSkip).Take(pageSize).ToList();
             if (newsItems.Count <= 0) return null;
 
             return newsItems;
@@ -59,8 +59,8 @@ namespace NewsItemService.Data
 
         public Author Post(Author author)
         {
-            _context.Authors.Add(author);
-            _context.SaveChanges();
+            _dbContext.Authors.Add(author);
+            _dbContext.SaveChanges();
 
             return author;
         }

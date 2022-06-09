@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NewsItemService.Entities;
 using NewsItemService.Interfaces;
 using NewsItemService.Types;
@@ -44,6 +45,11 @@ namespace NewsItemService.Tests.UnitTests.Stubs
         public Author? Get(int id)
         {
             return _authors.FirstOrDefault(a => a.Id == id);
+        }
+
+        public Task<Dictionary<bool, Author>> GetAuthorById(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public List<NewsItem>? GetNewsItems(int id, int page, int pageSize)

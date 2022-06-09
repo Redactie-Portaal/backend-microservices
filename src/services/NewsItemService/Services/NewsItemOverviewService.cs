@@ -31,28 +31,6 @@ namespace NewsItemService.Services
             return NewsItemHelper.ToDTO(newsItem);
         }
 
-        public NewsItemDTO Post(createNewsItemDTO newsItemDTO) 
-        {
-            var newsItem = new NewsItem()
-            {
-                Title = newsItemDTO.Title,
-                Status = newsItemDTO.Status,
-                Created = DateTime.Now.ToUniversalTime()
-            };
-
-            newsItem.Authors = new List<Author>();
-            foreach (var id in newsItemDTO.AuthorIDs)
-            {
-                var author = _authorRepository.Get(id);
-
-                newsItem.Authors.Add(author);
-            }
-
-            _newsItemRepository.Post(newsItem);
-
-            return NewsItemHelper.ToDTO(newsItem);
-        }
-
         public List<NewsItemDTO> GetBefore(DateTime date, int page, int pageSize)
         {
             var newsItems = this._newsItemRepository.GetBefore(date.ToUniversalTime(), page, pageSize);

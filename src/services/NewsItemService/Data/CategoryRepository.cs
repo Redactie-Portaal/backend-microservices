@@ -10,9 +10,9 @@ namespace NewsItemService.Data
         private bool disposed = false;
         private readonly ILogger _logger;
 
-        public CategoryRepository(NewsItemServiceDatabaseContext context, ILogger<CategoryRepository> logger)
+        public CategoryRepository(NewsItemServiceDatabaseContext dbContext, ILogger<CategoryRepository> logger)
         {
-            this._dbContext = context;
+            this._dbContext = dbContext;
             this._logger = logger;
         }
 

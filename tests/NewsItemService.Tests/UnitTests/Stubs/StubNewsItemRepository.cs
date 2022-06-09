@@ -1,9 +1,11 @@
-﻿using NewsItemService.Entities;
+﻿using NewsItemService.DTOs;
+using NewsItemService.Entities;
 using NewsItemService.Interfaces;
 using NewsItemService.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NewsItemService.Tests.UnitTests.Stubs
 {
@@ -71,6 +73,31 @@ namespace NewsItemService.Tests.UnitTests.Stubs
         }
 
         public NewsItem Post(NewsItem newsItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Dictionary<bool, NewsItem>> GetNewsItemById(int newsItemId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatusDTO newsItemStatus)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<NewsItem> GetNewsItemAsync(int newsItemId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
         {
             throw new NotImplementedException();
         }

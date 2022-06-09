@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NewsItemService.Data;
 using NewsItemService.Entities;
 using NewsItemService.Tests.IntegrationTests;
@@ -17,8 +18,9 @@ namespace NewsItemService.Tests.IntegrationTests
     {
         private readonly NewsItemServiceDatabaseContext _databaseContext;
         private readonly AuthorRepository _authorRepository;
+        private readonly ILogger<AuthorRepository> _authorRepositorylogger;
 
-        public AuthorRepositoryIntegrationTest()
+        public AuthorRepositoryIntegrationTest(ILogger<AuthorRepository> authorRepositorylogger)
         {
             string connectionString = "Server=localhost;Port=1111;Database=integrationtests;UserId=developer;Password=developer";
             var serviceProvider = new ServiceCollection().AddEntityFrameworkNpgsql().BuildServiceProvider();
@@ -31,7 +33,8 @@ namespace NewsItemService.Tests.IntegrationTests
 
             SeedData(this._databaseContext);
 
-            this._authorRepository = new AuthorRepository(this._databaseContext);
+            _authorRepositorylogger = authorRepositorylogger;
+            this._authorRepository = new AuthorRepository(this._databaseContext, _authorRepositorylogger);
         }
 
         private void SeedData(NewsItemServiceDatabaseContext context)

@@ -16,7 +16,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace NewsItemService
+namespace NewsItemService.Tests.IntegrationTests
 {
     public class NewsItemControllerTests
     {
@@ -31,6 +31,9 @@ namespace NewsItemService
         private readonly ILogger<SourceLocationRepository> _sourceLocationLogger;
         private readonly ILogger<SourcePersonRepository> _sourcePersonLogger;
         private readonly ILogger<NoteRepository> _noteLogger;
+
+        private NewsItemOverviewService _newsItemOverviewService;
+        private AuthorService _authorService;
 
         private NewsItemController Initialize(bool seed = true, [CallerMemberName] string callerName = "")
         {
@@ -49,6 +52,9 @@ namespace NewsItemService
 
             var test = new MessageProducer(null, exchangeName, connection);
 
+            _newsItemOverviewService = new NewsItemOverviewService(new NewsItemRepository(context, _newsItemLogger), new AuthorRepository(context, _authorLogger));
+            _authorService = new AuthorService(new AuthorRepository(context, _authorLogger));
+
             return new NewsItemController(
                 test,
                 newsItemRepo, 
@@ -60,7 +66,8 @@ namespace NewsItemService
                 new MediaNewsItemRepository(context, _mediaNewsItemLogger),
                 new SourceLocationRepository(context, _sourceLocationLogger),
                 new SourcePersonRepository(context, _sourcePersonLogger),
-                new NoteRepository(context, _noteLogger));
+                new NoteRepository(context, _noteLogger),
+                _newsItemOverviewService, _authorService);
         }
 
         private void SeedProductInMemoryDatabaseWithData(NewsItemServiceDatabaseContext context)

@@ -9,33 +9,25 @@ namespace NewsItemService.Data
     {
         private bool disposed = false;
         private readonly ILogger _logger;
-        private readonly NewsItemServiceDatabaseContext _context;
+        private readonly NewsItemServiceDatabaseContext _dbContext;
 
-        public NewsItemRepository(NewsItemServiceDatabaseContext context, ILogger<NewsItemRepository> logger)
+        public NewsItemRepository(NewsItemServiceDatabaseContext dbContext, ILogger<NewsItemRepository> logger)
         {
             this._logger = logger;
-            _context = context;
+            _dbContext = dbContext;
         }
 
         public List<NewsItem> Get(int page, int pageSize)
         {
             var amountToSkip = (page - 1) * pageSize;
-            var newsItems =  _context.NewsItems.Include("Authors").Skip(amountToSkip).Take(pageSize).ToList();
+            var newsItems =  _dbContext.NewsItems.Include("Authors").Skip(amountToSkip).Take(pageSize).ToList();
 
             return newsItems;
         }
 
         public NewsItem? Get(int id)
         {
-            var newsItem = _context.NewsItems.FirstOrDefault(n => n.Id == id);
-
-            return newsItem;
-        }
-
-        public NewsItem Post(NewsItem newsItem)
-        {
-            _context.NewsItems.Add(newsItem);
-            _context.SaveChanges();
+            var newsItem = _dbContext.NewsItems.FirstOrDefault(n => n.Id == id);
 
             return newsItem;
         }
@@ -44,7 +36,7 @@ namespace NewsItemService.Data
         {
             var amountToSkip = (page - 1) * pageSize;
 
-            var newsItems = _context.NewsItems.Where(n => n.Created < date).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
+            var newsItems = _dbContext.NewsItems.Where(n => n.Created < date).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
             if (newsItems == null) throw new Exception($"No news items found.");
 
             return newsItems;
@@ -54,7 +46,7 @@ namespace NewsItemService.Data
         {
             var amountToSkip = (page - 1) * pageSize;
 
-            var newsItems = _context.NewsItems.Where(n => n.Created > date).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
+            var newsItems = _dbContext.NewsItems.Where(n => n.Created > date).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
             if (newsItems == null) throw new Exception($"No news items found.");
 
             return newsItems;
@@ -64,13 +56,13 @@ namespace NewsItemService.Data
         {
             var amountToSkip = (page - 1) * pageSize;
 
-            var newsItems = _context.NewsItems.Where(n => n.Created > startDate && n.Created < endDate).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
+            var newsItems = _dbContext.NewsItems.Where(n => n.Created > startDate && n.Created < endDate).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
             if (newsItems == null) throw new Exception($"No news items found.");
 
             return newsItems;
         }
         
-                public async Task<NewsItem> GetNewsItemAsync(int newsItemId)
+        public async Task<NewsItem> GetNewsItemAsync(int newsItemId)
         {
             NewsItem? newsItem = await _dbContext.NewsItems.Where(s => s.Id == newsItemId).Include(s => s.Authors).FirstOrDefaultAsync();
             if (newsItem == default)

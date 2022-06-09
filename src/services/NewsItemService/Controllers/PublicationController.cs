@@ -21,8 +21,7 @@ namespace NewsItemService.Controllers
             _publicationRepository = publicationRepository;
              _newsItemRepository = newsItemRepository;
             _producer = producer;
-            _publicationService = new PublicationService(publicationRepository, );
-
+            _publicationService = new PublicationService(_publicationRepository, _newsItemRepository);
         }
 
         [HttpGet("{id}")]
@@ -33,7 +32,7 @@ namespace NewsItemService.Controllers
                 try
                 {
                     var publication = await _publicationRepository.GetPublicationById(id);
-                    return Ok(publication);
+                    return Ok(publication.SingleOrDefault().Value);
                 }
                 catch (Exception e)
                 {
@@ -44,8 +43,9 @@ namespace NewsItemService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Publicize(PublicizeDTO dto)
+        public async Task<IActionResult> Publicize(PublicizeNewsItemDTO dto)
         {
+            // TODO: retrieve a news item with the NewsItemService
            var newsItem = await _publicationService.Publicize(dto.NewsItemID, dto.PublicationID);
             if (newsItem == null)
             {

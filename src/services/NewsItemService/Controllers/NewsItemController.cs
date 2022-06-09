@@ -4,6 +4,10 @@ using NewsItemService.Data;
 using Microsoft.AspNetCore.Mvc;
 using NewsItemService.DTOs;
 using NewsItemService.Services;
+using NewsItemService.Interfaces;
+using RabbitMQLibrary.Producer;
+using NewsItemService.Types;
+using RabbitMQLibrary;
 
 namespace NewsArticleService.Controllers
 {
@@ -35,6 +39,7 @@ namespace NewsArticleService.Controllers
                                   INewsItemRepository newsItemRepository,
                                   IAuthorRepository authorRepository,
                                   ICategoryRepository categoryRepository,
+                                  IPublicationRepository publicationRepository,
                                   ITagRepository tagRepository,
                                   IMediaRepository mediaRepository,
                                   IMediaNewsItemRepository mediaNewsItemRepository,
@@ -42,8 +47,7 @@ namespace NewsArticleService.Controllers
                                   ISourcePersonRepository sourcePersonRepository,
                                   INoteRepository noteRepository,
                                   NewsItemOverviewService newsItemOverviewService, 
-                                  AuthorService authorService, 
-                                  IMessageProducer producer)
+                                  AuthorService authorService)
         {
             _newsItemOverviewService = newsItemOverviewService;
             _authorService = authorService;
@@ -51,6 +55,7 @@ namespace NewsArticleService.Controllers
             _newsItemRepository = newsItemRepository;
             _authorRepository = authorRepository;
             _categoryRepository = categoryRepository;
+            _publicationRepository = publicationRepository;
             _tagRepository = tagRepository;
             _mediaRepository = mediaRepository;
             _mediaNewsItemRepository = mediaNewsItemRepository;
@@ -82,12 +87,6 @@ namespace NewsArticleService.Controllers
             if (newsItemDTO == null) return NotFound(new { message = "News item with given id does not exist." });
 
             return Ok(newsItemDTO);
-        }
-
-        [HttpPost]
-        public IActionResult Post([FromBody] createNewsItemDTO newsItemDTO)
-        {
-            return Ok(_newsItemOverviewService.Post(newsItemDTO));
         }
 
         [HttpGet("before")]
@@ -139,7 +138,7 @@ namespace NewsArticleService.Controllers
             }
         }
 
-
+        [HttpPatch]
         public async Task<IActionResult> AddNewsItemStatus(AddNewsItemStatusDTO status)
         {
             // Call to service to check if field is empty
