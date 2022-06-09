@@ -8,10 +8,12 @@ namespace NewsItemService.Data
     public class NewsItemRepository : INewsItemRepository, IDisposable
     {
         private bool disposed = false;
+        private readonly ILogger _logger;
         private readonly NewsItemServiceDatabaseContext _context;
 
-        public NewsItemRepository(NewsItemServiceDatabaseContext context)
+        public NewsItemRepository(NewsItemServiceDatabaseContext context, ILogger<NewsItemRepository> logger)
         {
+            this._logger = logger;
             _context = context;
         }
 
@@ -78,11 +80,54 @@ namespace NewsItemService.Data
             return newsItem;
         }
 
+        public async Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item)
+        { 
+            try
+            {
+                var duplicate = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Title == item.Title);
+
+                if (duplicate != null)
+                {
+                    return new Dictionary<bool, string>() { { false, "Can't create newsItem with a title that has already been used" } };
+                }
+                else
+                {
+                    await _dbContext.NewsItems.AddAsync(item);
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("There is a problem with saving the NewsItem. Error message: {Message}", ex.Message);
+                throw;
+            }
+
+            return new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } };
+        }
+
+        public async Task<Dictionary<bool, NewsItem>> GetNewsItemById(int newsItemId)
+        {
+            try
+            {
+                var newsItem = await _dbContext.NewsItems.Where(a => a.Id == newsItemId).FirstOrDefaultAsync();
+                if (newsItem == null)
+                {
+                    return new Dictionary<bool, NewsItem>() { { false, null } };
+                }
+                return new Dictionary<bool, NewsItem>() { { true, newsItem } };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("There is a problem with retrieving the NewsItem. Error message: {Message}", ex.Message);
+                throw;
+            }
+        }
+        
         public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatusDTO newsItemStatus)
         {
             NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemStatus.NewsItemId);
 
-            if(item == default)
+            if (item == default)
             {
                 return new Dictionary<bool, string>() { { false, "STATUS.NO_NEWSITEM" } };
             }
@@ -99,7 +144,7 @@ namespace NewsItemService.Data
             {
                 return new Dictionary<bool, string>() { { false, "STATUS.NO_CHANGES_DETECTED" } };
             }
-            
+
             await _dbContext.SaveChangesAsync();
             return new Dictionary<bool, string>() { { true, "Status changed to " + newsItemStatus.status.ToString() } };
         }
@@ -118,7 +163,6 @@ namespace NewsItemService.Data
 
         public void Dispose()
         {
-            Dispose(true);
             GC.SuppressFinalize(this);
         }
     }

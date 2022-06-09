@@ -7,7 +7,7 @@ on:
       - feature-**
     paths:
       - "src/services/NewsItemService/**"
-      - "tests/NewsItemService.Tests/**"
+      - "tests/NewsItemService/**"
       - ".github/workflows/news-item-service-build-test.yml"
   pull_request:
     branches:
@@ -15,18 +15,25 @@ on:
       - dev
     paths:
       - "src/services/NewsItemService/**"
-      - "tests/NewsItemService.Tests/**"
+      - "tests/NewsItemService/**"
       - ".github/workflows/news-item-service-build-test.yml"
 
 jobs:
-  news-item-service-build-unit-tests:
+  news-item-service-build-unit-test-1:
+    uses: "./.github/workflows/template-build-unit-test.yml"
+    with:
+      project-location: "src/services/NewsItemService"
+      test-location: "tests/NewsItemService"
+      - "tests/NewsItemService.Tests/**"
+      - ".github/workflows/news-item-service-build-test.yml"
+  news-item-service-build-unit-tests-2:
     uses: "./.github/workflows/template-build-unit-test.yml"
     with:
       project-location: "src/services/NewsItemService"
       test-location: "tests/NewsItemService.Tests"
       namespace-name: "NewsItemService.Tests.UnitTests"
       project-name: "NewsItemService"
-  news-item-service-integration-tests:
+  news-item-service-integration-tests-2:
     uses: "./.github/workflows/template-integration-test.yml"
     with:
       project-location: "src/services/NewsItemService"

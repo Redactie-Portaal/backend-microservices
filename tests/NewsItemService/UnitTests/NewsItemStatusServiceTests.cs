@@ -1,4 +1,4 @@
-﻿using NewsItemService.DTOs;
+using NewsItemService.DTOs;
 using NewsItemService.Services;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace NewsItemService.Tests.UnitTests
         /// </summary>
         public NewsItemStatusServiceTests()
         {
-            NewsItemStatusService = new NewsItemStatusService();    
+            NewsItemStatusService = new NewsItemStatusService();
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace NewsItemService.Tests.UnitTests
         /// <param name="ID">ID of newsItem</param>
         /// <param name="status">Status that the newsItem has to change to</param>
         /// <returns>AddNewsItemStatus</returns>
-        private AddNewsItemStatusDTO CreateAddNewsItemStatus(int ID, NewsItemStatus status )
+        private AddNewsItemStatusDTO CreateAddNewsItemStatus(int ID, NewsItemStatus status)
         {
             return new AddNewsItemStatusDTO()
             {
@@ -97,7 +97,6 @@ namespace NewsItemService.Tests.UnitTests
         public async Task Add_StatusArchived_ReturnsStatusChangeToArchived()
         {
             var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, Enums.NewsItemStatus.Archived));
-
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + Enums.NewsItemStatus.Archived } };
             Assert.Equal(expectedResult, result);
         }

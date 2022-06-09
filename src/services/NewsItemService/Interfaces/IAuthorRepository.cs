@@ -4,6 +4,7 @@ namespace NewsItemService.Interfaces
 {
     public interface IAuthorRepository
     {
+        Task<Dictionary<bool, Author>> GetAuthorById(int id);
         List<Author>? Get();
 
         Author? Get(int id);

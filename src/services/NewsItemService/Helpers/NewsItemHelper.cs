@@ -3,7 +3,7 @@ using NewsItemService.Entities;
 
 namespace NewsItemService.Helpers
 {
-    class NewsItemHelper 
+    class NewsItemHelper
     {
         public static NewsItemDTO ToDTO(NewsItem newsItem, bool includeAuthors = true)
         {
@@ -16,7 +16,8 @@ namespace NewsItemService.Helpers
                 Status = newsItem.Status
             };
 
-            if (includeAuthors) {
+            if (includeAuthors)
+            {
                 var authors = new List<AuthorDTO>();
 
                 foreach (var author in newsItem.Authors)

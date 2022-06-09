@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using NewsItemService.Controllers;
+using NewsArticleService.Controllers;
+using Microsoft.Extensions.Logging;
 using NewsItemService.Data;
 using NewsItemService.Entities;
 using NewsItemService.Services;
@@ -19,6 +20,18 @@ namespace NewsItemService
 {
     public class NewsItemControllerTests
     {
+        private readonly ILogger<NewsItemRepository> _newsItemLogger;
+        private readonly ILogger<AuthorRepository> _authorLogger;
+        private readonly ILogger<CategoryRepository> _categoryLogger;
+
+        private readonly ILogger<PublicationRepository> _publicationLogger;
+        private readonly ILogger<TagRepository> _tagLogger;
+        private readonly ILogger<MediaRepository> _mediaLogger;
+        private readonly ILogger<MediaNewsItemRepository> _mediaNewsItemLogger;
+        private readonly ILogger<SourceLocationRepository> _sourceLocationLogger;
+        private readonly ILogger<SourcePersonRepository> _sourcePersonLogger;
+        private readonly ILogger<NoteRepository> _noteLogger;
+
         private NewsItemController Initialize(bool seed = true, [CallerMemberName] string callerName = "")
         {
             var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>().UseInMemoryDatabase(databaseName: "InMemoryProductDb_" + callerName).Options;
@@ -27,15 +40,27 @@ namespace NewsItemService
             {
                 SeedProductInMemoryDatabaseWithData(context);
             }
-            var repo = new NewsItemRepository(context);
+
+            var newsItemRepo = new NewsItemRepository(context, _newsItemLogger);
 
 
             var exchangeName = new ExchangeName("test-exchange");
             var connection = new RabbitMqConnection();
 
-            var test = new MessageProducer(null, exchangeName,  connection);
+            var test = new MessageProducer(null, exchangeName, connection);
 
-            return new NewsItemController(test, repo);
+            return new NewsItemController(
+                test,
+                newsItemRepo, 
+                new AuthorRepository(context, _authorLogger), 
+                new CategoryRepository(context, _categoryLogger),
+                new PublicationRepository(context, _publicationLogger),
+                new TagRepository(context, _tagLogger),
+                new MediaRepository(_mediaLogger),
+                new MediaNewsItemRepository(context, _mediaNewsItemLogger),
+                new SourceLocationRepository(context, _sourceLocationLogger),
+                new SourcePersonRepository(context, _sourcePersonLogger),
+                new NoteRepository(context, _noteLogger));
         }
 
         private void SeedProductInMemoryDatabaseWithData(NewsItemServiceDatabaseContext context)
@@ -49,7 +74,7 @@ namespace NewsItemService
             {
                 context.NewsItems.AddRange(newsItems);
             }
-            
+
             context.SaveChanges();
         }
 
@@ -63,6 +88,19 @@ namespace NewsItemService
 
             var final = resulttostring.Value.GetType().GetProperty("message").GetValue(resulttostring.Value, null);
             Assert.Equal(final, "Status changed to Done");
+        }
+
+        [Fact]
+        private async Task CreateNewsItemSuccessfully()
+        {
+            var controller = Initialize();
+
+            List<int> authorIds = new() { 1 };
+            var result = controller.Create(new DTOs.CreateNewsItemDTO { AuthorIds = authorIds, Title = "Test title", Content = "Test content" });
+            var resulttostring = result.Result as ObjectResult;
+
+            var final = resulttostring.Value.GetType().GetProperty("message").GetValue(resulttostring.Value, null);
+            Assert.Equal("Author does not exist", final);
         }
     }
 }

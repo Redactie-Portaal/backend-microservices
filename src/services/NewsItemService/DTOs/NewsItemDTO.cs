@@ -4,6 +4,7 @@ namespace NewsItemService.DTOs
 {
     public class NewsItemDTO
     {
+        //TODO: UPDATE MORE PROPERTIES
         public int Id { get; set; }
         public string Title { get; set; }
         public DateTime Created { get; set; }

@@ -15,7 +15,7 @@ on:
         type: string
         description: "name of the project"
       namespace-name:
-        required: true
+        required: false
         type: string
         description: "name of the namespace where are tests can be fetched"
 
@@ -37,7 +37,9 @@ jobs:
       - name: 'Build release version'
         run: dotnet build ${{ inputs.project-location }} --no-restore --configuration Release 
       
-      - name: 'Running unit tests'
+      - name: 'Run test 1'
+        run: dotnet test ${{ inputs.test-location }} --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+      - name: 'Running unit tests 2'
         run: dotnet test ${{ inputs.test-location }} --filter FullyQualifiedName~${{ inputs.namespace-name }} --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
 
       - name: 'Create Test Report'

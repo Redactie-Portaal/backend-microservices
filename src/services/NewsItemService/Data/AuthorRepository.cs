@@ -4,15 +4,36 @@ using NewsItemService.Interfaces;
 
 namespace NewsItemService.Data
 {
-    public class AuthorRepository : IAuthorRepository
+    public class AuthorRepository: IAuthorRepository, IDisposable
     {
-        private readonly NewsItemServiceDatabaseContext _context;
+        private readonly NewsItemServiceDatabaseContext _dbContext;
+        private bool disposed = false;
+        private readonly ILogger _logger;
 
-        public AuthorRepository(NewsItemServiceDatabaseContext context)
+        public AuthorRepository(NewsItemServiceDatabaseContext context, ILogger<AuthorRepository> logger)
         {
-            _context = context;
+            this._dbContext = context;
+            this._logger = logger;
         }
 
+        public async Task<Dictionary<bool, Author>> GetAuthorById(int id)
+        {
+            try
+            {
+                var author = await _dbContext.Authors.Where(a => a.Id == id).FirstOrDefaultAsync();
+                if (author == null)
+                {
+                    return new Dictionary<bool, Author>() { { false, null } };
+                }
+                return new Dictionary<bool, Author>() { { true, author } };
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("There is a problem with retrieving the Author. Error message: {Message}", ex.Message);
+                throw;
+            }
+        }
+        
         public List<Author>? Get()
         {
             return _context.Authors.ToList();
@@ -42,6 +63,23 @@ namespace NewsItemService.Data
             _context.SaveChanges();
 
             return author;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _dbContext.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }
