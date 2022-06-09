@@ -49,7 +49,6 @@ namespace NewsItemService.Controllers
            var newsItem = await _publicationService.Publicize(dto.NewsItemID, dto.PublicationID);
             if (newsItem == null)
             {
-
                 return BadRequest(); // TODO: Better response
             }
             else
