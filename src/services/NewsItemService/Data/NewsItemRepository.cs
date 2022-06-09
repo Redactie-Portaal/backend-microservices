@@ -1,23 +1,76 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NewsItemService.DTOs;
 using NewsItemService.Entities;
 using NewsItemService.Interfaces;
 
 namespace NewsItemService.Data
 {
-    public class NewsItemRepository: INewsItemRepository, IDisposable
+    public class NewsItemRepository : INewsItemRepository, IDisposable
     {
-        private readonly NewsItemServiceDatabaseContext _dbContext;
         private bool disposed = false;
         private readonly ILogger _logger;
+        private readonly NewsItemServiceDatabaseContext _context;
 
         public NewsItemRepository(NewsItemServiceDatabaseContext context, ILogger<NewsItemRepository> logger)
         {
-            this._dbContext = context;
             this._logger = logger;
+            _context = context;
         }
 
-        public async Task<NewsItem> GetNewsItemAsync(int newsItemId)
+        public List<NewsItem> Get(int page, int pageSize)
+        {
+            var amountToSkip = (page - 1) * pageSize;
+            var newsItems =  _context.NewsItems.Include("Authors").Skip(amountToSkip).Take(pageSize).ToList();
+
+            return newsItems;
+        }
+
+        public NewsItem? Get(int id)
+        {
+            var newsItem = _context.NewsItems.FirstOrDefault(n => n.Id == id);
+
+            return newsItem;
+        }
+
+        public NewsItem Post(NewsItem newsItem)
+        {
+            _context.NewsItems.Add(newsItem);
+            _context.SaveChanges();
+
+            return newsItem;
+        }
+
+        public List<NewsItem> GetBefore(DateTime date, int page, int pageSize)
+        {
+            var amountToSkip = (page - 1) * pageSize;
+
+            var newsItems = _context.NewsItems.Where(n => n.Created < date).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
+            if (newsItems == null) throw new Exception($"No news items found.");
+
+            return newsItems;
+        }
+
+        public List<NewsItem> GetAfter(DateTime date, int page, int pageSize)
+        {
+            var amountToSkip = (page - 1) * pageSize;
+
+            var newsItems = _context.NewsItems.Where(n => n.Created > date).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
+            if (newsItems == null) throw new Exception($"No news items found.");
+
+            return newsItems;
+        }
+
+        public List<NewsItem> GetBetween(DateTime startDate, DateTime endDate, int page, int pageSize)
+        {
+            var amountToSkip = (page - 1) * pageSize;
+
+            var newsItems = _context.NewsItems.Where(n => n.Created > startDate && n.Created < endDate).Skip(amountToSkip).Take(pageSize).Include("Authors").ToList();
+            if (newsItems == null) throw new Exception($"No news items found.");
+
+            return newsItems;
+        }
+        
+                public async Task<NewsItem> GetNewsItemAsync(int newsItemId)
         {
             NewsItem? newsItem = await _dbContext.NewsItems.Where(s => s.Id == newsItemId).Include(s => s.Authors).FirstOrDefaultAsync();
             if (newsItem == default)
@@ -69,24 +122,7 @@ namespace NewsItemService.Data
                 throw;
             }
         }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    _dbContext.Dispose();
-                }
-            }
-            this.disposed = true;
-        }
-
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-
+        
         public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatusDTO newsItemStatus)
         {
             NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemStatus.NewsItemId);
@@ -111,6 +147,23 @@ namespace NewsItemService.Data
 
             await _dbContext.SaveChangesAsync();
             return new Dictionary<bool, string>() { { true, "Status changed to " + newsItemStatus.status.ToString() } };
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _dbContext.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }

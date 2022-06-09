@@ -1,4 +1,4 @@
-name: "build & unit tests template"
+name: "integration tests template"
 on:
   workflow_call:
     inputs:
@@ -15,12 +15,12 @@ on:
         type: string
         description: "name of the project"
       namespace-name:
-        required: false
+        required: true
         type: string
         description: "name of the namespace where are tests can be fetched"
 
 jobs:
-  build-unit-tests:
+  integration-tests:
     runs-on: ubuntu-20.04
     steps:
       - name: 'checkout project code'
@@ -37,16 +37,14 @@ jobs:
       - name: 'Build release version'
         run: dotnet build ${{ inputs.project-location }} --no-restore --configuration Release 
       
-      - name: 'Run test 1'
-        run: dotnet test ${{ inputs.test-location }} --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
-      - name: 'Running unit tests 2'
-        run: dotnet test ${{ inputs.test-location }} --filter FullyQualifiedName~${{ inputs.namespace-name }} --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+      - name: "Executing helper script for running Integration tests"
+        run: bash ${{ inputs.test-location }}/IntegrationTests/run-integration-tests.sh ${{ inputs.test-location }} ${{ inputs.namespace-name }} 
 
       - name: 'Create Test Report'
         uses: dorny/test-reporter@v1
         if: success() || failure() # run this step even if previous step failed
         with:
-          name: "Test results of Unit tests for ${{ inputs.project-name }}" # Name of the check run which will be created
+          name: "Test results of Integration tests for ${{ inputs.project-name }}" # Name of the check run which will be created
           path: ${{ inputs.test-location }}/TestResults/test-results.trx # Path to test results
           reporter: dotnet-trx
 

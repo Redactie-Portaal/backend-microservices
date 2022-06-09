@@ -1,8 +1,7 @@
 namespace NewsItemService.DTOs
 {
-    public class AuthorDTO
+    public class CreateAuthorDTO
     {
-        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

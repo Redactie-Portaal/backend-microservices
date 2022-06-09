@@ -1,9 +1,9 @@
-﻿using NewsItemService.DTOs;
+using NewsItemService.DTOs;
 using NewsItemService.Entities;
 
 namespace NewsItemService.Helpers
 {
-    class AuthorHelper
+    class AuthorHelper 
     {
         public static AuthorDTO ToDTO(Author author)
         {
@@ -17,7 +17,7 @@ namespace NewsItemService.Helpers
         public static List<AuthorDTO> ToDTO(List<Author> authors)
         {
             List<AuthorDTO> authorDTOs = new List<AuthorDTO>();
-            foreach (Author author in authors)
+            foreach (Author author in authors) 
             {
                 authorDTOs.Add(AuthorHelper.ToDTO(author));
             }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using NewsItemService.Data;
 using NewsItemService.DTOs;

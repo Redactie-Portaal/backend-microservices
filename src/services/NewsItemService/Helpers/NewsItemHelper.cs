@@ -1,4 +1,4 @@
-﻿using NewsItemService.DTOs;
+using NewsItemService.DTOs;
 using NewsItemService.Entities;
 
 namespace NewsItemService.Helpers

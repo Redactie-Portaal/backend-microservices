@@ -1,5 +1,18 @@
 {
-  "Routes": [],
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/NewsItem/author/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 14000
+        }
+      ],
+      "UpstreamPathTemplate": "/NewsItem/author/{id}",
+      "UpstreamHttpMethod": [ "Get" ]
+    }
+  ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5000"
   }

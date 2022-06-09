@@ -1,4 +1,4 @@
-﻿using NewsItemService.Types;
+using NewsItemService.Types;
 
 namespace NewsItemService.DTOs
 {
