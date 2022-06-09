@@ -20,7 +20,7 @@ namespace NewsItemService.Data
         {
             try
             {
-                var publication = await _dbContext.Publications.AsNoTracking().Where(a => a.Id == id).FirstOrDefaultAsync();
+                var publication = await _dbContext.Publications.Where(a => a.Id == id).FirstOrDefaultAsync();
                 if (publication == null)
                 {
                     return new Dictionary<bool, Publication>() { { false, null } };
