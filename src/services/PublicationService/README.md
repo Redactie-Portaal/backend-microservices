@@ -11,3 +11,7 @@
 * A Tweet can only contain 1 video, being max 15MB in size.
 * The supported format for a video is MP4 (H264).
 * The video resolution are: 1280x720 (landscape), 720x1280 (portrait) & 720x720 (square).
+
+## Technical debt
+* A Tweet cannot contain a video and pictures. There is no logic that checks for this but can be added if
+time allows it.
