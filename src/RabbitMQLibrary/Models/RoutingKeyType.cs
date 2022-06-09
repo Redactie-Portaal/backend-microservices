@@ -13,5 +13,6 @@ namespace RabbitMQLibrary
         public const string NewsItemDeleted = "newsitem.deleted";
         public const string NewsItemDispose = "newsitem.disposed";
         public const string NewsItemArchive = "newsitem.archived";
+        public const string NewsItemPublishTwitter = "newsitem.publish.twitter";
     }
 }
