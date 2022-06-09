@@ -165,12 +165,12 @@ namespace NewsItemService.Services
                             FileContent = Convert.FromBase64String(medium.FileContent)
                         };
                         var newFile = await _mediaRepository.SaveMedia(newMedia);
-                        var newMediaNewsItem = new MediaNewsItem() { MediaId = newFile.SingleOrDefault().Value, IsSource = medium.IsSource };
+                        var newMediaNewsItem = new MediaNewsItem() { MediaId = newFile.SingleOrDefault().Value, IsSource = medium.IsSource, MediaFilename = medium.FileName };
                         mediaNewsItems.Add(newMediaNewsItem);
                     }
                     else
                     {
-                        var newMediaNewsItem = new MediaNewsItem() { MediaId = media.SingleOrDefault().Value.Id, IsSource = medium.IsSource };
+                        var newMediaNewsItem = new MediaNewsItem() { MediaId = media.SingleOrDefault().Value.Id, IsSource = medium.IsSource, MediaFilename = medium.FileName };
                         mediaNewsItems.Add(newMediaNewsItem);
                     }
                 }
