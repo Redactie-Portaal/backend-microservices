@@ -1,0 +1,43 @@
+name: Build and Test NewsItemService
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feature-**
+    paths:
+      - "src/services/NewsItemService/**"
+      - "tests/NewsItemService.Tests/**"
+      - ".github/workflows/news-item-service-build-test.yml"
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - "src/services/NewsItemService/**"
+      - "tests/NewsItemService.Tests/**"
+      - ".github/workflows/news-item-service-build-test.yml"
+
+jobs:
+  news-item-service-build-unit-tests:
+    uses: "./.github/workflows/template-build-unit-test.yml"
+    with:
+      project-location: "src/services/NewsItemService"
+      test-location: "tests/NewsItemService.Tests"
+      namespace-name: "NewsItemService.Tests.UnitTests"
+      project-name: "NewsItemService"
+  news-item-service-integration-tests:
+    uses: "./.github/workflows/template-integration-test.yml"
+    with:
+      project-location: "src/services/NewsItemService"
+      test-location: "tests/NewsItemService.Tests"
+      namespace-name: "NewsItemService.Tests.IntegrationTests"
+      project-name: "NewsItemService"
+  news-item-service-sonarqube-test:
+    uses: "./.github/workflows/template-sonarqube.yml"
+    with:
+      project-location: "src\\services\\NewsItemService"
+    secrets:
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      action-github_token: ${{ secrets.GITHUB_TOKEN }}
