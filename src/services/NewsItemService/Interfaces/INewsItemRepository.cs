@@ -1,8 +1,8 @@
-﻿using NewsItemService.Entities;
+using NewsItemService.Entities;
 
 namespace NewsItemService.Interfaces
 {
-    public interface INewsItemRepository
+    public interface INewsItemRepository : IDisposable
     {
         List<NewsItem> Get(int page, int pageSize);
 
@@ -15,5 +15,8 @@ namespace NewsItemService.Interfaces
         List<NewsItem> GetAfter(DateTime date, int page, int pageSize);
 
         List<NewsItem> GetBetween(DateTime startDate, DateTime endDate, int page, int pageSize);
+      
+        Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatusDTO newsItemStatus);
+        Task<NewsItem> GetNewsItemAsync(int newsItemId);
     }
 }

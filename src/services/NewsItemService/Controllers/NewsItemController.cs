@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using NewsItemService.DTOs;
 using NewsItemService.Services;
 
@@ -10,14 +10,20 @@ namespace NewsItemService.Controllers
     {
         private readonly NewsItemOverviewService _newsItemOverviewService;
         private readonly AuthorService _authorService;
+        private readonly NewsItemStatusService _newsItemStatusService;
+        private readonly IMessageProducer _producer;
+        private INewsItemRepository _newsItemRepository;
 
         private const int DEFAULT_PAGE = 1;
         private const int DEFAULT_PAGE_SIZE = 10;
 
-        public NewsItemController(NewsItemOverviewService newsItemOverviewService, AuthorService authorService)
+        public NewsItemController(NewsItemOverviewService newsItemOverviewService, AuthorService authorService, IMessageProducer producer ,INewsItemRepository newsItemRepository)
         {
             _newsItemOverviewService = newsItemOverviewService;
             _authorService = authorService;
+            _producer = producer;
+            _newsItemRepository = newsItemRepository;
+            _newsItemStatusService = new NewsItemStatusService();
         }
 
         [HttpGet]
@@ -81,5 +87,38 @@ namespace NewsItemService.Controllers
 
             return Ok(_newsItemOverviewService.GetBetween(startDate, endDate, page, pageSize));
         }
-    }
+        
+        [HttpPost]
+        public async Task<IActionResult> AddNewsItemStatus(AddNewsItemStatusDTO status)
+        {
+            // Call to service to check if field is empty
+            var check = _newsItemStatusService.CheckNewsItemValue(status);
+            if (!check.FirstOrDefault().Key)
+            {
+                return BadRequest(new { message = check.FirstOrDefault().Value });
+            }
+
+            // Do database actions
+            var result = await _newsItemRepository.ChangeNewsItemStatus(status);
+            if (!result.FirstOrDefault().Key)
+            {
+                return BadRequest(new { message = result.FirstOrDefault().Value });
+            }
+
+            //RABBITMQ CALLS IF STATUS MESSAGE IS DISPOSE OR ARCHIVED
+            if (status.status == NewsItemStatus.Dispose)
+            {
+                var newsItem = await _newsItemRepository.GetNewsItemAsync(status.NewsItemId);
+                if (newsItem == default)
+                {
+                    return BadRequest(new { message = result.FirstOrDefault().Value });
+                }
+
+                _producer.PublishMessageAsync(RoutingKeyType.NewsItemDispose, _newsItemStatusService.NewsItemToDisposedDTO(newsItem));
+            }
+            
+
+            // Return Ok message that status has been changed
+            return Ok(new { message = result.FirstOrDefault().Value });
+        }
 }

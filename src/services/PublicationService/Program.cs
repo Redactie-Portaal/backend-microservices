@@ -1,5 +1,7 @@
-using ArchiveService.Data;
-using ArchiveService.Messaging;
+using PublicationService.Data;
+using PublicationService.Interfaces;
+using PublicationService.Messaging;
+using PublicationService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHostedService<RabbitMQWorker>();
 
-builder.Services.AddDbContext<ArchiveServiceDatabaseContext>();
-using var archiveContext = new ArchiveServiceDatabaseContext();
-archiveContext.Database.EnsureCreated();
+builder.Services.AddSingleton<IPublicationService, TwitterService>();
+builder.Services.AddSingleton<IMediaProvider, GoogleDriveProvider>();
 
 var app = builder.Build();
 

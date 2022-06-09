@@ -1,6 +1,7 @@
 using NewsItemService.Data;
 using NewsItemService.Interfaces;
 using NewsItemService.Services;
+using RabbitMQLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +19,20 @@ builder.Services.AddSingleton<NewsItemOverviewService>();
 builder.Services.AddSingleton<AuthorService>();
 
 // Repositories
-builder.Services.AddSingleton<INewsItemRepository, NewsItemRepository>();
+
+builder.Services.AddScoped<INewsItemRepository, NewsItemRepository>();
 builder.Services.AddSingleton<IAuthorRepository, AuthorRepository>();
 
 // Contexts
 builder.Services.AddSingleton<NewsItemServiceDatabaseContext>();
+
+// Messaging
+builder.Services.AddMessageProducing("news-item-exchange");
+
+// Add the database context to the builder.
+builder.Services.AddDbContext<NewsItemServiceDatabaseContext>();
+using var newsItemContext = new NewsItemServiceDatabaseContext();
+newsItemContext.Database.EnsureCreated();
 
 
 var app = builder.Build();
@@ -39,9 +49,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Ensure database(s?) created
-var newsItemServiceContext = builder.Services.BuildServiceProvider().GetService<NewsItemServiceDatabaseContext>();
-newsItemServiceContext?.Database.EnsureCreated();
 
 app.Run();

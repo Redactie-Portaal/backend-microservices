@@ -31,6 +31,7 @@ namespace NewsItemService.Data
         /// DbSet objects are created from a DbContext using the DbContext.Set method.
         /// </summary>
         public DbSet<Author> Authors { get; set; }
+
         /// <summary>
         /// DbSet for the Category class, A DbSet represents the collection of all entities in the context. 
         /// DbSet objects are created from a DbContext using the DbContext.Set method.
@@ -46,6 +47,7 @@ namespace NewsItemService.Data
         /// DbSet objects are created from a DbContext using the DbContext.Set method.
         /// </summary>
         public DbSet<Publication> Publications { get; set; }
+
 
         /// <summary>
         /// OnConfiguring builds the connection between the database and the API using the given connection string

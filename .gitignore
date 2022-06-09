@@ -275,3 +275,7 @@ __pycache__/
 
 *.vscode
 *docker-compose.yaml
+
+# Secrets
+secrets.json
+google_client_secret.json
