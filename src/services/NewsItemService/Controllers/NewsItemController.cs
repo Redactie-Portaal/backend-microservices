@@ -34,7 +34,6 @@ namespace NewsArticleService.Controllers
                                   INewsItemRepository newsItemRepository,
                                   IAuthorRepository authorRepository,
                                   ICategoryRepository categoryRepository,
-                                  IPublicationRepository publicationRepository,
                                   ITagRepository tagRepository,
                                   IMediaRepository mediaRepository,
                                   IMediaNewsItemRepository mediaNewsItemRepository,
@@ -46,7 +45,6 @@ namespace NewsArticleService.Controllers
             _newsItemRepository = newsItemRepository;
             _authorRepository = authorRepository;
             _categoryRepository = categoryRepository;
-            _publicationRepository = publicationRepository;
             _tagRepository = tagRepository;
             _mediaRepository = mediaRepository;
             _mediaNewsItemRepository = mediaNewsItemRepository;
@@ -108,22 +106,6 @@ namespace NewsArticleService.Controllers
         }
 
 
-        [HttpGet("publication/{id}")]
-        public async Task<IActionResult> GetPublicationById(int id)
-        {
-            if(id > 0)
-            {
-                try
-                {
-                    var publication = _publicationRepository.GetPublicationById(id).Result;
-                    return Ok(publication);
-                }
-                catch(Exception e)
-                {
-                    return Problem("Error:" + e.Message);
-                }
-            };
-            return BadRequest(new { message = "ID cannot be smaller than one." });
-        }
+      
     }
 }
