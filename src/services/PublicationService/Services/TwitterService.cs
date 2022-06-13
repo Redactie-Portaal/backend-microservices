@@ -57,10 +57,10 @@ namespace PublicationService.Services
             List<byte[]> retrievedPictures = new List<byte[]>();
             List<byte[]> retrievedVideos = new List<byte[]>();
 
-            if (publishNewsItemDTO.Medias.Count != 0)
+            if (publishNewsItemDTO.Media.Count != 0)
             {
                 this._logger.LogInformation("Uploading media to Twitter.");
-                foreach (var media in publishNewsItemDTO.Medias)
+                foreach (var media in publishNewsItemDTO.Media)
                 {
                     var result = await this._mediaProvider.RetrieveMedia(media.FileName);
                     if (result.SingleOrDefault().Key.Contains("image"))
