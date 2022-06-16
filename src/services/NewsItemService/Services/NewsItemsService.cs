@@ -57,30 +57,36 @@ namespace NewsItemService.Services
             }
 
             List<Category> categories = new();
-            if (dto.CategoryIds.Count != 0)
+            if (dto.CategoryIds != null)
             {
-                foreach (var id in dto.CategoryIds)
+                if (dto.CategoryIds.Count != 0)
                 {
-                    var category = await _categoryRepository.GetCategoryById(id);
-                    if (!category.FirstOrDefault().Key)
+                    foreach (var id in dto.CategoryIds)
                     {
-                        return new Dictionary<bool, string>() { { false, "Category does not exist" } };
+                        var category = await _categoryRepository.GetCategoryById(id);
+                        if (!category.FirstOrDefault().Key)
+                        {
+                            return new Dictionary<bool, string>() { { false, "Category does not exist" } };
+                        }
+                        categories.Add(category.FirstOrDefault().Value);
                     }
-                    categories.Add(category.FirstOrDefault().Value);
                 }
             }
 
             List<Tag> tags = new();
-            if (dto.TagIds.Count != 0)
+            if (dto.TagIds != null)
             {
-                foreach (var id in dto.TagIds)
+                if (dto.TagIds.Count != 0)
                 {
-                    var tag = await _tagRepository.GetTagById(id);
-                    if (!tag.FirstOrDefault().Key)
+                    foreach (var id in dto.TagIds)
                     {
-                        return new Dictionary<bool, string>() { { false, "Tag does not exist" } };
+                        var tag = await _tagRepository.GetTagById(id);
+                        if (!tag.FirstOrDefault().Key)
+                        {
+                            return new Dictionary<bool, string>() { { false, "Tag does not exist" } };
+                        }
+                        tags.Add(tag.FirstOrDefault().Value);
                     }
-                    tags.Add(tag.FirstOrDefault().Value);
                 }
             }
 
