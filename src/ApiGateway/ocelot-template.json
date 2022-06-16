@@ -1,0 +1,31 @@
+{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/catalog/fruits/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+              {
+                "Host": "localhost",
+                "Port": 7700
+              }
+            ],
+            "UpstreamPathTemplate": "/api/catalog/fruits/{id}",
+            "UpstreamHttpMethod": [ "Get" ]
+        },
+        {
+            "DownstreamPathTemplate": "/checkout",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+              {
+                "Host": "localhost",
+                "Port": 7800
+              }
+            ],
+            "UpstreamPathTemplate": "/api/checkout",
+            "UpstreamHttpMethod": [ "Post" ]
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "https://localhost:4500"
+    }
+}
