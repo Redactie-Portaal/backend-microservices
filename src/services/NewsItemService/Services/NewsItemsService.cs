@@ -98,7 +98,7 @@ namespace NewsItemService.Services
                     var publication = await _publicationRepository.GetPublicationById(id);
                     if (!publication.FirstOrDefault().Key)
                     {
-                        return new Dictionary<bool, string>() { { false, "Tag does not exist" } };
+                        return new Dictionary<bool, string>() { { false, "Publication does not exist" } };
                     }
                     publications.Add(publication.FirstOrDefault().Value);
                 }
