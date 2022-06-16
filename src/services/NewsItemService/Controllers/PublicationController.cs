@@ -13,49 +13,41 @@ namespace NewsItemService.Controllers
     {
         private readonly IPublicationRepository _publicationRepository;
         private readonly INewsItemRepository _newsItemRepository;
+        private readonly IMediaNewsItemRepository _mediaNewsItemRepository;
         private readonly IMessageProducer _producer;
         private readonly PublicationService _publicationService;
 
-        public PublicationController(IPublicationRepository publicationRepository, INewsItemRepository newsItemRepository, IMessageProducer producer)
+        public PublicationController(IPublicationRepository publicationRepository, INewsItemRepository newsItemRepository, IMediaNewsItemRepository mediaNewsItemRepository, IMessageProducer producer)
         {
             _publicationRepository = publicationRepository;
-             _newsItemRepository = newsItemRepository;
+            _newsItemRepository = newsItemRepository;
+            _mediaNewsItemRepository = mediaNewsItemRepository;
             _producer = producer;
-            _publicationService = new PublicationService(_publicationRepository, _newsItemRepository);
+            _publicationService = new PublicationService(_publicationRepository, _newsItemRepository, _mediaNewsItemRepository, _producer);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPublicationById(int id)
         {
-            if (id > 0)
+            var publication = await _publicationService.GetPublication(id);
+            if (!publication.SingleOrDefault().Key)
             {
-                try
-                {
-                    var publication = await _publicationRepository.GetPublicationById(id);
-                    return Ok(publication.SingleOrDefault().Value);
-                }
-                catch (Exception e)
-                {
-                    return Problem("Error:" + e.Message);
-                }
-            };
-            return BadRequest(new { message = "ID cannot be smaller than one." });
+                return NotFound(new { message = " A publication with this id cannot be found." });
+            }
+            return Ok(publication.SingleOrDefault().Value);
         }
 
         [HttpPost]
         public async Task<IActionResult> Publicize(PublicizeNewsItemDTO dto)
         {
-            // TODO: retrieve a news item with the NewsItemService
            var newsItem = await _publicationService.Publicize(dto.NewsItemID, dto.PublicationID);
-            if (newsItem == null)
+            if (!newsItem.SingleOrDefault().Key && newsItem.SingleOrDefault().Value == "NEWSITEMNOTFOUND")
             {
-
-                return BadRequest(); // TODO: Better response
+                return NotFound(new { message = "NewsItem cannot be found." });
             }
             else
             {
-                _producer.PublishMessageAsync(RoutingKeyType.NewsItemPublishTwitter, newsItem);
-                return Ok();
+                return Ok(new { message = "Newsitem publishes to specified publication." });
             }
         }
     }

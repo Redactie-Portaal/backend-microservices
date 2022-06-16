@@ -16,16 +16,16 @@ namespace NewsItemService.Data
             this._logger = logger;
         }
 
-        public async Task<Dictionary<bool, MediaNewsItem>> GetMediaNewsItemById(int newsItemId)
+        public async Task<Dictionary<bool, List<MediaNewsItem>>> GetMediaNewsItemById(int newsItemId)
         {
             try
             {
-                var mediaNewsItem = await _dbContext.MediaNewsItems.Where(a => a.NewsItemId == newsItemId).FirstOrDefaultAsync();
+                var mediaNewsItem = await _dbContext.MediaNewsItems.Where(a => a.NewsItemId == newsItemId).ToListAsync();
                 if (mediaNewsItem == null)
                 {
-                    return new Dictionary<bool, MediaNewsItem>() { { false, null } };
+                    return new Dictionary<bool, List<MediaNewsItem>>() { { false, null } };
                 }
-                return new Dictionary<bool, MediaNewsItem>() { { true, mediaNewsItem } };
+                return new Dictionary<bool, List<MediaNewsItem>>() { { true, mediaNewsItem } };
             }
             catch (Exception ex)
             {

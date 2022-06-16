@@ -6,13 +6,13 @@ using Tweetinvi.Parameters;
 
 namespace PublicationService.Services
 {
-    public class TwitterService : IPublicationService
+    public class TwitterService
     {
         private readonly IMediaProvider _mediaProvider;
         private readonly ILogger _logger;
         private List<IMedia> twitterMedias = new List<IMedia>();
 
-        public TwitterService(IMediaProvider mediaProvider, ILogger<IPublicationService> logger)
+        public TwitterService(IMediaProvider mediaProvider, ILogger<TwitterService> logger)
         {
             this._mediaProvider = mediaProvider;
             this._logger = logger;
@@ -33,9 +33,12 @@ namespace PublicationService.Services
                 await PrepareMedia(twitterClient, publishNewsItemDTO);
 
                 string tags = "";
-                foreach (var tag in publishNewsItemDTO.Tags)
+                if (publishNewsItemDTO.Tags.Count != 0)
                 {
-                    tags += " #" + tag;
+                    foreach (var tag in publishNewsItemDTO.Tags)
+                    {
+                        tags += " #" + tag;
+                    }
                 }
 
                 this._logger.LogInformation("Publishing tweet to Twitter, with the specified file(s).");
@@ -57,10 +60,10 @@ namespace PublicationService.Services
             List<byte[]> retrievedPictures = new List<byte[]>();
             List<byte[]> retrievedVideos = new List<byte[]>();
 
-            if (publishNewsItemDTO.Medias.Count != 0)
+            if (publishNewsItemDTO.Media.Count != 0)
             {
                 this._logger.LogInformation("Uploading media to Twitter.");
-                foreach (var media in publishNewsItemDTO.Medias)
+                foreach (var media in publishNewsItemDTO.Media)
                 {
                     var result = await this._mediaProvider.RetrieveMedia(media.FileName);
                     if (result.SingleOrDefault().Key.Contains("image"))
