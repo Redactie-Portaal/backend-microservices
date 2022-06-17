@@ -20,21 +20,21 @@ on:
 
 jobs:
   news-item-service-build-unit-tests:
-    uses: "./.github/workflows/template-build-unit-test.yml"
+    uses: "./.github/workflows/workflow-build-unit-tests.yml"
     with:
       project-location: "src/services/NewsItemService"
       test-location: "tests/NewsItemService.Tests"
       namespace-name: "NewsItemService.Tests.UnitTests"
       project-name: "NewsItemService"
   news-item-service-integration-tests:
-    uses: "./.github/workflows/template-integration-test.yml"
+    uses: "./.github/workflows/workflow-integration-tests.yml"
     with:
       project-location: "src/services/NewsItemService"
       test-location: "tests/NewsItemService.Tests"
       namespace-name: "NewsItemService.Tests.IntegrationTests"
       project-name: "NewsItemService"
   news-item-service-sonarqube-test:
-    uses: "./.github/workflows/template-sonarqube.yml"
+    uses: "./.github/workflows/workflow-sonarqube.yml"
     with:
       project-location: "src\\services\\NewsItemService"
     secrets:

@@ -1,4 +1,4 @@
-name: "SonarQube template"
+name: "workflow - run SonarQube analysis"
 on:
   workflow_call:
     inputs:
@@ -16,7 +16,7 @@ on:
 
 
 jobs:
-  run-sonarqube:
+  sonarqube-analysis:
     name: Build & Run SonarQube
     runs-on: windows-latest
     steps:

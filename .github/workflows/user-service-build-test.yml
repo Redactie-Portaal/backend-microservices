@@ -7,7 +7,7 @@ on:
       - feature-**
     paths:
       - "src/services/UserService/**"
-      - "tests/UserService.**/**" 
+      - "tests/UserService.Tests/**"
       - ".github/workflows/user-service-build-test.yml"
   pull_request:
     branches:
@@ -15,18 +15,19 @@ on:
       - dev
     paths:
       - "src/services/UserService/**"
-      - "tests/UserService.**/**"
+      - "tests/UserService.Tests/**"
       - ".github/workflows/user-service-build-test.yml"
 
 jobs:
-  user-service-build-unit-test:
-    uses: "./.github/workflows/template-build-unit-test.yml"
+  user-service-build-unit-tests:
+    uses: "./.github/workflows/workflow-build-unit-tests.yml"
     with:
       project-location: "src/services/UserService"
       test-location: "tests/UserService.Tests"
+      namespace-name: "UserService.Tests.UnitTests"
       project-name: "UserService"
-  user-service-sonarqube-test:
-    uses: "./.github/workflows/template-sonarqube.yml"
+  user-service-sonarqube-analysis:
+    uses: "./.github/workflows/workflow-sonarqube.yml"
     with:
       project-location: "src\\services\\UserService"
     secrets:

@@ -20,8 +20,8 @@ namespace PublicationService.Services
 
         public TwitterClient Authenticate()
         {
-            IConfiguration conf = (new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("secrets.json").Build());
-            var twitterClient = new TwitterClient(conf["Twitter:KEY"], conf["Twitter:SECRET"], conf["Twitter:ACCESS_TOKEN"], conf["Twitter:ACCESS_TOKEN_SECRET"]);
+            IConfiguration conf = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("twitter_secrets.json").Build();
+            var twitterClient = new TwitterClient(conf["Twitter:API_KEY"], conf["Twitter:API_KEY_SECRET"], conf["Twitter:ACCESS_TOKEN"], conf["Twitter:ACCESS_TOKEN_SECRET"]);
             return twitterClient;
         }
 
