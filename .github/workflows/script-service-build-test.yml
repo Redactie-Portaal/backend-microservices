@@ -24,7 +24,7 @@ jobs:
     with:
       project-location: "src/services/ScriptService"
       test-location: "tests/ScriptService.Tests"
-      namespace-name: "ScriptService.Tests.UnitTests"
+      test-namespace: "ScriptService.Tests.UnitTests"
       project-name: "ScriptService"
   script-service-sonarqube-analysis:
     uses: "./.github/workflows/workflow-sonarqube.yml"

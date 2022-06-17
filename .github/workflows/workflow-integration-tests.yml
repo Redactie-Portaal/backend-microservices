@@ -10,14 +10,14 @@ on:
         required: true
         type: string
         description: "Path to test files"
+      test-namespace:
+        required: false
+        type: string
+        description: "name of the testing namespace, that can be used to fetch tests"
       project-name:
         required: true
         type: string
         description: "name of the project"
-      namespace-name:
-        required: true
-        type: string
-        description: "name of the namespace where are tests can be fetched"
 
 jobs:
   integration-tests:
@@ -38,7 +38,7 @@ jobs:
         run: dotnet build ${{ inputs.project-location }} --no-restore --configuration Release 
       
       - name: Executing helper script for running Integration tests
-        run: bash ${{ inputs.test-location }}/IntegrationTests/run-integration-tests.sh ${{ inputs.test-location }} ${{ inputs.namespace-name }} 
+        run: bash ${{ inputs.test-location }}/IntegrationTests/run-integration-tests.sh ${{ inputs.test-location }} ${{ inputs.test-namespace }} 
 
       - name: Create Test Report
         uses: dorny/test-reporter@v1

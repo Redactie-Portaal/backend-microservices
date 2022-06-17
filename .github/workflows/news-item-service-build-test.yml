@@ -24,14 +24,14 @@ jobs:
     with:
       project-location: "src/services/NewsItemService"
       test-location: "tests/NewsItemService.Tests"
-      namespace-name: "NewsItemService.Tests.UnitTests"
+      test-namespace: "NewsItemService.Tests.UnitTests"
       project-name: "NewsItemService"
   news-item-service-integration-tests:
     uses: "./.github/workflows/workflow-integration-tests.yml"
     with:
       project-location: "src/services/NewsItemService"
       test-location: "tests/NewsItemService.Tests"
-      namespace-name: "NewsItemService.Tests.IntegrationTests"
+      test-namespace: "NewsItemService.Tests.IntegrationTests"
       project-name: "NewsItemService"
   news-item-service-sonarqube-test:
     uses: "./.github/workflows/workflow-sonarqube.yml"

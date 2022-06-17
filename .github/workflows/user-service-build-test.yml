@@ -24,7 +24,7 @@ jobs:
     with:
       project-location: "src/services/UserService"
       test-location: "tests/UserService.Tests"
-      namespace-name: "UserService.Tests.UnitTests"
+      test-namespace: "UserService.Tests.UnitTests"
       project-name: "UserService"
   user-service-sonarqube-analysis:
     uses: "./.github/workflows/workflow-sonarqube.yml"
