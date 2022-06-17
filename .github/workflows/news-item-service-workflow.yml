@@ -1,4 +1,4 @@
-name: Build and Test NewsItemService
+name: Build, Test and Analyse NewsItemService
 on:
   push:
     branches:

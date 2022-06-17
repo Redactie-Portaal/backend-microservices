@@ -1,4 +1,4 @@
-name: Build and Test ScriptService
+name: Build, Test and Analyse ScriptService
 on:
   push:
     branches:

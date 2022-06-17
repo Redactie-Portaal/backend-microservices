@@ -1,4 +1,4 @@
-name: Build and Test UserService
+name: Build, Test and Analyse UserService
 on:
   push:
     branches:
