@@ -1,7 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using NewsItemService.Data;
-using Microsoft.AspNetCore.Mvc;
 using NewsItemService.DTOs;
 using NewsItemService.Services;
 using NewsItemService.Interfaces;

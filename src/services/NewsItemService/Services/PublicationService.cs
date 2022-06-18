@@ -1,6 +1,4 @@
 ﻿using NewsItemService.DTOs;
-using NewsItemService.Entities;
-using NewsItemService.Helpers;
 using NewsItemService.Interfaces;
 using RabbitMQLibrary;
 using RabbitMQLibrary.Producer;
@@ -63,7 +61,7 @@ namespace NewsItemService.Services
             }
 
             var medias = await _mediaNewsItemRepository.GetMediaNewsItemByNewsItemId(newsItemId);
-            
+
             if (medias.SingleOrDefault().Key)
             {
                 var mediaDTOs = new List<MediaDTO>();
