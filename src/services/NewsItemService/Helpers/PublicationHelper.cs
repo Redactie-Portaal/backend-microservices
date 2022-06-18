@@ -13,7 +13,7 @@ namespace NewsItemService.Helpers
                 publicationDTOs.Add(new PublicationDTO()
                 {
                     Id = pub.Id,
-                    IconUrl = pub.Icon,
+                    Icon = pub.Icon,
                     Name  = pub.Name
                 });
             }
