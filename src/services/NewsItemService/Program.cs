@@ -34,6 +34,7 @@ builder.Services.AddSingleton<ITagRepository, TagRepository>();
 builder.Services.AddSingleton<NewsItemOverviewService>();
 builder.Services.AddSingleton<AuthorService>();
 
+
 // Messaging
 builder.Services.AddMessageProducing("news-item-exchange");
 
@@ -54,7 +55,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

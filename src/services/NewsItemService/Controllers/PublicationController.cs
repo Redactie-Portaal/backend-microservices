@@ -8,9 +8,10 @@ using RabbitMQLibrary.Producer;
 namespace NewsItemService.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PublicationController : ControllerBase
     {
+        private readonly IMediaRepository _mediaRepostiory;
         private readonly IPublicationRepository _publicationRepository;
         private readonly INewsItemRepository _newsItemRepository;
         private readonly IMessageProducer _producer;
