@@ -101,7 +101,7 @@ namespace NewsItemService.Data
         {
             try
             {
-                var newsItem = await _dbContext.NewsItems.Include("Authors").Include("Tags").Where(a => a.Id == newsItemId).FirstOrDefaultAsync();
+                var newsItem = await _dbContext.NewsItems.Include(n => n.Tags).Where(a => a.Id == newsItemId).FirstOrDefaultAsync();
                 if (newsItem == null)
                 {
                     return new Dictionary<bool, NewsItem>() { { false, null } };
