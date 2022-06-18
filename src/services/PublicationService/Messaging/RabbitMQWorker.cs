@@ -15,16 +15,14 @@ namespace PublicationService.Messaging
         private ConnectionFactory _factory;
         private IConnection _connection;
         private IModel _channel;
-        private IPublicationService _publicationService;
         private readonly IMediaProvider _mediaProvider;
-        private readonly ILogger<IPublicationService> _publicationServiceLogger;
+        private readonly ILogger<TwitterService> _twitterServiceLogger;
 
-        public RabbitMQWorker(ILogger<RabbitMQWorker> logger, IPublicationService publicationService, IMediaProvider mediaProvider, ILogger<IPublicationService> publicationServiceLogger)
+        public RabbitMQWorker(ILogger<RabbitMQWorker> logger, IMediaProvider mediaProvider, ILogger<TwitterService> publicationServiceLogger)
         {
             _logger = logger;
-            _publicationService = publicationService;
             _mediaProvider = mediaProvider;
-            _publicationServiceLogger = publicationServiceLogger;
+            _twitterServiceLogger = publicationServiceLogger;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -96,8 +94,8 @@ namespace PublicationService.Messaging
                         _logger.LogInformation("NewsItem will be published to Twitter.");
                         var publishNewsItemDTO = JsonConvert.DeserializeObject<PublishNewsItemDTO>(message);
 
-                        _publicationService = new TwitterService(_mediaProvider, _publicationServiceLogger);
-                        await _publicationService.PublishNewsItem(publishNewsItemDTO);
+                        var twitterService = new TwitterService(_mediaProvider, _twitterServiceLogger);
+                        await twitterService.PublishNewsItem(publishNewsItemDTO);
                         break;
                     default:
                         break;

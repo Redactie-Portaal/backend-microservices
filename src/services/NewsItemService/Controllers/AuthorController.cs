@@ -5,7 +5,7 @@ using NewsItemService.Services;
 
 namespace NewsItemService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AuthorController : ControllerBase
     {

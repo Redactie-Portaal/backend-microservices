@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace NewsItemService.Tests.UnitTests
+namespace NewsItemService.Tests.IntegrationTests
 {
     /// <summary>
     /// Tests for the item repository
@@ -39,8 +39,8 @@ namespace NewsItemService.Tests.UnitTests
             var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>().UseInMemoryDatabase(databaseName: "InMemoryProductDb_" + "NewsItem").UseInternalServiceProvider(serviceProvider).Options;
             context = new NewsItemServiceDatabaseContext(options);
             SeedProductInMemoryDatabaseWithData(context);
-            
-            this.repo = new NewsItemRepository(context, _logger);
+
+            repo = new NewsItemRepository(context, _logger);
         }
 
 
@@ -114,7 +114,7 @@ namespace NewsItemService.Tests.UnitTests
         {
             var authors = new List<Author>()
             {
-             
+
             };
 
             NewsItem itemDupe = new()

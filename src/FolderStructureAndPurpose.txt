@@ -1,6 +1,6 @@
 This document will explain what every folder does in the services and the structure of the folders.
 
-Controllers -> Contains all handeling for HTTP requests, and the HTTP error handling
+Controllers -> Contains all handling for HTTP requests, and the HTTP error handling
 Data -> Contains the databaseContext and the Repositories. Everything database related
 DTOs -> Contains the data transfer objects, example: UserDTO contains only email and username and not the entire User class.
 Entities -> Contains the entities like User, these are exact replica's of the database classes.
