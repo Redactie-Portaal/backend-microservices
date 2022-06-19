@@ -55,6 +55,9 @@ builder.Services.AddSingleton<ITagRepository, TagRepository>();
 builder.Services.AddSingleton<NewsItemOverviewService>();
 builder.Services.AddSingleton<AuthorService>();
 
+// Messaging
+builder.Services.AddMessageProducing("news-item-exchange");
+
 // Add the database context to the builder.
 builder.Services.AddSingleton<NewsItemServiceDatabaseContext>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Needed for saving DateTime variables

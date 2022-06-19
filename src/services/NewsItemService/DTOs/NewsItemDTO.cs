@@ -1,3 +1,4 @@
+using NewsItemService.Entities;
 using NewsItemService.Types;
 
 namespace NewsItemService.DTOs
@@ -11,5 +12,7 @@ namespace NewsItemService.DTOs
         public DateTime Updated { get; set; }
         public List<AuthorDTO> Authors { get; set; }
         public NewsItemStatus Status { get; set; }
+
+        public List<PublicationDTO> Publications { get; set; } = new();
     }
 }

@@ -12,7 +12,10 @@ namespace NewsItemService.Services
         private readonly IPublicationRepository _publicationRepository;
         private readonly IMediaNewsItemRepository _mediaNewsItemRepository;
 
-        public PublicationService(INewsItemRepository newsItemRepository, IPublicationRepository publicationRepository, IMediaNewsItemRepository mediaNewsItemRepository, IMessageProducer producer)
+        public PublicationService(INewsItemRepository newsItemRepository,
+                                  IPublicationRepository publicationRepository,
+                                  IMediaNewsItemRepository mediaNewsItemRepository,
+                                  IMessageProducer producer)
         {
             _newsItemRepostiory = newsItemRepository;
             _publicationRepository = publicationRepository;

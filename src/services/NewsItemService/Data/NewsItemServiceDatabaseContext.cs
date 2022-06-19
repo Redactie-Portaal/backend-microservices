@@ -82,7 +82,7 @@ namespace NewsItemService.Data
                     throw new MissingFieldException("Database environment variable not found.");
                 }
 
-                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("redactieportaal_db_string").Replace("DATABASE_NAME", "newsitemservice"));
+                optionsBuilder.UseNpgsql(dbString.Replace("DATABASE_NAME", "newsitemservice"));
             }
 
             base.OnConfiguring(optionsBuilder);
