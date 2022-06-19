@@ -6,7 +6,7 @@ using PublicationService.Services;
 
 namespace PublicationService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PublicationController : ControllerBase
     {

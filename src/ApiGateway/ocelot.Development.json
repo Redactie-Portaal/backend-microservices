@@ -47,6 +47,18 @@
       ],
       "UpstreamPathTemplate": "/api/newsitem",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Publication",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 15000
+        }
+      ],
+      "UpstreamPathTemplate": "api/Publication",
+      "UpstreamHttpMethod": [ "Post" ]
     }
   ],
   "GlobalConfiguration": {
