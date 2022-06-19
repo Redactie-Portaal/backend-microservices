@@ -14,7 +14,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHostedService<RabbitMQWorker>();
 
-builder.Services.AddSingleton<IPublicationService, TwitterService>();
 builder.Services.AddSingleton<IMediaProvider, GoogleDriveProvider>();
 
 var app = builder.Build();

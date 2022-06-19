@@ -1,7 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using NewsItemService.Data;
-using Microsoft.AspNetCore.Mvc;
 using NewsItemService.DTOs;
 using NewsItemService.Services;
 using NewsItemService.Interfaces;
@@ -11,7 +8,7 @@ using RabbitMQLibrary;
 
 namespace NewsArticleService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class NewsItemController : ControllerBase
     {

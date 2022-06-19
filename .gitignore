@@ -280,3 +280,4 @@ __pycache__/
 # Secrets
 secrets.json
 google_client_secret.json
+twitter_secrets.json

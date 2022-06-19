@@ -1,4 +1,4 @@
-name: Build and Test ScriptService
+name: Build, Test and Analyse ScriptService
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
       - feature-**
     paths:
       - "src/services/ScriptService/**"
-      - "tests/ScriptService.**/**"
+      - "tests/ScriptService.Tests/**"
       - ".github/workflows/script-service-build-test.yml"
   pull_request:
     branches:
@@ -15,18 +15,19 @@ on:
       - dev
     paths:
       - "src/services/ScriptService/**"
-      - "tests/ScriptService.**/**"
+      - "tests/ScriptService.Tests/**"
       - ".github/workflows/script-service-build-test.yml"
 
 jobs:
-  script-service-build-unit-test:
-    uses: "./.github/workflows/template-build-unit-test.yml"
+  script-service-build-unit-tests:
+    uses: "./.github/workflows/workflow-build-unit-tests.yml"
     with:
       project-location: "src/services/ScriptService"
       test-location: "tests/ScriptService.Tests"
+      test-namespace: "ScriptService.Tests.UnitTests"
       project-name: "ScriptService"
-  script-service-sonarqube-test:
-    uses: "./.github/workflows/template-sonarqube.yml"
+  script-service-sonarqube-analysis:
+    uses: "./.github/workflows/workflow-sonarqube.yml"
     with:
       project-location: "src\\services\\ScripService"
     secrets:

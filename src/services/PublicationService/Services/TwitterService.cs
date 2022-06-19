@@ -6,13 +6,13 @@ using Tweetinvi.Parameters;
 
 namespace PublicationService.Services
 {
-    public class TwitterService : IPublicationService
+    public class TwitterService
     {
         private readonly IMediaProvider _mediaProvider;
         private readonly ILogger _logger;
         private List<IMedia> twitterMedias = new List<IMedia>();
 
-        public TwitterService(IMediaProvider mediaProvider, ILogger<IPublicationService> logger)
+        public TwitterService(IMediaProvider mediaProvider, ILogger<TwitterService> logger)
         {
             this._mediaProvider = mediaProvider;
             this._logger = logger;
@@ -20,8 +20,8 @@ namespace PublicationService.Services
 
         public TwitterClient Authenticate()
         {
-            IConfiguration conf = (new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("secrets.json").Build());
-            var twitterClient = new TwitterClient(conf["Twitter:KEY"], conf["Twitter:SECRET"], conf["Twitter:ACCESS_TOKEN"], conf["Twitter:ACCESS_TOKEN_SECRET"]);
+            IConfiguration conf = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("twitter_secrets.json").Build();
+            var twitterClient = new TwitterClient(conf["Twitter:API_KEY"], conf["Twitter:API_KEY_SECRET"], conf["Twitter:ACCESS_TOKEN"], conf["Twitter:ACCESS_TOKEN_SECRET"]);
             return twitterClient;
         }
 
@@ -33,9 +33,12 @@ namespace PublicationService.Services
                 await PrepareMedia(twitterClient, publishNewsItemDTO);
 
                 string tags = "";
-                foreach (var tag in publishNewsItemDTO.Tags)
+                if (publishNewsItemDTO.Tags.Count != 0)
                 {
-                    tags += " #" + tag;
+                    foreach (var tag in publishNewsItemDTO.Tags)
+                    {
+                        tags += " #" + tag;
+                    }
                 }
 
                 this._logger.LogInformation("Publishing tweet to Twitter, with the specified file(s).");

@@ -1,5 +1,6 @@
-using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace ApiGateway
 {
@@ -7,32 +8,18 @@ namespace ApiGateway
     {
         public static void Main(string[] args)
         {
-            new WebHostBuilder()
-            .UseKestrel()
-            .UseContentRoot(Directory.GetCurrentDirectory())
-            .ConfigureAppConfiguration((hostingContext, config) =>
-            {
-                config
-                    .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                    .AddJsonFile("appsettings.json", true, true)
-                    .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                    .AddJsonFile($"ocelot.{hostingContext.HostingEnvironment.EnvironmentName}.json", false, true)
-                    .AddEnvironmentVariables();
-            })
-            .ConfigureServices(s => {
-                s.AddOcelot();
-            })
-            .ConfigureLogging((hostingContext, logging) =>
-            {
-                //add your logging
-            })
-            .UseIISIntegration()
-            .Configure(app =>
-            {
-                app.UseOcelot().Wait();
-            })
-            .Build()
-            .Run();
+            CreateHostBuilder(args).Build().Run();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((host, config) =>
+            {
+                config.AddJsonFile($"ocelot.{host.HostingEnvironment.EnvironmentName}.json", false, true);
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }
