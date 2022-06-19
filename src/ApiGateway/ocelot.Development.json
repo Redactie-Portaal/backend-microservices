@@ -57,7 +57,7 @@
           "Port": 15000
         }
       ],
-      "UpstreamPathTemplate": "api/Publication",
+      "UpstreamPathTemplate": "/api/Publication",
       "UpstreamHttpMethod": [ "Post" ]
     }
   ],
