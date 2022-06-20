@@ -4,43 +4,38 @@ using NewsItemService.Data;
 using NewsItemService.DTOs;
 using NewsItemService.Entities;
 using NewsItemService.Interfaces;
+using NewsItemService.Types;
 
 namespace NewsItemService.Services
 {
     public class NewsItemsService
     {
-        private readonly INewsItemRepository _newsItemRepository;
-        private readonly IAuthorRepository _authorRepository;
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly IPublicationRepository _publicationRepository;
         private readonly ITagRepository _tagRepository;
         private readonly IMediaRepository _mediaRepository;
-        private readonly IMediaNewsItemRepository _mediaNewsItemRepository;
-        private readonly ISourceLocationRepository _sourceLocationRepository;
+        private readonly IAuthorRepository _authorRepository;
+        private readonly INewsItemRepository _newsItemRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IPublicationRepository _publicationRepository;
         private readonly ISourcePersonRepository _sourcePersonRepository;
-        private readonly INoteRepository _noteRepository;
+        private readonly ISourceLocationRepository _sourceLocationRepository;
 
-        public NewsItemsService(INewsItemRepository repo,
+        public NewsItemsService(ITagRepository tagRepository,
+                                IMediaRepository mediaRepository,
                                 IAuthorRepository authorRepository,
+                                INewsItemRepository newsItemRepository,
                                 ICategoryRepository categoryRepository,
                                 IPublicationRepository publicationRepository,
-                                ITagRepository tagRepository,
-                                IMediaRepository mediaRepository,
-                                IMediaNewsItemRepository mediaNewsItemRepository,
-                                ISourceLocationRepository sourceLocationRepository,
                                 ISourcePersonRepository sourcePersonRepository,
-                                INoteRepository noteRepository)
+                                ISourceLocationRepository sourceLocationRepository)
         {
-            _newsItemRepository = repo;
-            _authorRepository = authorRepository;
-            _categoryRepository = categoryRepository;
-            _publicationRepository = publicationRepository;
             _tagRepository = tagRepository;
             _mediaRepository = mediaRepository;
-            _mediaNewsItemRepository = mediaNewsItemRepository;
-            _sourceLocationRepository = sourceLocationRepository;
+            _authorRepository = authorRepository;
+            _newsItemRepository = newsItemRepository;
+            _categoryRepository = categoryRepository;
+            _publicationRepository = publicationRepository;
             _sourcePersonRepository = sourcePersonRepository;
-            _noteRepository = noteRepository;
+            _sourceLocationRepository = sourceLocationRepository;
         }
 
         public async Task<Dictionary<bool, string>> CreateNewsItem(CreateNewsItemDTO dto)
@@ -57,7 +52,7 @@ namespace NewsItemService.Services
             }
 
             List<Category> categories = new();
-            if (dto.CategoryIds.Count != 0)
+            if (dto.CategoryIds != null && dto.CategoryIds.Count != 0)
             {
                 foreach (var id in dto.CategoryIds)
                 {
@@ -71,7 +66,7 @@ namespace NewsItemService.Services
             }
 
             List<Tag> tags = new();
-            if (dto.TagIds.Count != 0)
+            if (dto.TagIds != null && dto.TagIds.Count != 0)
             {
                 foreach (var id in dto.TagIds)
                 {
@@ -198,7 +193,7 @@ namespace NewsItemService.Services
                 Summary = dto.Summary,
                 Title = dto.Title,
                 Authors = authors,
-                Status = Types.NewsItemStatus.Done,
+                Status = NewsItemStatus.Done,
                 Created = dto.ProductionDate.ToUniversalTime(),
                 EndDate = dto.EndDate.ToUniversalTime(),
                 Categories = categories,

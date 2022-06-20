@@ -32,6 +32,9 @@ builder.Services.AddSingleton<ISourcePersonRepository, SourcePersonRepository>()
 builder.Services.AddSingleton<ITagRepository, TagRepository>();
 
 builder.Services.AddSingleton<NewsItemOverviewService>();
+builder.Services.AddSingleton<NewsItemsService>();
+builder.Services.AddSingleton<NewsItemStatusService>();
+builder.Services.AddSingleton<PublicationService>();
 builder.Services.AddSingleton<AuthorService>();
 
 // Messaging

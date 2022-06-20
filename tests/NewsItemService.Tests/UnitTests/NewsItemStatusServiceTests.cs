@@ -46,9 +46,10 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_EmptyInteger_ReturnsFAULTY_ID()
         {
+            // FIXME: Use NieuwsItemHelper
             var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(default, NewsItemStatus.Done));
 
-            var expectedResult = new Dictionary<bool, string>() { { false, "STATUS.FAULTY_ID" } };
+            var expectedResult = new Dictionary<bool, string>() { { false, NewsItemStatusValues.FAULTY_ID } };
             Assert.Equal(expectedResult, result);
         }
 
@@ -56,18 +57,20 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_EmptyClass_ReturnsDEFAULT()
         {
+            // FIXME: Use NieuwsItemHelper
             var result = NewsItemStatusService.CheckNewsItemValue(null);
 
-            var expectedResult = new Dictionary<bool, string>() { { false, "STATUS.DEFAULT_OBJECT" } };
+            var expectedResult = new Dictionary<bool, string>() { { false, NewsItemStatusValues.DEFAULT_OBJECT } };
             Assert.Equal(expectedResult, result);
         }
 
         [Fact]
         public async Task Add_OutOfRangeEnum_ReturnsINCORRECT_STATUS_VALUE()
         {
+            // FIXME: Use NieuwsItemHelper
             var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, (NewsItemStatus)100));
 
-            var expectedResult = new Dictionary<bool, string>() { { false, "STATUS.INCORRECT_STATUS_VALUE" } };
+            var expectedResult = new Dictionary<bool, string>() { { false, NewsItemStatusValues.INCORRECT_STATUS_VALUE } };
             Assert.Equal(expectedResult, result);
         }
 
@@ -76,6 +79,7 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_StatusDone_ReturnsStatusChangeToDone()
         {
+            // FIXME: Use NieuwsItemHelper
             var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Done));
 
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + NewsItemStatus.Done } };
@@ -85,6 +89,7 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_StatusDispose_ReturnsStatusChangeToDispose()
         {
+            // FIXME: Use NieuwsItemHelper
             var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Dispose));
 
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + NewsItemStatus.Dispose } };
@@ -96,6 +101,7 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_StatusArchived_ReturnsStatusChangeToArchived()
         {
+            // FIXME: Use NieuwsItemHelper
             var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, Enums.NewsItemStatus.Archived));
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + Enums.NewsItemStatus.Archived } };
             Assert.Equal(expectedResult, result);
@@ -105,6 +111,7 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_StatusProduction_ReturnsStatusChangeToProduction()
         {
+            // FIXME: Use NieuwsItemHelper
             var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Production));
 
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + NewsItemStatus.Production } };
@@ -114,6 +121,7 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_StatusPublication_ReturnsStatusChangeToPublication()
         {
+            // FIXME: Use NieuwsItemHelper
             var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Publication));
 
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + NewsItemStatus.Publication } };

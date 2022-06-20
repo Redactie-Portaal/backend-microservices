@@ -34,7 +34,7 @@ namespace NewsItemService.Tests.IntegrationTests
             SeedData(this._databaseContext);
 
             _authorRepositorylogger = authorRepositorylogger;
-            this._authorRepository = new AuthorRepository(this._databaseContext, _authorRepositorylogger);
+            this._authorRepository = new AuthorRepository(_databaseContext, _authorRepositorylogger);
         }
 
         private void SeedData(NewsItemServiceDatabaseContext context)

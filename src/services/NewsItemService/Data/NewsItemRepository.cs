@@ -7,13 +7,14 @@ namespace NewsItemService.Data
 {
     public class NewsItemRepository : INewsItemRepository, IDisposable
     {
-        private bool disposed = false;
         private readonly ILogger _logger;
         private readonly NewsItemServiceDatabaseContext _dbContext;
 
+        private bool _disposed = false;
+
         public NewsItemRepository(NewsItemServiceDatabaseContext dbContext, ILogger<NewsItemRepository> logger)
         {
-            this._logger = logger;
+            _logger = logger;
             _dbContext = dbContext;
         }
 
@@ -143,14 +144,14 @@ namespace NewsItemService.Data
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()

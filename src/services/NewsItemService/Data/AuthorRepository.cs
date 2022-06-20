@@ -4,16 +4,17 @@ using NewsItemService.Interfaces;
 
 namespace NewsItemService.Data
 {
-    public class AuthorRepository: IAuthorRepository, IDisposable
+    public class AuthorRepository : IAuthorRepository, IDisposable
     {
-        private readonly NewsItemServiceDatabaseContext _dbContext;
-        private bool disposed = false;
         private readonly ILogger _logger;
+        private readonly NewsItemServiceDatabaseContext _dbContext;
 
-        public AuthorRepository(NewsItemServiceDatabaseContext dbContext, ILogger<AuthorRepository> logger)
+        private bool _disposed = false;
+
+        public AuthorRepository(ILogger<AuthorRepository> logger, NewsItemServiceDatabaseContext dbContext)
         {
-            this._dbContext = dbContext;
-            this._logger = logger;
+            _logger = logger;
+            _dbContext = dbContext;
         }
 
         public async Task<Dictionary<bool, Author>> GetAuthorById(int id)
@@ -29,7 +30,7 @@ namespace NewsItemService.Data
             }
             catch (Exception ex)
             {
-                this._logger.LogError("There is a problem with retrieving the Author. Error message: {Message}", ex.Message);
+                _logger.LogError("There is a problem with retrieving the Author. Error message: {Message}", ex.Message);
                 throw;
             }
         }
@@ -37,14 +38,6 @@ namespace NewsItemService.Data
         public List<Author>? Get()
         {
             return _dbContext.Authors.ToList();
-        }
-
-        public Author Get(int id)
-        {
-            var author = _dbContext.Authors.Include("NewsItems").FirstOrDefault(a => a.Id == id);
-            if (author == null) return null;
-
-            return author;
         }
 
         public List<NewsItem>? GetNewsItems(int id, int page, int pageSize)
@@ -67,14 +60,14 @@ namespace NewsItemService.Data
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()

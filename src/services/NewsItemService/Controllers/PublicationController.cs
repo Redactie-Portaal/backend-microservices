@@ -2,6 +2,7 @@
 using NewsItemService.DTOs;
 using NewsItemService.Interfaces;
 using NewsItemService.Services;
+using NewsItemService.Types;
 using RabbitMQLibrary;
 using RabbitMQLibrary.Producer;
 
@@ -11,19 +12,11 @@ namespace NewsItemService.Controllers
     [Route("[controller]")]
     public class PublicationController : ControllerBase
     {
-        private readonly IPublicationRepository _publicationRepository;
-        private readonly INewsItemRepository _newsItemRepository;
-        private readonly IMessageProducer _producer;
-        private readonly IMediaNewsItemRepository _mediaNewsItemRepository;
         private readonly PublicationService _publicationService;
 
-        public PublicationController(IPublicationRepository publicationRepository, INewsItemRepository newsItemRepository, IMessageProducer producer, IMediaNewsItemRepository mediaNewsItemRepository)
+        public PublicationController(PublicationService publicationService)
         {
-            _publicationRepository = publicationRepository;
-             _newsItemRepository = newsItemRepository;
-            _mediaNewsItemRepository = mediaNewsItemRepository;
-            _producer = producer;
-            _publicationService = new PublicationService(_newsItemRepository, _publicationRepository, _mediaNewsItemRepository, _producer);
+            _publicationService = publicationService;
         }
 
         [HttpGet("{id}")]
@@ -42,7 +35,7 @@ namespace NewsItemService.Controllers
         public async Task<IActionResult> Publicize(PublicizeNewsItemDTO dto)
         {
            var newsItem = await _publicationService.PublishNewsItem(dto.NewsItemID, dto.PublicationID);
-            if (!newsItem.SingleOrDefault().Key && newsItem.SingleOrDefault().Value == "NEWSITEMNOTFOUND")
+            if (!newsItem.SingleOrDefault().Key && newsItem.SingleOrDefault().Value == ErrorType.NEWS_ITEM_NOT_FOUND)
             {
                 return NotFound(new { message = "NewsItem cannot be found." });
             }

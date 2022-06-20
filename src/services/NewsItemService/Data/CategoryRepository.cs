@@ -7,13 +7,14 @@ namespace NewsItemService.Data
     public class CategoryRepository : ICategoryRepository, IDisposable
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
-        private bool disposed = false;
         private readonly ILogger _logger;
+
+        private bool _disposed = false;
 
         public CategoryRepository(NewsItemServiceDatabaseContext dbContext, ILogger<CategoryRepository> logger)
         {
-            this._dbContext = dbContext;
-            this._logger = logger;
+            _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task<Dictionary<bool, Category>> GetCategoryById(int id)
@@ -29,21 +30,21 @@ namespace NewsItemService.Data
             }
             catch (Exception ex)
             {
-                this._logger.LogError("There is a problem with retrieving the Category. Error message: {Message}", ex.Message);
+                _logger.LogError("There is a problem with retrieving the Category. Error message: {Message}", ex.Message);
                 throw;
             }
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()
