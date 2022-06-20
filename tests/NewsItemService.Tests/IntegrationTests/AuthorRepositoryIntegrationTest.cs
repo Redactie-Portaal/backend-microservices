@@ -15,30 +15,40 @@ using Xunit;
 
 namespace NewsItemService.Tests.IntegrationTests
 {
+    /// <summary>
+    /// Integration Tests for the Author repository
+    /// </summary>
     public class AuthorRepositoryIntegrationTest : IDisposable
     {
-        private readonly NewsItemServiceDatabaseContext _databaseContext;
+        /// <summary>
+        /// AuthorRepository for testing purposes
+        /// </summary>
         private readonly AuthorRepository _authorRepository;
+        private readonly NewsItemServiceDatabaseContext _databaseContext;
+        private readonly ILogger<AuthorRepository> _logger;
 
+        /// <summary>
+        /// Constructor to setup the in memory database, and add to the context to use.
+        /// </summary>
         public AuthorRepositoryIntegrationTest()
         {
-            string connectionString = "Server=localhost;Port=1111;Database=DATABASE_NAME;UserId=developer;Password=developer";
-            var serviceProvider = new ServiceCollection().AddEntityFrameworkNpgsql().BuildServiceProvider();
+            var serviceProvider = new ServiceCollection()
+              .AddEntityFrameworkInMemoryDatabase()
+              .BuildServiceProvider();
 
-            var builder = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>();
-            builder.UseNpgsql(connectionString).UseInternalServiceProvider(serviceProvider);
-            this._databaseContext = new NewsItemServiceDatabaseContext(builder.Options);
+            var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDb_" + "AuthorOverview")
+                .UseInternalServiceProvider(serviceProvider).Options;
+            _databaseContext = new NewsItemServiceDatabaseContext(options);
+            SeedData(_databaseContext);
 
-            this._databaseContext.Database.EnsureCreated();
-
-            SeedData(this._databaseContext);
-
-            var loggerMock = new Mock<ILogger<AuthorRepository>>();
-            ILogger<AuthorRepository> authorRepositorylogger = loggerMock.Object;
-
-            this._authorRepository = new AuthorRepository(this._databaseContext, authorRepositorylogger);
+            _authorRepository = new AuthorRepository(_databaseContext, _logger);
         }
 
+        /// <summary>
+        /// Feed the virtual database data
+        /// </summary>
+        /// <param name="context">Context used for the repository</param>
         private void SeedData(NewsItemServiceDatabaseContext context)
         {
             var authors = new List<Author>()
@@ -50,7 +60,9 @@ namespace NewsItemService.Tests.IntegrationTests
             var newsItems = new List<NewsItem>()
             {
                 new NewsItem { Id = 1, Title = "First Title", Authors = authors, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Publication},
-                new NewsItem { Id = 2, Title = "Second Title", Authors = authors, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Publication}
+                new NewsItem { Id = 2, Title = "Second Title", Authors = authors, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Publication},
+                new NewsItem { Id = 3, Title = "Third Title", Authors = authors, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Publication},
+                new NewsItem { Id = 4, Title = "Fourth Title", Authors = authors, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Publication}
             };
 
             if (!context.NewsItems.Any())
@@ -126,7 +138,7 @@ namespace NewsItemService.Tests.IntegrationTests
 
         #region GetNewsItems() Tests
         [Fact]
-        public void GetNewsItems()
+        public void GetNewsItemsFromPageOne()
         {
             // Arrange
             var expected = new List<NewsItem>()
@@ -160,7 +172,7 @@ namespace NewsItemService.Tests.IntegrationTests
             };
 
             // Act
-            List<NewsItem> newsItems = _authorRepository.GetNewsItems(1, 1, 5);
+            List<NewsItem> newsItems = _authorRepository.GetNewsItems(1, 1, 2);
 
             // Assert
             Assert.Equal(expected.Count, newsItems.Count);
@@ -171,13 +183,72 @@ namespace NewsItemService.Tests.IntegrationTests
                 Assert.Equal(expected[i].Status, newsItems[i].Status);
             }
         }
+
+        [Fact]
+        public void GetNewsItemsFromPageTwo()
+        {
+            // Arrange
+            var expected = new List<NewsItem>()
+            {
+                new NewsItem()
+                {
+                    Id = 3,
+                    Title = "Third Title",
+                    Created = DateTime.Now.ToUniversalTime(),
+                    Updated = DateTime.Now.ToUniversalTime(),
+                    Authors = new List<Author>()
+                    {
+                        new Author(){ Id = 1, Name = "TestAuthor"},
+                        new Author(){ Id = 2, Name = "TestAuthor2"}
+                    },
+                    Status = NewsItemStatus.Publication
+                },
+                new NewsItem()
+                {
+                    Id = 4,
+                    Title = "Fourth Title",
+                    Created = DateTime.Now.ToUniversalTime(),
+                    Updated = DateTime.Now.ToUniversalTime(),
+                    Authors = new List<Author>()
+                    {
+                        new Author(){ Id = 1, Name = "TestAuthor"},
+                        new Author(){ Id = 2, Name = "TestAuthor2"}
+                    },
+                    Status = NewsItemStatus.Publication
+                }
+            };
+
+            // Act
+            List<NewsItem> newsItems = _authorRepository.GetNewsItems(1, 2, 2);
+
+            // Assert
+            Assert.Equal(expected.Count, newsItems.Count);
+            for (int i = 0; i < newsItems.Count; i++)
+            {
+                Assert.Equal(expected[i].Id, newsItems[i].Id);
+                Assert.Equal(expected[i].Title, newsItems[i].Title);
+                Assert.Equal(expected[i].Status, newsItems[i].Status);
+            }
+        }
+
+        [Fact]
+        public void GetZeroNewsItems()
+        {
+            // Arrange
+
+            // Act
+            List<NewsItem> newsItems = _authorRepository.GetNewsItems(4, 1, 2);
+
+            // Assert
+            Assert.Null(newsItems);
+        }
         #endregion
 
         [Fact]
         public void AddNewAuthor()
         {
             // Arrange
-            var author = new Author() { Id = 3, Name = "Steven" };
+            var author = new Author() { Name = "Steven" };
 
             // Act
             _authorRepository.Post(author);
