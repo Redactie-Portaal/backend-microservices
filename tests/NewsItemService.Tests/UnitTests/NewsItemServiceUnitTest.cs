@@ -291,6 +291,18 @@ namespace NewsItemService.Tests.UnitTests
                 Assert.Equal(expected[i].Status, newsItems[i].Status);
             }
         }
+
+        [Fact]
+        public void GetBeforeDateReturnZero()
+        {
+            // Arrange
+
+            // Act
+            List<NewsItemDTO> newsItems = _service.GetBefore(new DateTime(2019, 1, 1), 1, 5);
+
+            // Assert
+            Assert.Equal(0, newsItems.Count);
+        }
         #endregion
 
         #region GetAfter() Tests
@@ -378,7 +390,7 @@ namespace NewsItemService.Tests.UnitTests
             };
 
             // Act
-            List<NewsItemDTO> newsItems = _service.GetAfter(DateTime.Now, 1, 5);
+            List<NewsItemDTO> newsItems = _service.GetAfter(new DateTime(2019, 1, 1), 1, 5);
 
             // Assert
             Assert.Equal(expected.Count, newsItems.Count);
@@ -392,6 +404,18 @@ namespace NewsItemService.Tests.UnitTests
                 Assert.Equal(expected[i].Authors[0].Name, newsItems[i].Authors[0].Name);
                 Assert.Equal(expected[i].Status, newsItems[i].Status);
             }
+        }
+
+        [Fact]
+        public void GetAfterDateReturnZero()
+        {
+            // Arrange
+
+            // Act
+            List<NewsItemDTO> newsItems = _service.GetAfter(new DateTime(2021, 1, 1), 1, 5);
+
+            // Assert
+            Assert.Equal(0, newsItems.Count);
         }
         #endregion
 
@@ -480,7 +504,7 @@ namespace NewsItemService.Tests.UnitTests
             };
 
             // Act
-            List<NewsItemDTO> newsItems = _service.GetBetween(DateTime.Now, DateTime.Now, 1, 5);
+            List<NewsItemDTO> newsItems = _service.GetBetween(new DateTime(2019, 1, 1), new DateTime(2020, 1, 2), 1, 5);
 
             // Assert
             Assert.Equal(expected.Count, newsItems.Count);
@@ -494,6 +518,18 @@ namespace NewsItemService.Tests.UnitTests
                 Assert.Equal(expected[i].Authors[0].Name, newsItems[i].Authors[0].Name);
                 Assert.Equal(expected[i].Status, newsItems[i].Status);
             }
+        }
+
+        [Fact]
+        public void GetBetweenDateReturnZero()
+        {
+            // Arrange
+            
+            // Act
+            List<NewsItemDTO> newsItems = _service.GetBetween(new DateTime(2021, 1, 1), new DateTime(2022, 1, 1), 1, 5);
+
+            // Assert
+            Assert.Equal(0, newsItems.Count);
         }
         #endregion
     }
