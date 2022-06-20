@@ -1,6 +1,4 @@
 ﻿using NewsItemService.DTOs;
-using NewsItemService.Entities;
-using NewsItemService.Helpers;
 using NewsItemService.Interfaces;
 using NewsItemService.Types;
 using RabbitMQLibrary;
@@ -15,7 +13,10 @@ namespace NewsItemService.Services
         private readonly IMediaNewsItemRepository _mediaNewsItemRepository;
         private readonly IMessageProducer _producer;
 
-        public PublicationService(INewsItemRepository newsItemRepository, IPublicationRepository publicationRepository, IMediaNewsItemRepository mediaNewsItemRepository, IMessageProducer producer)
+        public PublicationService(INewsItemRepository newsItemRepository,
+                                  IPublicationRepository publicationRepository,
+                                  IMediaNewsItemRepository mediaNewsItemRepository,
+                                  IMessageProducer producer)
         {
             _newsItemRepostiory = newsItemRepository;
             _publicationRepository = publicationRepository;
@@ -64,7 +65,7 @@ namespace NewsItemService.Services
             }
 
             var medias = await _mediaNewsItemRepository.GetMediaNewsItemByNewsItemId(newsItemId);
-            
+
             if (medias.SingleOrDefault().Key)
             {
                 var mediaDTOs = new List<MediaDTO>();

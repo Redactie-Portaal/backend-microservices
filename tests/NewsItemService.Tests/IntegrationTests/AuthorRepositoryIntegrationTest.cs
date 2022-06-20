@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Moq;
 using NewsItemService.Data;
 using NewsItemService.Entities;
 using NewsItemService.Tests.IntegrationTests;
@@ -18,11 +19,10 @@ namespace NewsItemService.Tests.IntegrationTests
     {
         private readonly NewsItemServiceDatabaseContext _databaseContext;
         private readonly AuthorRepository _authorRepository;
-        private readonly ILogger<AuthorRepository> _authorRepositorylogger;
 
-        public AuthorRepositoryIntegrationTest(ILogger<AuthorRepository> authorRepositorylogger)
+        public AuthorRepositoryIntegrationTest()
         {
-            string connectionString = "Server=localhost;Port=1111;Database=integrationtests;UserId=developer;Password=developer";
+            string connectionString = "Server=localhost;Port=1111;Database=DATABASE_NAME;UserId=developer;Password=developer";
             var serviceProvider = new ServiceCollection().AddEntityFrameworkNpgsql().BuildServiceProvider();
 
             var builder = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>();
@@ -33,8 +33,10 @@ namespace NewsItemService.Tests.IntegrationTests
 
             SeedData(this._databaseContext);
 
-            _authorRepositorylogger = authorRepositorylogger;
-            this._authorRepository = new AuthorRepository(_databaseContext, _authorRepositorylogger);
+            var loggerMock = new Mock<ILogger<AuthorRepository>>();
+            ILogger<AuthorRepository> authorRepositorylogger = loggerMock.Object;
+
+            this._authorRepository = new AuthorRepository(this._databaseContext, authorRepositorylogger);
         }
 
         private void SeedData(NewsItemServiceDatabaseContext context)

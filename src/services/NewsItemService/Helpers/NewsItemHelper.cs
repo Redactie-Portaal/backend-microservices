@@ -13,7 +13,8 @@ namespace NewsItemService.Helpers
                 Title = newsItem.Title,
                 Created = newsItem.Created,
                 Updated = newsItem.Updated,
-                Status = newsItem.Status
+                Status = newsItem.Status,
+                Publications = PublicationHelper.ToDTO(newsItem.Publications.ToList())
             };
 
             if (includeAuthors)

@@ -2,26 +2,29 @@
 using Microsoft.AspNetCore.Mvc;
 using PublicationService.DTOs;
 using PublicationService.Interfaces;
+using PublicationService.Services;
 
 namespace PublicationService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PublicationController : ControllerBase
     {
-        private readonly IPublicationService _publicationService;
+        private TwitterService _twitterService;
         private readonly IMediaProvider _mediaProvider;
+        private readonly ILogger<TwitterService> _twitterLogger;
 
-        public PublicationController(IPublicationService publicationService, IMediaProvider mediaProvider)
+        public PublicationController(IMediaProvider mediaProvider, ILogger<TwitterService> twitterLogger)
         {
-            this._publicationService = publicationService;
             this._mediaProvider = mediaProvider;
+            _twitterLogger = twitterLogger;
         }
 
         [HttpPost]
         public async Task<IActionResult> PublishToTwitter(PublishNewsItemDTO publishNewsItemDTO)
         {
-            await this._publicationService.PublishNewsItem(publishNewsItemDTO);
+            _twitterService = new TwitterService(_mediaProvider, _twitterLogger);
+            await this._twitterService.PublishNewsItem(publishNewsItemDTO);
             return this.Ok();
         }
     }

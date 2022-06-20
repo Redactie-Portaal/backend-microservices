@@ -1,16 +1,64 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/NewsItem/author/{id}",
+      "DownstreamPathTemplate": "/Author/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 14000
+          "Port": 15000
         }
       ],
-      "UpstreamPathTemplate": "/NewsItem/author/{id}",
+      "UpstreamPathTemplate": "/api/author/{id}",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Author",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 15000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/author",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/NewsItem",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 15000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/newsitem",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/NewsItem",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 15000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/newsitem",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Publication",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 15000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Publication",
+      "UpstreamHttpMethod": [ "Post" ]
     }
   ],
   "GlobalConfiguration": {

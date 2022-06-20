@@ -2,7 +2,7 @@
 {
     public class MediaDTO
     {
-        public string FileID { get; set; }
-        public string FileName { get; set; }
+        public string FileID { get; set; } = string.Empty;
+        public string FileName { get; set; } = string.Empty;
     }
 }

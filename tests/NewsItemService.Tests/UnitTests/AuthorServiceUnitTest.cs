@@ -1,4 +1,6 @@
 ﻿using NewsItemService.DTOs;
+using NewsItemService.Entities;
+using NewsItemService.Helpers;
 using NewsItemService.Services;
 using NewsItemService.Tests.UnitTests.Stubs;
 using NewsItemService.Types;
@@ -20,6 +22,7 @@ namespace NewsItemService.Tests.UnitTests
             this._service = new AuthorService(new StubAuthorRepository());
         }
 
+  
         #region Get() Tests
         [Fact]
         public void GetAll()

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using NewsItemService.DTOs;
 using NewsItemService.Interfaces;
 using NewsItemService.Services;
@@ -23,10 +23,9 @@ namespace NewsItemService.Controllers
         public async Task<IActionResult> GetPublicationById(int id)
         {
             var publication = await _publicationService.GetById(id);
-
             if (!publication.SingleOrDefault().Key)
             {
-                return NotFound(new { message = "Publication cannot be found." });
+                return NotFound(new { message = " A publication with this id cannot be found." });
             }
             return Ok(publication.SingleOrDefault().Value);
         }

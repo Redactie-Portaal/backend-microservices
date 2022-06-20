@@ -18,6 +18,8 @@ namespace NewsItemService.Tests.UnitTests
             this._service = new NewsItemOverviewService(new StubNewsItemRepository(), new StubAuthorRepository());
         }
 
+       
+
         #region Get() Tests
         [Fact]
         public void GetSingleNewsItem()

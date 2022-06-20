@@ -3,14 +3,15 @@ using NewsItemService.Entities;
 
 namespace NewsItemService.Helpers
 {
-    class AuthorHelper 
+    public class AuthorHelper 
     {
         public static AuthorDTO ToDTO(Author author)
         {
             return new AuthorDTO
             {
                 Id = author.Id,
-                Name = author.Name
+                Name = author.Name,
+                ImageUrl = author.ImageUrl
             };
         }
 
@@ -30,7 +31,8 @@ namespace NewsItemService.Helpers
             return new Author
             {
                 Id = authorDTO.Id,
-                Name = authorDTO.Name
+                Name = authorDTO.Name,
+                ImageUrl = authorDTO.ImageUrl
             };
         }
     }

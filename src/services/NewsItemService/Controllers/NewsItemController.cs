@@ -9,7 +9,7 @@ using NewsItemService.Helpers;
 
 namespace NewsArticleService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class NewsItemController : ControllerBase
     {
