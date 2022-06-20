@@ -8,7 +8,7 @@ using RabbitMQLibrary.Producer;
 namespace NewsItemService.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class PublicationController : ControllerBase
     {
         private readonly IMediaRepository _mediaRepostiory;
