@@ -20,7 +20,7 @@ namespace NewsItemService.Data
         public List<NewsItem> Get(int page, int pageSize)
         {
             var amountToSkip = (page - 1) * pageSize;
-            var newsItems =  _dbContext.NewsItems.Include("Authors").Skip(amountToSkip).Take(pageSize).ToList();
+            var newsItems =  _dbContext.NewsItems.Include("Authors").Include("Publications").Skip(amountToSkip).Take(pageSize).ToList();
 
             return newsItems;
         }
