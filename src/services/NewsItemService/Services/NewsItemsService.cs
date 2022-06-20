@@ -214,6 +214,7 @@ namespace NewsItemService.Services
                 SourceLocations = sourceLocations,
                 SourcePeople = sourcePeople,
                 Notes = notes,
+                Updated = DateTime.Now.ToUniversalTime(),
                 MediaNewsItems = mediaNewsItems
             };
 
