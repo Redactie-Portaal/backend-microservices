@@ -15,7 +15,7 @@ namespace RabbitMQLibrary
             services.AddSingleton(connection);
             // Give the IMessagePublisher its MessageProducer that way it can start producing messages
 
-            services.AddScoped<IMessageProducer, MessageProducer>();
+            services.AddSingleton<IMessageProducer, MessageProducer>();
         }
     }
 }

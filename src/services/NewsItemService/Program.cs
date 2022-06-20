@@ -3,7 +3,7 @@ using NewsItemService.Data;
 using NewsItemService.Interfaces;
 using NewsItemService.Services;
 using RabbitMQLibrary;
-
+using RabbitMQLibrary.Producer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,12 +50,13 @@ builder.Services.AddSingleton<INoteRepository, NoteRepository>();
 builder.Services.AddSingleton<IPublicationRepository, PublicationRepository>();
 builder.Services.AddSingleton<ISourceLocationRepository, SourceLocationRepository>();
 builder.Services.AddSingleton<ISourcePersonRepository, SourcePersonRepository>();
+builder.Services.AddSingleton<IMessageProducer, MessageProducer>();
 builder.Services.AddSingleton<ITagRepository, TagRepository>();
 
 builder.Services.AddSingleton<NewsItemOverviewService>();
 builder.Services.AddSingleton<NewsItemsService>();
 builder.Services.AddSingleton<NewsItemStatusService>();
-builder.Services.AddSingleton<PublicationService>();
+builder.Services.AddSingleton<PublicationService>(); // Geen idee waarom maar AddSingleton werkte niet, dus daarom AddScoped;
 builder.Services.AddSingleton<AuthorService>();
 
 // Messaging

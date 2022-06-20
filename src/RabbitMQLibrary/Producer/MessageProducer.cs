@@ -7,7 +7,7 @@ using System.Text;
 [assembly: InternalsVisibleTo("NewsItemService.Tests")]
 namespace RabbitMQLibrary.Producer
 {
-    internal class MessageProducer : IMessageProducer
+    public class MessageProducer : IMessageProducer
     {
         private readonly string _exchangeName;
         private readonly RabbitMqConnection _connection;
