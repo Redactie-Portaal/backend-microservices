@@ -13,7 +13,7 @@ namespace NewsItemService.Entities
         public string Summary { get; set; } = string.Empty;
         public ICollection<Author> Authors { get; set; }
         public ICollection<Category> Categories { get; set; }
-        public ICollection<Publication> Publications { get; set; }
+        public ICollection<Publication> Publications { get; set; } = new List<Publication>();
         public ICollection<Tag> Tags { get; set; }
         public NewsItemStatus Status { get; set; }
         public DateTime Created { get; set; }

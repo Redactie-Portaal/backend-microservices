@@ -16,9 +16,9 @@ using Xunit;
 namespace NewsItemService.Tests.IntegrationTests
 {
     /// <summary>
-    /// Tests for the item repository
+    /// Integration Tests for the newsitem repository
     /// </summary>
-    public class NewsItemRepositoryTests
+    public class NewsItemRepositorySaveStatusIntegrationTest
     {
         /// <summary>
         /// NewsItemRepository for testing purposes
@@ -30,7 +30,7 @@ namespace NewsItemService.Tests.IntegrationTests
         /// <summary>
         /// Constructor to setup the in memory database, and add to the context to use.
         /// </summary>
-        public NewsItemRepositoryTests()
+        public NewsItemRepositorySaveStatusIntegrationTest()
         {
             var serviceProvider = new ServiceCollection()
                                     .AddEntityFrameworkInMemoryDatabase()

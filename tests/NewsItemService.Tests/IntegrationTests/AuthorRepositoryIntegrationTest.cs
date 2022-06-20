@@ -15,30 +15,40 @@ using Xunit;
 
 namespace NewsItemService.Tests.IntegrationTests
 {
-    public class AuthorRepositoryIntegrationTest : IDisposable
+    /// <summary>
+    /// Integration Tests for the Author repository
+    /// </summary>
+    public class AuthorRepositoryIntegrationTest
     {
-        private readonly NewsItemServiceDatabaseContext _databaseContext;
+        /// <summary>
+        /// AuthorRepository for testing purposes
+        /// </summary>
         private readonly AuthorRepository _authorRepository;
+        private readonly NewsItemServiceDatabaseContext _databaseContext;
+        private readonly ILogger<AuthorRepository> _logger;
 
+        /// <summary>
+        /// Constructor to setup the in memory database, and add to the context to use.
+        /// </summary>
         public AuthorRepositoryIntegrationTest()
         {
-            string connectionString = "Server=localhost;Port=1111;Database=DATABASE_NAME;UserId=developer;Password=developer";
-            var serviceProvider = new ServiceCollection().AddEntityFrameworkNpgsql().BuildServiceProvider();
+            var serviceProvider = new ServiceCollection()
+            .AddEntityFrameworkInMemoryDatabase()
+            .BuildServiceProvider();
 
-            var builder = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>();
-            builder.UseNpgsql(connectionString).UseInternalServiceProvider(serviceProvider);
-            this._databaseContext = new NewsItemServiceDatabaseContext(builder.Options);
+            var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDb_" + "AuthorOverview")
+                .UseInternalServiceProvider(serviceProvider).Options;
+            _databaseContext = new NewsItemServiceDatabaseContext(options);
+            SeedData(_databaseContext);
 
-            this._databaseContext.Database.EnsureCreated();
-
-            SeedData(this._databaseContext);
-
-            var loggerMock = new Mock<ILogger<AuthorRepository>>();
-            ILogger<AuthorRepository> authorRepositorylogger = loggerMock.Object;
-
-            this._authorRepository = new AuthorRepository(this._databaseContext, authorRepositorylogger);
+            _authorRepository = new AuthorRepository(_databaseContext, _logger);
         }
 
+        /// <summary>
+        /// Feed the virtual database data
+        /// </summary>
+        /// <param name="context">Context used for the repository</param>
         private void SeedData(NewsItemServiceDatabaseContext context)
         {
             var authors = new List<Author>()
@@ -185,11 +195,6 @@ namespace NewsItemService.Tests.IntegrationTests
 
             // Assert
             Assert.Equal(3, result.Count);
-        }
-
-        public void Dispose()
-        {
-            this._databaseContext.Database.EnsureDeleted();
         }
     }
 }

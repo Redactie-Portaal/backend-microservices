@@ -97,6 +97,14 @@ namespace NewsItemService.Tests.UnitTests
         public void GetNewsItems()
         {
             // Arrange
+            var twitterPublicationDTO = new PublicationDTO()
+            {
+                Id = 1,
+                Name = "Twitter",
+                Description = "Social Media",
+                Icon = "ico"
+            };
+
             var expected = new List<NewsItemDTO>()
             {
                 new NewsItemDTO()
@@ -110,7 +118,8 @@ namespace NewsItemService.Tests.UnitTests
                         new AuthorDTO() { Id = 1, Name = "Jacob" },
                         new AuthorDTO() { Id = 2, Name = "Jason" }
                     },
-                    Status = NewsItemStatus.Done
+                    Status = NewsItemStatus.Done,
+                    Publications = new List<PublicationDTO>() { twitterPublicationDTO }
                 },
                 new NewsItemDTO()
                 {
@@ -123,7 +132,8 @@ namespace NewsItemService.Tests.UnitTests
                         new AuthorDTO() { Id = 1, Name = "Jacob" },
                         new AuthorDTO() { Id = 2, Name = "Jason" }
                     },
-                    Status = NewsItemStatus.Done
+                    Status = NewsItemStatus.Done,
+                    Publications = new List<PublicationDTO>() { twitterPublicationDTO }
                 },
                 new NewsItemDTO()
                 {
@@ -136,7 +146,8 @@ namespace NewsItemService.Tests.UnitTests
                         new AuthorDTO() { Id = 1, Name = "Jacob" },
                         new AuthorDTO() { Id = 2, Name = "Jason" }
                     },
-                    Status = NewsItemStatus.Done
+                    Status = NewsItemStatus.Done,
+                    Publications = new List<PublicationDTO>() { twitterPublicationDTO }
                 },
                 new NewsItemDTO()
                 {
@@ -149,7 +160,8 @@ namespace NewsItemService.Tests.UnitTests
                         new AuthorDTO() { Id = 1, Name = "Jacob" },
                         new AuthorDTO() { Id = 2, Name = "Jason" }
                     },
-                    Status = NewsItemStatus.Done
+                    Status = NewsItemStatus.Done,
+                    Publications = new List<PublicationDTO>() { twitterPublicationDTO }
                 },
                 new NewsItemDTO()
                 {
@@ -162,7 +174,8 @@ namespace NewsItemService.Tests.UnitTests
                         new AuthorDTO() { Id = 1, Name = "Jacob" },
                         new AuthorDTO() { Id = 2, Name = "Jason" }
                     },
-                    Status = NewsItemStatus.Done
+                    Status = NewsItemStatus.Done,
+                    Publications = new List<PublicationDTO>() { twitterPublicationDTO }
                 }
             };
 
