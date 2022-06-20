@@ -130,13 +130,12 @@ namespace NewsArticleService.Controllers
             if (status.status == NewsItemStatus.Dispose)
             {
                 // FIXME: Use newsItem service.
-                var newsItem = await _newsItemRepository.GetNewsItemAsync(status.NewsItemId);
+                var newsItem = _newsItemRepository.Get(status.NewsItemId);
                 if (newsItem == default)
                 {
                     return BadRequest(new { message = result.FirstOrDefault().Value });
                 }
 
-                // FIXME: Use newsItemOverview service.
                 _producer.PublishMessageAsync(RoutingKeyType.NewsItemDispose, NewsItemHelper.NewsItemToDisposedDTO(newsItem));
             }
 

@@ -44,21 +44,17 @@ namespace NewsItemService.Services
 
         public async Task<Dictionary<bool, string>> PublishNewsItem(int newsItemId, int publicationId)
         {
-            var newsItem = await _newsItemRepostiory.GetNewsItemById(newsItemId);
-            if (!newsItem.SingleOrDefault().Key)
-            {
-                return new Dictionary<bool, string>() { { false, ErrorType.NEWS_ITEM_NOT_FOUND} };
-            }
+            var newsItem = _newsItemRepostiory.Get(newsItemId);
+            if (newsItem == null) return new Dictionary<bool, string>() { { false, ErrorType.NEWS_ITEM_NOT_FOUND} };
 
-            var n = newsItem.SingleOrDefault().Value;
             var publishDTO = new PublishDTO()
             {
-                Content = n.Content,
-                Summary = n.Summary,
+                Content = newsItem.Content,
+                Summary = newsItem.Summary,
             };
-            if (n.Tags.Count != 0)
+            if (newsItem.Tags.Count != 0)
             {
-                foreach (var item in n.Tags)
+                foreach (var item in newsItem.Tags)
                 {
                     publishDTO.Tags.Add(item.Name);
                 }
