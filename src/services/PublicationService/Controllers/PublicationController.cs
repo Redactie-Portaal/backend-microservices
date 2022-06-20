@@ -11,21 +11,18 @@ namespace PublicationService.Controllers
     public class PublicationController : ControllerBase
     {
         private TwitterService _twitterService;
-        private readonly IMediaProvider _mediaProvider;
-        private readonly ILogger<TwitterService> _twitterLogger;
 
-        public PublicationController(IMediaProvider mediaProvider, ILogger<TwitterService> twitterLogger)
+        public PublicationController(TwitterService twitterService)
         {
-            this._mediaProvider = mediaProvider;
-            _twitterLogger = twitterLogger;
+            _twitterService = twitterService;
         }
 
         [HttpPost]
         public async Task<IActionResult> PublishToTwitter(PublishNewsItemDTO publishNewsItemDTO)
         {
-            _twitterService = new TwitterService(_mediaProvider, _twitterLogger);
-            await this._twitterService.PublishNewsItem(publishNewsItemDTO);
-            return this.Ok();
+            await _twitterService.PublishNewsItem(publishNewsItemDTO);
+
+            return Ok("Item published to Twitter");
         }
     }
 }

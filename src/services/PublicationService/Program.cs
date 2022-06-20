@@ -16,6 +16,8 @@ builder.Services.AddHostedService<RabbitMQWorker>();
 
 builder.Services.AddSingleton<IMediaProvider, GoogleDriveProvider>();
 
+builder.Services.AddSingleton<TwitterService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
