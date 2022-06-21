@@ -53,12 +53,14 @@ namespace PublicationService.Data
                     throw new Exception("Specified file not found in Google Drive.");
                 }
 
-                if (file.Files[0].MimeType.Contains("image") && file.Files[0].Size > 5242880)
+                var imageSizeLimitInBytes = 5 * 1024 * 1024; // 5MB
+                if (file.Files[0].MimeType.Contains("image") && file.Files[0].Size > imageSizeLimitInBytes)
                 {
                     throw new Exception("File is too large to be used for publication.");
                 }
 
-                if (file.Files[0].MimeType.Contains("video") && file.Files[0].Size > 15728640)
+                var videoSizeLimitInBytes = 15 * 1024 * 1024; // 15MB
+                if (file.Files[0].MimeType.Contains("video") && file.Files[0].Size > videoSizeLimitInBytes)
                 {
                     throw new Exception("File is too large to be used for publication.");
                 }
@@ -73,20 +75,17 @@ namespace PublicationService.Data
                         switch (progress.Status)
                         {
                             case DownloadStatus.Downloading:
-                                {
-                                    this._logger.LogInformation("File is downloading from Google Drive. Downloaded bytes thus far: {ByteAmount}", progress.BytesDownloaded);
-                                    break;
-                                }
+                                this._logger.LogInformation("File is downloading from Google Drive. Downloaded bytes thus far: {ByteAmount}", progress.BytesDownloaded);
+                                
+                                break;
                             case DownloadStatus.Completed:
-                                {
-                                    this._logger.LogInformation("File successfully downloaded from Google Drive.");
-                                    break;
-                                }
+                                this._logger.LogInformation("File successfully downloaded from Google Drive.");
+                                
+                                break;
                             case DownloadStatus.Failed:
-                                {
-                                    this._logger.LogError("Failed to download file from Google Drive.");
-                                    break;
-                                }
+                                this._logger.LogError("Failed to download file from Google Drive.");
+                                
+                                break;
                         }
                     };
                 this._logger.LogInformation("Downloading file from Google Drive.");

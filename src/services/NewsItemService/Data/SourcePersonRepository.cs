@@ -8,13 +8,14 @@ namespace NewsItemService.Data
     public class SourcePersonRepository : ISourcePersonRepository, IDisposable
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
-        private bool disposed = false;
         private readonly ILogger _logger;
+
+        private bool _disposed = false;
 
         public SourcePersonRepository(NewsItemServiceDatabaseContext context, ILogger<SourcePersonRepository> logger)
         {
-            this._dbContext = context;
-            this._logger = logger;
+            _dbContext = context;
+            _logger = logger;
         }
 
         public async Task<Dictionary<bool, SourcePerson>> GetSourcePerson(AddSourcePersonDTO addSourcePersonDTO)
@@ -64,14 +65,14 @@ namespace NewsItemService.Data
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()

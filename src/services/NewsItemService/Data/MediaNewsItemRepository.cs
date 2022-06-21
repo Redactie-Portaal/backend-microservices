@@ -7,13 +7,14 @@ namespace NewsItemService.Data
     public class MediaNewsItemRepository : IMediaNewsItemRepository, IDisposable
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
-        private bool disposed = false;
         private readonly ILogger _logger;
+
+        private bool _disposed = false;
 
         public MediaNewsItemRepository(NewsItemServiceDatabaseContext context, ILogger<MediaNewsItemRepository> logger)
         {
-            this._dbContext = context;
-            this._logger = logger;
+            _dbContext = context;
+            _logger = logger;
         }
 
         public async Task<Dictionary<bool, List<MediaNewsItem>>> GetMediaNewsItemByNewsItemId(int newsItemId)
@@ -29,7 +30,7 @@ namespace NewsItemService.Data
             }
             catch (Exception ex)
             {
-                this._logger.LogError("There is a problem with retrieving the MediaNewsItem. Error message: {Message}", ex.Message);
+                _logger.LogError("There is a problem with retrieving the MediaNewsItem. Error message: {Message}", ex.Message);
                 throw;
             }
         }
@@ -52,7 +53,7 @@ namespace NewsItemService.Data
             }
             catch (Exception ex)
             {
-                this._logger.LogError("There is a problem with saving the MediaNewsItem. Error message: {Message}", ex.Message);
+                _logger.LogError("There is a problem with saving the MediaNewsItem. Error message: {Message}", ex.Message);
                 throw;
             }
 
@@ -61,14 +62,14 @@ namespace NewsItemService.Data
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()

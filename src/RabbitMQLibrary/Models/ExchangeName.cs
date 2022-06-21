@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RabbitMQLibrary
 {
-    internal class ExchangeName
+    public class ExchangeName
     {
         public string Name { get; }
         public ExchangeName(string name)

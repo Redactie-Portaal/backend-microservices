@@ -5,7 +5,7 @@ namespace RabbitMQLibrary
     /// <summary>
     /// Singleton service keeping track of our connection with RabbitMQ.
     /// </summary>
-    internal class RabbitMqConnection : IDisposable
+    public class RabbitMqConnection : IDisposable
     {
         private IConnection _connection;
         public IModel CreateChannel()

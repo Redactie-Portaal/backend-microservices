@@ -13,9 +13,10 @@ namespace NewsItemService.Data
     public class MediaRepository : IMediaRepository
     {
         private readonly ILogger _logger;
+
         public MediaRepository(ILogger<MediaRepository> logger)
         {
-            this._logger = logger;
+            _logger = logger;
         }
 
         internal async Task<DriveService> Authenticate()
@@ -46,7 +47,7 @@ namespace NewsItemService.Data
                 var fileSearch = driveService.Files.List();
                 fileSearch.Q = $"name = '{fileName}'";
 
-                this._logger.LogInformation("Searching for file in Google Drive.");
+                _logger.LogInformation("Searching for file in Google Drive.");
                 var file = await fileSearch.ExecuteAsync();
 
                 if (file.Files.Count == 0)
@@ -54,7 +55,7 @@ namespace NewsItemService.Data
                     return new Dictionary<bool, Media>() { { false, null } };
                 }
 
-                this._logger.LogInformation("Getting file metadata from Google Drive.");
+                _logger.LogInformation("Getting file metadata from Google Drive.");
                 var fileRequest = driveService.Files.Get(file.Files[0].Id);
 
                 var fileStream = new MemoryStream();
@@ -65,22 +66,22 @@ namespace NewsItemService.Data
                         {
                             case DownloadStatus.Downloading:
                                 {
-                                    this._logger.LogInformation("File is downloading from Google Drive. Downloaded bytes thus far: {ByteAmount}", progress.BytesDownloaded);
+                                    _logger.LogInformation("File is downloading from Google Drive. Downloaded bytes thus far: {ByteAmount}", progress.BytesDownloaded);
                                     break;
                                 }
                             case DownloadStatus.Completed:
                                 {
-                                    this._logger.LogInformation("File successfully downloaded from Google Drive.");
+                                    _logger.LogInformation("File successfully downloaded from Google Drive.");
                                     break;
                                 }
                             case DownloadStatus.Failed:
                                 {
-                                    this._logger.LogError("Failed to download file from Google Drive.");
+                                    _logger.LogError("Failed to download file from Google Drive.");
                                     break;
                                 }
                         }
                     };
-                this._logger.LogInformation("Downloading file from Google Drive.");
+                _logger.LogInformation("Downloading file from Google Drive.");
                 fileRequest.Download(fileStream);
 
                 var media = new Media();
@@ -109,7 +110,7 @@ namespace NewsItemService.Data
             }
             catch (Exception ex)
             {
-                this._logger.LogError("There is a problem with retrieve the file from Google Drive. Error message: {Message}", ex.Message);
+                _logger.LogError("There is a problem with retrieve the file from Google Drive. Error message: {Message}", ex.Message);
                 throw;
             }
         }
@@ -131,21 +132,21 @@ namespace NewsItemService.Data
             {
                 var fileUpload = driveService.Files.Create(file, fileStream, file.MimeType);
 
-                this._logger.LogInformation("Uploading file to Google Drive.");
+                _logger.LogInformation("Uploading file to Google Drive.");
                 var result = await fileUpload.UploadAsync();
 
                 if (result.Status == Google.Apis.Upload.UploadStatus.Failed)
                 {
-                    this._logger.LogError("The file upload to Google Drive failed. Error message: {Message}", result.Exception);
+                    _logger.LogError("The file upload to Google Drive failed. Error message: {Message}", result.Exception);
                     throw result.Exception;
                 }
-                this._logger.LogInformation("File upload to Google Drive succeeded.");
+                _logger.LogInformation("File upload to Google Drive succeeded.");
                 return new Dictionary<bool, string>() { { true, fileUpload.ResponseBody.Id } };
 
             }
             catch (Exception ex)
             {
-                this._logger.LogError("There is a problem with uploading the file to Google Drive. Error message: {Message}", ex.Message);
+                _logger.LogError("There is a problem with uploading the file to Google Drive. Error message: {Message}", ex.Message);
                 throw;
             }
         }
