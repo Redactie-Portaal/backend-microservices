@@ -10,6 +10,11 @@ namespace NewsItemService.Tests.UnitTests.Stubs
 {
     internal class StubPublicationRepository : IPublicationRepository
     {
+        public Task<Publication> Create(Publication publication)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Dictionary<bool, Publication>> GetPublicationById(int id)
         {
             Publication publication = new Publication();
