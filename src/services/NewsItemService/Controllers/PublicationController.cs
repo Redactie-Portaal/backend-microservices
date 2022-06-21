@@ -39,10 +39,10 @@ namespace NewsItemService.Controllers
             return Ok(publicationDTO);
         }
 
-        [HttpPost("/publish")]
+        [HttpPost("publish")]
         public async Task<IActionResult> Publicize(PublicizeNewsItemDTO dto)
         {
-           var newsItem = await _publicationService.PublishNewsItem(dto.NewsItemID, dto.PublicationID);
+            var newsItem = await _publicationService.PublishNewsItem(dto.NewsItemID, dto.PublicationID);
             if (!newsItem.SingleOrDefault().Key && newsItem.SingleOrDefault().Value == ErrorType.NEWS_ITEM_NOT_FOUND)
             {
                 return NotFound(new { message = "NewsItem cannot be found." });
