@@ -79,7 +79,9 @@ namespace NewsItemService.Tests.UnitTests.Stubs
 
         public Task<Dictionary<bool, NewsItem>> GetNewsItemById(int newsItemId)
         {
-            throw new NotImplementedException();
+            var result = _newsItems.SingleOrDefault(n => n.Id == newsItemId);
+            if (result == null) return Task.FromResult(new Dictionary<bool, NewsItem>() { { false, null } });
+            return Task.FromResult(new Dictionary<bool, NewsItem>() { { true, result } });
         }
 
         public Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item)

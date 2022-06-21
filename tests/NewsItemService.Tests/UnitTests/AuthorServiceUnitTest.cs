@@ -180,6 +180,16 @@ namespace NewsItemService.Tests.UnitTests
                 Assert.Equal(expected[i].Status, newsItems[i].Status);
             }
         }
+
+        [Fact]
+        public void GetNewsItemsReturnZero()
+        {
+            // Act
+            List<NewsItemDTO> newsItems = _service.GetNewsItems(1, 5, 5);
+
+            // Assert
+            Assert.Empty(newsItems);
+        }
         #endregion
     }
 }
