@@ -51,8 +51,8 @@ namespace NewsItemService.Tests.UnitTests
             var author = _service.Get(1);
 
             // Assert
-            Assert.Equal(expected.Id, author.Id);
-            Assert.Equal(expected.Name, author.Name);
+            Assert.Equal(expected.Id, author.Result.Id);
+            Assert.Equal(expected.Name, author.Result.Name);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace NewsItemService.Tests.UnitTests
             var author = _service.Get(3);
 
             // Assert
-            Assert.Null(author);
+            Assert.Null(author.Result);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace NewsItemService.Tests.UnitTests
             var author = _service.Get(-1);
 
             // Assert
-            Assert.Null(author);
+            Assert.Null(author.Result);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace NewsItemService.Tests.UnitTests
             var author = _service.Get(0);
 
             // Assert
-            Assert.Null(author);
+            Assert.Null(author.Result);
         }
         #endregion
 
@@ -179,6 +179,16 @@ namespace NewsItemService.Tests.UnitTests
                 Assert.Equal(expected[i].Updated, newsItems[i].Updated);
                 Assert.Equal(expected[i].Status, newsItems[i].Status);
             }
+        }
+
+        [Fact]
+        public void GetNewsItemsReturnZero()
+        {
+            // Act
+            List<NewsItemDTO> newsItems = _service.GetNewsItems(1, 5, 5);
+
+            // Assert
+            Assert.Empty(newsItems);
         }
         #endregion
     }

@@ -3,7 +3,7 @@ using NewsItemService.Entities;
 
 namespace NewsItemService.Helpers
 {
-    class NewsItemHelper
+    public class NewsItemHelper
     {
         public static NewsItemDTO ToDTO(NewsItem newsItem, bool includeAuthors = true)
         {
@@ -59,6 +59,28 @@ namespace NewsItemService.Helpers
                 Updated = newsItemDTO.Updated,
                 Authors = authors,
                 Status = newsItemDTO.Status
+            };
+        }
+
+         public static NewsItemDisposedDTO NewsItemToDisposedDTO(NewsItem newsItem)
+        {
+            if (newsItem == default)
+            {
+                throw new ArgumentNullException(nameof(newsItem));
+            }
+            List<int> authorIds = new List<int>();
+            foreach (var item in newsItem.Authors)
+            {
+                authorIds.Add(item.Id);
+            }
+
+            return new NewsItemDisposedDTO()
+            {
+                Id = newsItem.Id,
+                AuthorIds = authorIds,
+                Created = newsItem.Created,
+                Status = newsItem.Status,
+                Updated = newsItem.Updated
             };
         }
     }

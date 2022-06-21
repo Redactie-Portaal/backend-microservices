@@ -16,9 +16,9 @@ using Xunit;
 namespace NewsItemService.Tests.IntegrationTests
 {
     /// <summary>
-    /// Tests for the item repository
+    /// Integration Tests for the news item repository
     /// </summary>
-    public class NewsItemRepositoryTests
+    public class NewsItemRepositorySaveStatusIntegrationTest
     {
         /// <summary>
         /// NewsItemRepository for testing purposes
@@ -30,7 +30,7 @@ namespace NewsItemService.Tests.IntegrationTests
         /// <summary>
         /// Constructor to setup the in memory database, and add to the context to use.
         /// </summary>
-        public NewsItemRepositoryTests()
+        public NewsItemRepositorySaveStatusIntegrationTest()
         {
             var serviceProvider = new ServiceCollection()
                                     .AddEntityFrameworkInMemoryDatabase()
@@ -73,7 +73,8 @@ namespace NewsItemService.Tests.IntegrationTests
             var newsItems = new List<NewsItem>
             {
                 new NewsItem { Id = 4, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now },
-                new NewsItem { Id = 5, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now }
+                new NewsItem { Id = 5, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now },
+                new NewsItem { Id = 6, Authors = authors, Created = DateTime.Now, Updated = DateTime.Now, Status = NewsItemStatus.Archived }
             };
 
             if (!context.NewsItems.Any())
@@ -145,25 +146,21 @@ namespace NewsItemService.Tests.IntegrationTests
 
         #region Start of tests (Be carefull where u place the update entries, since it will update the database which could mess with the other tests)
         //TODO: fix this test
-        /*
+        
         [Fact]
         public async Task Update_DuplicateStatusEntry_ReturnsDUPLICATE_STATUS()
         {
-            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(3, NewsItemStatus.Publication));
+            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(4, NewsItemStatus.Done));
             Assert.Equal(result, new Dictionary<bool, string>() { { false, "STATUS.DUPLICATE_STATUS" } });
         }
-        */
+        
 
-        /*
-        //TODO: fix this test
         [Fact]
         public async Task Update_NewsItemStatusDone_ReturnsStatusChangedToDone()
         {
-            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(1, NewsItemStatus.Done));
-
+            var result = await repo.ChangeNewsItemStatus(CreateAddNewsItemStatus(6, NewsItemStatus.Done));
             Assert.Equal(result, new Dictionary<bool, string>() { { true, "Status changed to " + NewsItemStatus.Done } });
         }
-        */
 
         [Fact]
         public async Task Update_NonExistentEntry_ReturnsNO_NEWSITEM()

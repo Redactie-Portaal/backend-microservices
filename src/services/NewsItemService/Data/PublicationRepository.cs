@@ -7,13 +7,14 @@ namespace NewsItemService.Data
     public class PublicationRepository : IPublicationRepository, IDisposable
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
-        private bool disposed = false;
         private readonly ILogger _logger;
+
+        private bool _disposed = false;
 
         public PublicationRepository(NewsItemServiceDatabaseContext context, ILogger<PublicationRepository> logger)
         {
-            this._dbContext = context;
-            this._logger = logger;
+            _dbContext = context;
+            _logger = logger;
         }
 
         public async Task<Dictionary<bool, Publication>> GetPublicationById(int id)
@@ -52,14 +53,14 @@ namespace NewsItemService.Data
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()

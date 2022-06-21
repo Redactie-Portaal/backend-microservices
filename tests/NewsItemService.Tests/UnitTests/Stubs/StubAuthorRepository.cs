@@ -49,7 +49,9 @@ namespace NewsItemService.Tests.UnitTests.Stubs
 
         public Task<Dictionary<bool, Author>> GetAuthorById(int id)
         {
-            throw new NotImplementedException();
+            var result = _authors.FirstOrDefault(a => a.Id == id);
+            if (result == null) return Task.FromResult(new Dictionary<bool, Author>() { { false, null } });
+            return Task.FromResult(new Dictionary<bool, Author>() { { true, result } });
         }
 
         public List<NewsItem>? GetNewsItems(int id, int page, int pageSize)

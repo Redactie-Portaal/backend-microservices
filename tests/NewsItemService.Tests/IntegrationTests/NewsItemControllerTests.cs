@@ -50,24 +50,28 @@ namespace NewsItemService.Tests.IntegrationTests
             var exchangeName = new ExchangeName("test-exchange");
             var connection = new RabbitMqConnection();
 
-            var test = new MessageProducer(null, exchangeName, connection);
-
-            _newsItemOverviewService = new NewsItemOverviewService(new NewsItemRepository(context, _newsItemLogger), new AuthorRepository(context, _authorLogger));
-            _authorService = new AuthorService(new AuthorRepository(context, _authorLogger));
-
-            return new NewsItemController(
-                test,
-                newsItemRepo, 
-                new AuthorRepository(context, _authorLogger), 
-                new CategoryRepository(context, _categoryLogger),
-                new PublicationRepository(context, _publicationLogger),
+            var producer = new MessageProducer(null, exchangeName, connection);
+            var newsItemService = new NewsItemsService(
                 new TagRepository(context, _tagLogger),
                 new MediaRepository(_mediaLogger),
-                new MediaNewsItemRepository(context, _mediaNewsItemLogger),
-                new SourceLocationRepository(context, _sourceLocationLogger),
+                new AuthorRepository(_authorLogger, context),
+                newsItemRepo,
+                new CategoryRepository(context, _categoryLogger),
+                new PublicationRepository(context, _publicationLogger),
                 new SourcePersonRepository(context, _sourcePersonLogger),
-                new NoteRepository(context, _noteLogger),
-                _newsItemOverviewService, _authorService);
+                new SourceLocationRepository(context, _sourceLocationLogger)
+            );
+            var newsItemStatusService = new NewsItemStatusService();
+
+            _newsItemOverviewService = new NewsItemOverviewService(new NewsItemRepository(context, _newsItemLogger), new AuthorRepository(_authorLogger, context));
+            _authorService = new AuthorService(new AuthorRepository(_authorLogger, context));
+
+            return new NewsItemController(
+                producer,
+                newsItemService,
+                newsItemRepo,
+                newsItemStatusService,
+                _newsItemOverviewService);
         }
 
         private void SeedProductInMemoryDatabaseWithData(NewsItemServiceDatabaseContext context)
