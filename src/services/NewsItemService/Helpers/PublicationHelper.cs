@@ -10,16 +10,30 @@ namespace NewsItemService.Helpers
             List<PublicationDTO> publicationDTOs = new List<PublicationDTO>();
             foreach (Publication pub in publications)
             {
-                publicationDTOs.Add(new PublicationDTO()
-                {
-                    Id = pub.Id,
-                    Icon = pub.Icon,
-                    Name  = pub.Name
-                });
+                publicationDTOs.Add(ToDTO(pub));
             }
 
             return publicationDTOs;
         }
 
+        public static PublicationDTO ToDTO(Publication publication)
+        {
+            return new PublicationDTO()
+            {
+                Id = publication.Id,
+                Icon = publication.Icon == null ? string.Empty : publication.Icon,
+                Name = publication.Name
+            };
+        }
+
+        public static Publication ToEntity(CreatePublicationDTO createPublicationDTO)
+        {
+            return new Publication()
+            {
+                Name = createPublicationDTO.Name,
+                Description = createPublicationDTO.Description,
+                Icon = createPublicationDTO.Icon
+            };
+        }
     }
 }

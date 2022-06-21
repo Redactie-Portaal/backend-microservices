@@ -55,21 +55,21 @@ namespace NewsItemService.Tests.UnitTests.Stubs
         {
             var amountToSkip = (page - 1) * pageSize;
 
-            return _newsItems.Skip(amountToSkip).Take(pageSize).ToList();
+            return _newsItems.Where(n => n.Created > date).Skip(amountToSkip).Take(pageSize).ToList();
         }
 
         public List<NewsItem> GetBefore(DateTime date, int page, int pageSize)
         {
             var amountToSkip = (page - 1) * pageSize;
 
-            return _newsItems.Skip(amountToSkip).Take(pageSize).ToList();
+            return _newsItems.Where(n => n.Created < date).Skip(amountToSkip).Take(pageSize).ToList();
         }
 
         public List<NewsItem> GetBetween(DateTime startDate, DateTime endDate, int page, int pageSize)
         {
             var amountToSkip = (page - 1) * pageSize;
 
-            return _newsItems.Skip(amountToSkip).Take(pageSize).ToList();
+            return _newsItems.Where(n => n.Created > startDate && n.Created < endDate).Skip(amountToSkip).Take(pageSize).ToList();
         }
 
         public NewsItem Post(NewsItem newsItem)
@@ -79,7 +79,9 @@ namespace NewsItemService.Tests.UnitTests.Stubs
 
         public Task<Dictionary<bool, NewsItem>> GetNewsItemById(int newsItemId)
         {
-            throw new NotImplementedException();
+            var result = _newsItems.SingleOrDefault(n => n.Id == newsItemId);
+            if (result == null) return Task.FromResult(new Dictionary<bool, NewsItem>() { { false, null } });
+            return Task.FromResult(new Dictionary<bool, NewsItem>() { { true, result } });
         }
 
         public Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item)

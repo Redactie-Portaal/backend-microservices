@@ -37,8 +37,8 @@ jobs:
       - name: Build release version
         run: dotnet build ${{ inputs.project-location }} --no-restore --configuration Release 
       
-      - name: Executing helper script for running Integration tests
-        run: bash ${{ inputs.test-location }}/IntegrationTests/run-integration-tests.sh ${{ inputs.test-location }} ${{ inputs.test-namespace }} 
+      - name: Running integration tests
+        run: dotnet test ${{ inputs.test-location }} --filter FullyQualifiedName~${{ inputs.test-namespace }} --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
 
       - name: Create Test Report
         uses: dorny/test-reporter@v1

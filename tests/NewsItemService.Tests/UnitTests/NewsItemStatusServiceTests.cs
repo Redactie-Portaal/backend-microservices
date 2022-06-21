@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using NewsItemService.Types;
 using Xunit;
+using NewsItemService.Helpers;
+using NewsItemService.Tests.UnitTests.Stubs;
 
 namespace NewsItemService.Tests.UnitTests
 {
@@ -18,14 +20,14 @@ namespace NewsItemService.Tests.UnitTests
         /// <summary>
         /// NewsItemStatusService for testing purposes
         /// </summary>
-        private NewsItemStatusService NewsItemStatusService { get; set; }
+        private NewsItemOverviewService _newsItemOverviewService { get; set; }
 
         /// <summary>
         /// Constructer to build the NewsItemStatusService
         /// </summary>
         public NewsItemStatusServiceTests()
         {
-            NewsItemStatusService = new NewsItemStatusService();
+            _newsItemOverviewService = new NewsItemOverviewService(new StubNewsItemRepository(), new StubAuthorRepository());
         }
 
         /// <summary>
@@ -46,9 +48,9 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_EmptyInteger_ReturnsFAULTY_ID()
         {
-            var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(default, NewsItemStatus.Done));
+            var result = _newsItemOverviewService.CheckNewsItemValue(CreateAddNewsItemStatus(default, NewsItemStatus.Done));
 
-            var expectedResult = new Dictionary<bool, string>() { { false, "STATUS.FAULTY_ID" } };
+            var expectedResult = new Dictionary<bool, string>() { { false, NewsItemStatusValues.FAULTY_ID } };
             Assert.Equal(expectedResult, result);
         }
 
@@ -56,18 +58,18 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_EmptyClass_ReturnsDEFAULT()
         {
-            var result = NewsItemStatusService.CheckNewsItemValue(null);
+            var result = _newsItemOverviewService.CheckNewsItemValue(null);
 
-            var expectedResult = new Dictionary<bool, string>() { { false, "STATUS.DEFAULT_OBJECT" } };
+            var expectedResult = new Dictionary<bool, string>() { { false, NewsItemStatusValues.DEFAULT_OBJECT } };
             Assert.Equal(expectedResult, result);
         }
 
         [Fact]
         public async Task Add_OutOfRangeEnum_ReturnsINCORRECT_STATUS_VALUE()
         {
-            var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, (NewsItemStatus)100));
+            var result = _newsItemOverviewService.CheckNewsItemValue(CreateAddNewsItemStatus(1, (NewsItemStatus)100));
 
-            var expectedResult = new Dictionary<bool, string>() { { false, "STATUS.INCORRECT_STATUS_VALUE" } };
+            var expectedResult = new Dictionary<bool, string>() { { false, NewsItemStatusValues.INCORRECT_STATUS_VALUE } };
             Assert.Equal(expectedResult, result);
         }
 
@@ -76,7 +78,7 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_StatusDone_ReturnsStatusChangeToDone()
         {
-            var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Done));
+            var result = _newsItemOverviewService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Done));
 
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + NewsItemStatus.Done } };
             Assert.Equal(expectedResult, result);
@@ -85,7 +87,7 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_StatusDispose_ReturnsStatusChangeToDispose()
         {
-            var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Dispose));
+            var result = _newsItemOverviewService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Dispose));
 
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + NewsItemStatus.Dispose } };
             Assert.Equal(expectedResult, result);
@@ -105,7 +107,7 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_StatusProduction_ReturnsStatusChangeToProduction()
         {
-            var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Production));
+            var result = _newsItemOverviewService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Production));
 
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + NewsItemStatus.Production } };
             Assert.Equal(expectedResult, result);
@@ -114,7 +116,7 @@ namespace NewsItemService.Tests.UnitTests
         [Fact]
         public async Task Add_StatusPublication_ReturnsStatusChangeToPublication()
         {
-            var result = NewsItemStatusService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Publication));
+            var result = _newsItemOverviewService.CheckNewsItemValue(CreateAddNewsItemStatus(1, NewsItemStatus.Publication));
 
             var expectedResult = new Dictionary<bool, string>() { { true, "Status able change to " + NewsItemStatus.Publication } };
             Assert.Equal(expectedResult, result);

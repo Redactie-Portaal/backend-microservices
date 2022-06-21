@@ -10,12 +10,12 @@ namespace PublicationService.Services
     {
         private readonly IMediaProvider _mediaProvider;
         private readonly ILogger _logger;
-        private List<IMedia> twitterMedias = new List<IMedia>();
+        private List<IMedia> _twitterMedias = new List<IMedia>();
 
         public TwitterService(IMediaProvider mediaProvider, ILogger<TwitterService> logger)
         {
-            this._mediaProvider = mediaProvider;
-            this._logger = logger;
+            _mediaProvider = mediaProvider;
+            _logger = logger;
         }
 
         public TwitterClient Authenticate()
@@ -41,16 +41,16 @@ namespace PublicationService.Services
                     }
                 }
 
-                this._logger.LogInformation("Publishing tweet to Twitter, with the specified file(s).");
+                _logger.LogInformation("Publishing tweet to Twitter, with the specified file(s).");
                 await twitterClient.Tweets.PublishTweetAsync(new PublishTweetParameters(publishNewsItemDTO.Summary + " " + tags)
                 {
-                    Medias = twitterMedias
+                    Medias = _twitterMedias
                 });
-                this._logger.LogInformation("Successfully published tweet to Twitter.");
+                _logger.LogInformation("Successfully published tweet to Twitter.");
             }
             catch (Exception exception)
             {
-                this._logger.LogError("Error with publishing tweet. Message: {message}", exception.Message);
+                _logger.LogError("Error with publishing tweet. Message: {message}", exception.Message);
                 throw;
             }
         }
@@ -62,10 +62,10 @@ namespace PublicationService.Services
 
             if (publishNewsItemDTO.Media.Count != 0)
             {
-                this._logger.LogInformation("Uploading media to Twitter.");
+                _logger.LogInformation("Uploading media to Twitter.");
                 foreach (var media in publishNewsItemDTO.Media)
                 {
-                    var result = await this._mediaProvider.RetrieveMedia(media.FileName);
+                    var result = await _mediaProvider.RetrieveMedia(media.FileName);
                     if (result.SingleOrDefault().Key.Contains("image"))
                     {
                         retrievedPictures.Add(result.SingleOrDefault().Value);
@@ -79,12 +79,12 @@ namespace PublicationService.Services
                 foreach (var picture in retrievedPictures)
                 {
                     var uploadedImage = await twitterClient.Upload.UploadTweetImageAsync(picture);
-                    twitterMedias.Add(uploadedImage);
+                    _twitterMedias.Add(uploadedImage);
                 }
                 foreach (var video in retrievedVideos)
                 {
                     var uploadedVideo = await twitterClient.Upload.UploadTweetVideoAsync(video);
-                    twitterMedias.Add(uploadedVideo);
+                    _twitterMedias.Add(uploadedVideo);
                 }
             }
         }

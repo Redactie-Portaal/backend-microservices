@@ -11,7 +11,7 @@ namespace NewsItemService.Services
 
         public AuthorService(IAuthorRepository authorRepository)
         {
-            this._authorRepository = authorRepository;
+            _authorRepository = authorRepository;
         }
 
         public List<AuthorDTO>? Get() 
@@ -22,11 +22,15 @@ namespace NewsItemService.Services
             return AuthorHelper.ToDTO(authors);
         }
 
-        public AuthorDTO? Get(int id)
+        public async Task<AuthorDTO?> Get(int id)
         {
-            var author = _authorRepository.Get(id);
-            if (author == null) return null;
+            Dictionary<bool, Author> result = await _authorRepository.GetAuthorById(id);
+            
+            bool error = !result.FirstOrDefault().Key;
+            if (error) return null;
 
+            var author = result.FirstOrDefault().Value;
+            
             return AuthorHelper.ToDTO(author);
         }
 

@@ -8,13 +8,14 @@ namespace NewsItemService.Data
     public class SourceLocationRepository : ISourceLocationRepository, IDisposable
     {
         private readonly NewsItemServiceDatabaseContext _dbContext;
-        private bool disposed = false;
         private readonly ILogger _logger;
 
+        private bool _disposed = false;
+        
         public SourceLocationRepository(NewsItemServiceDatabaseContext context, ILogger<SourceLocationRepository> logger)
         {
-            this._dbContext = context;
-            this._logger = logger;
+            _dbContext = context;
+            _logger = logger;
         }
 
         public async Task<Dictionary<bool, SourceLocation>> GetSourceLocation(AddSourceLocationDTO addSourceLocationDTO)
@@ -65,14 +66,14 @@ namespace NewsItemService.Data
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()

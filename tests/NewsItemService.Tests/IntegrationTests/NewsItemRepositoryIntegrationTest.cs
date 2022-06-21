@@ -15,30 +15,40 @@ using Xunit;
 
 namespace NewsItemService.Tests.IntegrationTests
 {
+    /// <summary>
+    /// Integration Tests for the newsitem repository
+    /// </summary>
     public class NewsItemRepositoryIntegrationTest: IDisposable
     {
-        private readonly NewsItemServiceDatabaseContext _databaseContext;
+        /// <summary>
+        /// NewsItemRepository for testing purposes
+        /// </summary>
         private readonly NewsItemRepository _newsItemRepository;
+        private readonly NewsItemServiceDatabaseContext _databaseContext;
+        private readonly ILogger<NewsItemRepository> _logger;
 
+        /// <summary>
+        /// Constructor to setup the in memory database, and add to the context to use.
+        /// </summary>
         public NewsItemRepositoryIntegrationTest()
         {
-            string connectionString = "Server=localhost;Port=1111;Database=DATABASE_NAME;UserId=developer;Password=developer";
-            var serviceProvider = new ServiceCollection().AddEntityFrameworkNpgsql().BuildServiceProvider();
+            var serviceProvider = new ServiceCollection()
+                        .AddEntityFrameworkInMemoryDatabase()
+                        .BuildServiceProvider();
 
-            var builder = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>();
-            builder.UseNpgsql(connectionString).UseInternalServiceProvider(serviceProvider);
-            this._databaseContext = new NewsItemServiceDatabaseContext(builder.Options);
+            var options = new DbContextOptionsBuilder<NewsItemServiceDatabaseContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDb_" + "NewsItemOverview")
+                .UseInternalServiceProvider(serviceProvider).Options;
+            _databaseContext = new NewsItemServiceDatabaseContext(options);
+            SeedData(_databaseContext);
 
-            this._databaseContext.Database.EnsureCreated();
-
-            SeedData(this._databaseContext);
-
-            var loggerMock = new Mock<ILogger<NewsItemRepository>>();
-            ILogger<NewsItemRepository> newsItemRepositorylogger = loggerMock.Object;
-
-            this._newsItemRepository = new NewsItemRepository(this._databaseContext, newsItemRepositorylogger);
+            _newsItemRepository = new NewsItemRepository(_databaseContext, _logger);
         }
 
+        /// <summary>
+        /// Feed the virtual database data
+        /// </summary>
+        /// <param name="context">Context used for the repository</param>
         private void SeedData(NewsItemServiceDatabaseContext context)
         {
             var authors = new List<Author>()
@@ -49,8 +59,8 @@ namespace NewsItemService.Tests.IntegrationTests
 
             var newsItems = new List<NewsItem>()
             {
-                new NewsItem { Id = 1, Authors = authors, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Publication},
-                new NewsItem { Id = 2, Authors = authors, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Publication}
+                new NewsItem { Id = 1, Title = "People are buying gloves in drones", Authors = authors, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Publication},
+                new NewsItem { Id = 2, Title = "Shipping containers cannot move without fuel", Authors = authors, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Publication}
             };
 
             if (!context.NewsItems.Any())
@@ -143,7 +153,19 @@ namespace NewsItemService.Tests.IntegrationTests
             // Arrange
 
             // Act
-            var result = _newsItemRepository.GetAfter(DateTime.Now.AddDays(1).ToUniversalTime(), 1, 2);
+            var result = _newsItemRepository.GetAfter(new DateTime(2022, 01, 01).ToUniversalTime(), 1, 2);
+
+            // Assert
+            Assert.Equal(2, result.Count);
+        }
+
+        [Fact]
+        public void GetAfterDateReturnZero()
+        {
+            // Arrange
+
+            // Act
+            var result = _newsItemRepository.GetAfter(new DateTime(2050, 7, 7).ToUniversalTime(), 1, 2);
 
             // Assert
             Assert.Empty(result);
@@ -155,7 +177,19 @@ namespace NewsItemService.Tests.IntegrationTests
             // Arrange
 
             // Act
-            var result = _newsItemRepository.GetBefore(DateTime.Now.AddDays(-1).ToUniversalTime(), 1, 2);
+            var result = _newsItemRepository.GetBefore(new DateTime(2050, 7, 7).ToUniversalTime(), 1, 2);
+
+            // Assert
+            Assert.Equal(2, result.Count);
+        }
+
+        [Fact]
+        public void GetBeforeDateReturnZero()
+        {
+            // Arrange
+
+            // Act
+            var result = _newsItemRepository.GetBefore(new DateTime(2014, 7, 16).ToUniversalTime(), 1, 2);
 
             // Assert
             Assert.Empty(result);
@@ -172,28 +206,59 @@ namespace NewsItemService.Tests.IntegrationTests
             // Assert
             Assert.Equal(2, result.Count);
         }
+
+        [Fact]
+        public void GetBetweenDateReturnZero()
+        {
+            // Arrange
+
+            // Act
+            var result = _newsItemRepository.GetBetween(DateTime.Now.AddYears(20).ToUniversalTime(), DateTime.Now.AddYears(25).ToUniversalTime(), 1, 2);
+
+            // Assert
+            Assert.Empty(result);
+        }
         #endregion
 
         //TODO: creating a news item requires more values than this test has prepared.
-        /*
+
+        #region CreateNewsItem() Tests
         [Fact]
         public void AddNewNewsItem()
         {
             // Arrange
-            var newsItem = new NewsItem() { Id = 3, Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Production };
+            var newsItem = new NewsItem() { Id = 3, Title = "Lawn mover stuck in tree", Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Production };
 
             var author = _databaseContext.Authors.Include("NewsItems").FirstOrDefault(a => a.Id == 1);
             newsItem.Authors = new List<Author>();
             newsItem.Authors.Add(author);
 
             // Act
-            _newsItemRepository.Post(newsItem);
+            _newsItemRepository.CreateNewsItem(newsItem);
             var result = _newsItemRepository.Get(1, 3);
 
             // Assert
             Assert.Equal(3, result.Count);
         }
-        */
+
+        [Fact]
+        public void AddNewNewsItemWithExistingTitle()
+        {
+            // Arrange
+            var newsItem = new NewsItem() { Id = 3, Title = "People are buying gloves in drones", Created = DateTime.Now.ToUniversalTime(), Updated = DateTime.Now.ToUniversalTime(), Status = NewsItemStatus.Production };
+
+            var author = _databaseContext.Authors.Include("NewsItems").FirstOrDefault(a => a.Id == 1);
+            newsItem.Authors = new List<Author>();
+            newsItem.Authors.Add(author);
+
+            // Act
+            var result = _newsItemRepository.CreateNewsItem(newsItem);
+
+            // Assert
+            Assert.False(result.Result.SingleOrDefault().Key);
+            Assert.Equal("Can't create newsItem with a title that has already been used", result.Result.SingleOrDefault().Value);
+        }
+        #endregion
 
         public void Dispose()
         {

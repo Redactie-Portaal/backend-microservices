@@ -7,13 +7,14 @@ namespace NewsItemService.Data
 {
     public class NewsItemRepository : INewsItemRepository, IDisposable
     {
-        private bool disposed = false;
         private readonly ILogger _logger;
         private readonly NewsItemServiceDatabaseContext _dbContext;
 
+        private bool _disposed = false;
+
         public NewsItemRepository(NewsItemServiceDatabaseContext dbContext, ILogger<NewsItemRepository> logger)
         {
-            this._logger = logger;
+            _logger = logger;
             _dbContext = dbContext;
         }
 
@@ -62,16 +63,6 @@ namespace NewsItemService.Data
             return newsItems;
         }
         
-        public async Task<NewsItem> GetNewsItemAsync(int newsItemId)
-        {
-            NewsItem? newsItem = await _dbContext.NewsItems.Where(s => s.Id == newsItemId).Include(s => s.Authors).FirstOrDefaultAsync();
-            if (newsItem == default)
-            {
-                throw new ArgumentException("No newsitem found with this ID");
-            }
-            return newsItem;
-        }
-
         public async Task<Dictionary<bool, string>> CreateNewsItem(NewsItem item)
         { 
             try
@@ -97,24 +88,6 @@ namespace NewsItemService.Data
             return new Dictionary<bool, string>() { { true, $"Article '{item.Title}' has been created succesfully" } };
         }
 
-        public async Task<Dictionary<bool, NewsItem>> GetNewsItemById(int newsItemId)
-        {
-            try
-            {
-                var newsItem = await _dbContext.NewsItems.Include(n => n.Tags).Where(a => a.Id == newsItemId).FirstOrDefaultAsync();
-                if (newsItem == null)
-                {
-                    return new Dictionary<bool, NewsItem>() { { false, null } };
-                }
-                return new Dictionary<bool, NewsItem>() { { true, newsItem } };
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("There is a problem with retrieving the NewsItem. Error message: {Message}", ex.Message);
-                throw;
-            }
-        }
-        
         public async Task<Dictionary<bool, string>> ChangeNewsItemStatus(AddNewsItemStatusDTO newsItemStatus)
         {
             NewsItem item = await _dbContext.NewsItems.FirstOrDefaultAsync(x => x.Id == newsItemStatus.NewsItemId);
@@ -143,14 +116,14 @@ namespace NewsItemService.Data
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()
