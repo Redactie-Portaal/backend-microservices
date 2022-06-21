@@ -1,4 +1,5 @@
 ﻿using NewsItemService.DTOs;
+using NewsItemService.Helpers;
 using NewsItemService.Interfaces;
 using RabbitMQLibrary;
 using RabbitMQLibrary.Producer;
@@ -38,6 +39,16 @@ namespace NewsItemService.Services
                 return new Dictionary<bool, PublicationDTO>() { { true, publicationDto } };
             }
             return new Dictionary<bool, PublicationDTO>() { { false, null } };
+        }
+
+        public async Task<PublicationDTO?> Create(CreatePublicationDTO createPublicationDTO)
+        {
+            var publication = await _publicationRepository.Create(
+                PublicationHelper.ToEntity(createPublicationDTO));
+                
+            if (publication == null) return null;
+
+            return PublicationHelper.ToDTO(publication);
         }
 
         public async Task<Dictionary<bool, string>> PublishNewsItem(int newsItemId, int publicationId)

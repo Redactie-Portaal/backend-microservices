@@ -34,6 +34,22 @@ namespace NewsItemService.Data
             }
         }
 
+        public async Task<Publication> Create(Publication publication)
+        {
+            try
+            {
+                await _dbContext.Publications.AddAsync(publication);
+                await _dbContext.SaveChangesAsync();
+
+                return publication;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("There is a problem with creating the Publication. Error message: {Message}", ex.Message);
+                throw;
+            }
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)

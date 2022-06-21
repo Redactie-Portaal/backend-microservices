@@ -39,6 +39,15 @@ namespace NewsItemService.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> CreatePublication(CreatePublicationDTO createPublicationDTO)
+        {
+            var publicationDTO = await _publicationService.Create(createPublicationDTO);
+            if (publicationDTO == null) return BadRequest(new { message = "Publication could not be created." });
+
+            return Ok(publicationDTO);
+        }
+
+        [HttpPost("/publish")]
         public async Task<IActionResult> Publicize(PublicizeNewsItemDTO dto)
         {
             var newsItem = await _publicationService.PublishNewsItem(dto.NewsItemID, dto.PublicationID);
