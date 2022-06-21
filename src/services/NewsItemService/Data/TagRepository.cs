@@ -34,6 +34,14 @@ namespace NewsItemService.Data
             }
         }
 
+        public Tag Post(Tag tag)
+        {
+            _dbContext.Tags.Add(tag);
+            _dbContext.SaveChanges();
+
+            return tag;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
