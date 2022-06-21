@@ -275,3 +275,4 @@ __pycache__/
 
 *.vscode
 *docker-compose.yaml
+*docker-compose.yml
