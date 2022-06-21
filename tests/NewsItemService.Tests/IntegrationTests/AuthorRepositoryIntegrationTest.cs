@@ -42,7 +42,7 @@ namespace NewsItemService.Tests.IntegrationTests
             _databaseContext = new NewsItemServiceDatabaseContext(options);
             SeedData(_databaseContext);
 
-            _authorRepository = new AuthorRepository(_databaseContext, _logger);
+            _authorRepository = new AuthorRepository(_logger, _databaseContext);
         }
 
         /// <summary>
@@ -92,11 +92,11 @@ namespace NewsItemService.Tests.IntegrationTests
             // Arrange
 
             // Act
-            var result = _authorRepository.Get(1);
+            var result = _authorRepository.GetAuthorById(1);
 
             // Assert
-            Assert.Equal(1, result.Id);
-            Assert.Equal("TestAuthor", result.Name);
+            Assert.Equal(1, result.Result.SingleOrDefault().Value.Id);
+            Assert.Equal("TestAuthor", result.Result.SingleOrDefault().Value.Name);
         }
 
         [Fact]
@@ -105,10 +105,10 @@ namespace NewsItemService.Tests.IntegrationTests
             // Arrange
 
             // Act
-            var result = _authorRepository.Get(3);
+            var result = _authorRepository.GetAuthorById(3);
 
             // Assert
-            Assert.Null(result);
+            Assert.False(result.Result.SingleOrDefault().Key);
         }
 
         [Fact]
@@ -117,10 +117,10 @@ namespace NewsItemService.Tests.IntegrationTests
             // Arrange
 
             // Act
-            var result = _authorRepository.Get(-1);
+            var result = _authorRepository.GetAuthorById(-1);
 
             // Assert
-            Assert.Null(result);
+            Assert.False(result.Result.SingleOrDefault().Key);
         }
 
         [Fact]
@@ -129,10 +129,10 @@ namespace NewsItemService.Tests.IntegrationTests
             // Arrange
 
             // Act
-            var result = _authorRepository.Get(0);
+            var result = _authorRepository.GetAuthorById(0);
 
             // Assert
-            Assert.Null(result);
+            Assert.False(result.Result.SingleOrDefault().Key);
         }
         #endregion
 

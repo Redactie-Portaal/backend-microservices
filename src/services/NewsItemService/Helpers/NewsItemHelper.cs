@@ -3,7 +3,7 @@ using NewsItemService.Entities;
 
 namespace NewsItemService.Helpers
 {
-    class NewsItemHelper
+    public class NewsItemHelper
     {
         public static NewsItemDTO ToDTO(NewsItem newsItem, bool includeAuthors = true)
         {
