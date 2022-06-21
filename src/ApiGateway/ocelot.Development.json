@@ -49,18 +49,6 @@
       "UpstreamHttpMethod": [ "Get" ]
     },
     {
-      "DownstreamPathTemplate": "/Publication/publish",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 15000
-        }
-      ],
-      "UpstreamPathTemplate": "/api/Publication/publish",
-      "UpstreamHttpMethod": [ "Post" ]
-    },
-    {
       "DownstreamPathTemplate": "/Publication",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -70,6 +58,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Publication",
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Publication/publish",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 15000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/publication/publish",
       "UpstreamHttpMethod": [ "Post" ]
     }
   ],
