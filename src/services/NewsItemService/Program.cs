@@ -54,6 +54,7 @@ builder.Services.AddSingleton<ITagRepository, TagRepository>();
 
 builder.Services.AddSingleton<NewsItemOverviewService>();
 builder.Services.AddSingleton<AuthorService>();
+builder.Services.AddSingleton<TagService>();
 
 // Messaging
 builder.Services.AddMessageProducing("news-item-exchange");
