@@ -1,0 +1,36 @@
+name: Build, Test and Analyse UserService
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feature-**
+    paths:
+      - "src/services/UserService/**"
+      - "tests/UserService.Tests/**"
+      - ".github/workflows/user-service-build-test.yml"
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - "src/services/UserService/**"
+      - "tests/UserService.Tests/**"
+      - ".github/workflows/user-service-build-test.yml"
+
+jobs:
+  user-service-build-unit-tests:
+    uses: "./.github/workflows/workflow-build-unit-tests.yml"
+    with:
+      project-location: "src/services/UserService"
+      test-location: "tests/UserService.Tests"
+      test-namespace: "UserService.Tests.UnitTests"
+      project-name: "UserService"
+  user-service-sonarqube-analysis:
+    uses: "./.github/workflows/workflow-sonarqube.yml"
+    with:
+      project-location: "src\\services\\UserService"
+    secrets:
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      action-github_token: ${{ secrets.GITHUB_TOKEN }}

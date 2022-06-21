@@ -276,3 +276,9 @@ __pycache__/
 *.vscode
 *docker-compose.yaml
 *docker-compose.yml
+
+# Google Cloud Oauth Secret
+# Secrets
+secrets.json
+google_client_secret.json
+twitter_secrets.json

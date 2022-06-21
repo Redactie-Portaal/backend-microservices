@@ -47,7 +47,26 @@ namespace NewsItemService.Data
         /// DbSet objects are created from a DbContext using the DbContext.Set method.
         /// </summary>
         public DbSet<Publication> Publications { get; set; }
-
+        /// <summary>
+        /// DbSet for the MediaNewsItem class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
+        public DbSet<MediaNewsItem> MediaNewsItems { get; set; }
+        /// <summary>
+        /// DbSet for the Note class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
+        public DbSet<Note> Notes { get; set; }
+        /// <summary>
+        /// DbSet for the Source_Location class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
+        public DbSet<SourceLocation> SourceLocations { get; set; }
+        /// <summary>
+        /// DbSet for the Source_Person class, A DbSet represents the collection of all entities in the context. 
+        /// DbSet objects are created from a DbContext using the DbContext.Set method.
+        /// </summary>
+        public DbSet<SourcePerson> SourcePeople { get; set; }
 
         /// <summary>
         /// OnConfiguring builds the connection between the database and the API using the given connection string
@@ -63,7 +82,7 @@ namespace NewsItemService.Data
                     throw new MissingFieldException("Database environment variable not found.");
                 }
 
-                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("redactieportaal_db_string").Replace("DATABASE_NAME", "newsitemservice"));
+                optionsBuilder.UseNpgsql(dbString.Replace("DATABASE_NAME", "newsitemservice"));
             }
 
             base.OnConfiguring(optionsBuilder);

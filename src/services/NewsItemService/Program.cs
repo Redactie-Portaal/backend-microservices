@@ -1,21 +1,66 @@
+using Microsoft.OpenApi.Models;
 using NewsItemService.Data;
 using NewsItemService.Interfaces;
+using NewsItemService.Services;
 using RabbitMQLibrary;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "CorsPolicy",
+        builder => builder.SetIsOriginAllowed((host) => true)
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
+});
 
+var configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
+        .Build();
+
+// Add services to the container.
 builder.Services.AddControllers();
+
+// Messaging
+builder.Services.AddMessageProducing("news-item-exchange");
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "NewsItemService", Version = "v1" });
+});
 
 builder.Services.AddMessageProducing("news-item-exchange");
-builder.Services.AddScoped<INewsItemRepository, NewsItemRepository>();
+
+// Add singletons
+// Services
+// Repositories
+builder.Services.AddSingleton<INewsItemRepository, NewsItemRepository>();
+builder.Services.AddSingleton<IAuthorRepository, AuthorRepository>();
+builder.Services.AddSingleton<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddSingleton<IMediaNewsItemRepository, MediaNewsItemRepository>();
+builder.Services.AddSingleton<IMediaRepository, MediaRepository>();
+builder.Services.AddSingleton<INoteRepository, NoteRepository>();
+builder.Services.AddSingleton<IPublicationRepository, PublicationRepository>();
+builder.Services.AddSingleton<ISourceLocationRepository, SourceLocationRepository>();
+builder.Services.AddSingleton<ISourcePersonRepository, SourcePersonRepository>();
+builder.Services.AddSingleton<ITagRepository, TagRepository>();
+
+builder.Services.AddSingleton<NewsItemOverviewService>();
+builder.Services.AddSingleton<AuthorService>();
+
+// Messaging
+builder.Services.AddMessageProducing("news-item-exchange");
 
 // Add the database context to the builder.
-builder.Services.AddDbContext<NewsItemServiceDatabaseContext>();
+builder.Services.AddSingleton<NewsItemServiceDatabaseContext>();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // Needed for saving DateTime variables
 using var newsItemContext = new NewsItemServiceDatabaseContext();
 newsItemContext.Database.EnsureCreated();
 
@@ -26,12 +71,22 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "NewsItemService v1"));
 }
 
+app.UseCors("CorsPolicy");
+
 app.UseHttpsRedirection();
+
+app.UseRouting();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();
