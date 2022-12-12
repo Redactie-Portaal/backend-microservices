@@ -274,7 +274,7 @@ __pycache__/
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore
 
 *.vscode
-*docker-compose.yaml
+docker-compose.yaml
 *docker-compose.yml
 
 # Google Cloud Oauth Secret

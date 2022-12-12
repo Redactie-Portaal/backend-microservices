@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgresql-db:
+    image: postgres:15.1-alpine
+    container_name: postgresql-db
+    environment:
+      - POSTGRES_USER=developer
+      - POSTGRES_PASSWORD=Flevoland
+      - POSTGRES_DB=redactieportaal
+    ports:
+      - "6432:5432"
+    volumes:
+      - postgresqldata:/var/lib/postgresql/data
+
+  rabbit-mq:
+    image: rabbitmq:3.11-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+volumes:
+  postgresqldata:
+
